@@ -1,0 +1,229 @@
+# LBVR Plugin SDK for Go
+
+A Go SDK for building document processing plugins for the LBVR (Libvisor) system. This SDK provides unified data structures and interfaces for extracting metadata, outlines, and text content from various document formats.
+
+## Features
+
+- **Unified Interface**: Consistent `DocumentHandler` interface for all document types
+- **Rich Metadata**: Comprehensive metadata extraction with format-specific fields
+- **Hierarchical Outlines**: Support for nested table of contents structures
+- **Page-based Content**: Organized text extraction with pages and paragraphs
+- **JSON Compatible**: All data structures support JSON serialization
+- **Extensible**: Plugin-specific metadata through extended fields
+
+## Installation
+
+```bash
+go get github.com/jowharshamshiri/lbvr-plugin-sdk-go
+```
+
+## Quick Start
+
+### Implementing a Document Handler
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    
+    sdk "github.com/jowharshamshiri/lbvr-plugin-sdk-go"
+)
+
+// MyDocumentHandler implements the DocumentHandler interface
+type MyDocumentHandler struct {
+    sdk.BaseDocumentHandler
+}
+
+func (h *MyDocumentHandler) Name() string {
+    return "my-handler"
+}
+
+func (h *MyDocumentHandler) Version() string {
+    return "1.0.0"
+}
+
+func (h *MyDocumentHandler) SupportedExtensions() []string {
+    return []string{"txt", "md"}
+}
+
+func (h *MyDocumentHandler) CanHandle(filePath string) bool {
+    return h.BaseDocumentHandler.CanHandle(filePath, h.SupportedExtensions())
+}
+
+func (h *MyDocumentHandler) ExtractMetadata(ctx context.Context, filePath string) (*sdk.FileMetadata, error) {
+    // Get file info
+    fileInfo, err := os.Stat(filePath)
+    if err != nil {
+        return nil, err
+    }
+    
+    // Create metadata
+    metadata := sdk.NewFileMetadata(filePath, "text", uint64(fileInfo.Size()))
+    metadata.SetExtended("extractor", "my-handler")
+    
+    return metadata, nil
+}
+
+func (h *MyDocumentHandler) ExtractOutline(ctx context.Context, filePath string) (*sdk.DocumentOutline, error) {
+    outline := sdk.NewDocumentOutline(filePath, "text", 1)
+    outline.ExtractionInfo = *sdk.NewExtractionInfo("my-handler", "1.0.0")
+    return outline, nil
+}
+
+func (h *MyDocumentHandler) ExtractPages(ctx context.Context, filePath string) (*sdk.DocumentPages, error) {
+    // Read file content
+    content, err := os.ReadFile(filePath)
+    if err != nil {
+        return nil, err
+    }
+    
+    // Create pages structure
+    pages := sdk.NewDocumentPages(filePath, "text", 1)
+    page := sdk.NewDocumentPageWithText(1, string(content))
+    pages.AddPage(*page)
+    
+    return pages, nil
+}
+
+// ... implement other required methods
+```
+
+### Using the Handler Registry
+
+```go
+func main() {
+    // Create registry and register handler
+    registry := sdk.NewHandlerRegistry()
+    registry.Register(&MyDocumentHandler{})
+    
+    // Find handler for a file
+    handler := registry.FindHandler("document.txt")
+    if handler != nil {
+        // Extract metadata
+        metadata, err := handler.ExtractMetadata(context.Background(), "document.txt")
+        if err != nil {
+            fmt.Printf("Error: %v\n", err)
+            return
+        }
+        
+        // Convert to JSON
+        jsonStr, _ := metadata.ToJSON()
+        fmt.Println(jsonStr)
+    }
+}
+```
+
+## Data Structures
+
+### FileMetadata
+
+Consolidated metadata structure supporting:
+- Common document fields (title, authors, dates)
+- Format-specific fields (PDF, EPUB specific)
+- Extensible metadata via `ExtendedMetadata` map
+- Word/character/page counts
+
+```go
+metadata := sdk.NewFileMetadata("/path/to/file.pdf", "pdf", 1024*1024)
+metadata.Title = &"Document Title"
+metadata.AddAuthor("John Doe")
+metadata.SetExtended("custom_field", "custom_value")
+```
+
+### DocumentOutline
+
+Hierarchical table of contents:
+- Nested TOC entries with unlimited depth
+- Page/section references
+- Source references (filenames, anchors)
+
+```go
+outline := sdk.NewDocumentOutline("/path/to/file.pdf", "pdf", 100)
+entry := sdk.NewTocEntry("Chapter 1", 0).WithPage(5)
+outline.AddEntry(*entry)
+```
+
+### DocumentPages
+
+Page-based text content organization:
+- Documents contain pages (1-indexed)
+- Pages contain paragraphs (1-indexed within page)
+- Automatic word/character counting
+
+```go
+pages := sdk.NewDocumentPages("/path/to/file.pdf", "pdf", 10)
+page := sdk.NewDocumentPageWithText(1, "Page content here...")
+pages.AddPage(*page)
+```
+
+## Plugin Capabilities
+
+The SDK supports a capability-based system:
+
+```go
+capabilities := &sdk.PluginCapabilities{
+    Capabilities: []string{
+        "extract_metadata",
+        "extract_outline", 
+        "extract_pages",
+        "validate_file",
+        "generate_thumbnail",
+        "supports_json_output",
+    },
+}
+```
+
+## Error Handling
+
+All handler methods return errors following Go conventions:
+
+```go
+metadata, err := handler.ExtractMetadata(ctx, filePath)
+if err != nil {
+    // Handle error
+    return fmt.Errorf("failed to extract metadata: %w", err)
+}
+```
+
+## JSON Schemas
+
+This SDK implements the JSON schemas defined in the `lbvr/plugin-schemas/` directory:
+- `file-metadata.json` - FileMetadata structure
+- `document-outline.json` - DocumentOutline structure  
+- `document-pages.json` - DocumentPages structure
+- `plugin-info.json` - Plugin information
+- `handler-interface.json` - DocumentHandler interface
+
+## Testing
+
+```bash
+go test ./...
+```
+
+## Examples
+
+See the `examples/` directory for complete implementation examples:
+- Text file handler
+- Markdown processor
+- Plugin registration patterns
+
+## Contributing
+
+1. Ensure all data structures match the JSON schemas in `../lbvr/plugin-schemas/`
+2. Implement the complete `DocumentHandler` interface
+3. Add appropriate tests
+4. Follow Go naming conventions
+
+## License
+
+MIT License - see LICENSE file for details.
+
+## Related Projects
+
+- **lbvr-plugin-sdk** - Rust SDK implementation
+- **lbvr** - Main LBVR engine
+- **txtczar** - Text and Markdown processor
+- **pdfczar** - PDF processor  
+- **epubczar** - EPUB processor

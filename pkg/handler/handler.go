@@ -1,0 +1,277 @@
+// Package handler provides the core DocumentHandler interface and related types
+package handler
+
+import (
+	"context"
+	"encoding/json"
+	"path/filepath"
+	"strings"
+
+	"github.com/jowharshamshiri/lbvr-plugin-sdk-go/pkg/metadata"
+	"github.com/jowharshamshiri/lbvr-plugin-sdk-go/pkg/outline"
+	"github.com/jowharshamshiri/lbvr-plugin-sdk-go/pkg/pages"
+)
+
+// DocumentHandler is the core interface that all document file handlers must implement
+type DocumentHandler interface {
+	// Get the name of this handler
+	Name() string
+
+	// Get the version of this handler
+	Version() string
+
+	// Get the file extensions this handler supports (e.g., ["pdf"])
+	SupportedExtensions() []string
+
+	// Check if this handler can process the given file
+	CanHandle(filePath string) bool
+
+	// Extract document metadata
+	ExtractMetadata(ctx context.Context, filePath string) (*metadata.FileMetadata, error)
+
+	// Extract document outline/table of contents
+	ExtractOutline(ctx context.Context, filePath string) (*outline.DocumentOutline, error)
+
+	// Extract document pages with text content organized by pages and paragraphs
+	ExtractPages(ctx context.Context, filePath string) (*pages.DocumentPages, error)
+
+	// Validate that the file is not corrupted and can be processed
+	ValidateFile(ctx context.Context, filePath string) (bool, error)
+
+	// Get basic file information without full processing
+	GetFileInfo(ctx context.Context, filePath string) (*FileInfo, error)
+
+	// Generate thumbnail image for the document
+	// Returns PNG image data
+	GenerateThumbnail(ctx context.Context, filePath string, width, height uint32) ([]byte, error)
+
+	// Get handler capabilities
+	GetCapabilities() *PluginCapabilities
+}
+
+// BaseDocumentHandler provides default implementations for optional methods
+type BaseDocumentHandler struct{}
+
+// CanHandle provides default implementation based on file extension
+func (b *BaseDocumentHandler) CanHandle(filePath string, supportedExtensions []string) bool {
+	ext := strings.ToLower(filepath.Ext(filePath))
+	if strings.HasPrefix(ext, ".") {
+		ext = ext[1:] // Remove the dot
+	}
+
+	for _, supportedExt := range supportedExtensions {
+		if strings.EqualFold(ext, supportedExt) {
+			return true
+		}
+	}
+	return false
+}
+
+// GetCapabilities provides default capabilities
+func (b *BaseDocumentHandler) GetCapabilities() *PluginCapabilities {
+	return &PluginCapabilities{
+		Capabilities: []string{
+			"extract_metadata",
+			"extract_outline",
+			"extract_pages",
+			"validate_file",
+			"generate_thumbnail",
+			"supports_json_output",
+		},
+	}
+}
+
+// FileInfo represents basic file information
+type FileInfo struct {
+	// File path
+	Path string `json:"path"`
+
+	// File size in bytes
+	Size uint64 `json:"size"`
+
+	// Document type detected
+	DocumentType string `json:"document_type"`
+
+	// Whether the file appears to be valid
+	IsValid bool `json:"is_valid"`
+
+	// Quick metadata (title, author if easily accessible)
+	QuickMetadata *QuickMetadata `json:"quick_metadata,omitempty"`
+}
+
+// QuickMetadata represents quick metadata that can be extracted without full processing
+type QuickMetadata struct {
+	// Document title
+	Title *string `json:"title,omitempty"`
+
+	// Primary author
+	Author *string `json:"author,omitempty"`
+
+	// Page/section count
+	PageCount *uint64 `json:"page_count,omitempty"`
+}
+
+// PluginCapabilities represents plugin capabilities
+type PluginCapabilities struct {
+	Capabilities []string `json:"capabilities"`
+}
+
+// Can checks if plugin has a specific capability
+func (pc *PluginCapabilities) Can(capability string) bool {
+	for _, cap := range pc.Capabilities {
+		if cap == capability {
+			return true
+		}
+	}
+	return false
+}
+
+// PluginInfo represents plugin information
+type PluginInfo struct {
+	// Plugin name
+	Name string `json:"name"`
+
+	// Plugin version
+	Version string `json:"version"`
+
+	// Plugin description
+	Description string `json:"description"`
+
+	// Supported file extensions
+	Extensions []string `json:"extensions"`
+
+	// Plugin capabilities
+	Capabilities *PluginCapabilities `json:"capabilities"`
+
+	// Plugin author/maintainer
+	Author *string `json:"author,omitempty"`
+}
+
+// PluginMetadata interface for plugins to provide metadata about themselves
+type PluginMetadata interface {
+	// Get plugin information
+	PluginInfo() *PluginInfo
+
+	// Get plugin capabilities
+	Capabilities() *PluginCapabilities
+}
+
+// ProcessingResult represents the result of a document processing operation
+type ProcessingResult struct {
+	// Whether the operation was successful
+	Success bool `json:"success"`
+
+	// Processing time in milliseconds
+	ProcessingTimeMs uint64 `json:"processing_time_ms"`
+
+	// Any warnings generated during processing
+	Warnings []string `json:"warnings"`
+
+	// Error message if operation failed
+	Error *string `json:"error,omitempty"`
+}
+
+// NewSuccessResult creates a successful result
+func NewSuccessResult(processingTimeMs uint64) *ProcessingResult {
+	return &ProcessingResult{
+		Success:          true,
+		ProcessingTimeMs: processingTimeMs,
+		Warnings:         make([]string, 0),
+	}
+}
+
+// NewFailureResult creates a failed result
+func NewFailureResult(errorMsg string, processingTimeMs uint64) *ProcessingResult {
+	return &ProcessingResult{
+		Success:          false,
+		ProcessingTimeMs: processingTimeMs,
+		Warnings:         make([]string, 0),
+		Error:            &errorMsg,
+	}
+}
+
+// AddWarning adds a warning to the result
+func (pr *ProcessingResult) AddWarning(warning string) {
+	pr.Warnings = append(pr.Warnings, warning)
+}
+
+// HandlerRegistry manages registered document handlers
+type HandlerRegistry struct {
+	handlers []DocumentHandler
+}
+
+// NewHandlerRegistry creates a new empty registry
+func NewHandlerRegistry() *HandlerRegistry {
+	return &HandlerRegistry{
+		handlers: make([]DocumentHandler, 0),
+	}
+}
+
+// Register registers a document handler
+func (hr *HandlerRegistry) Register(handler DocumentHandler) {
+	hr.handlers = append(hr.handlers, handler)
+}
+
+// FindHandler finds a handler for the given file
+func (hr *HandlerRegistry) FindHandler(filePath string) DocumentHandler {
+	for _, handler := range hr.handlers {
+		if handler.CanHandle(filePath) {
+			return handler
+		}
+	}
+	return nil
+}
+
+// Handlers gets all registered handlers
+func (hr *HandlerRegistry) Handlers() []DocumentHandler {
+	return hr.handlers
+}
+
+// HandlersForExtension gets handlers that support a specific extension
+func (hr *HandlerRegistry) HandlersForExtension(extension string) []DocumentHandler {
+	var result []DocumentHandler
+	for _, handler := range hr.handlers {
+		for _, ext := range handler.SupportedExtensions() {
+			if strings.EqualFold(ext, extension) {
+				result = append(result, handler)
+				break
+			}
+		}
+	}
+	return result
+}
+
+// HandlerCount gets the number of registered handlers
+func (hr *HandlerRegistry) HandlerCount() int {
+	return len(hr.handlers)
+}
+
+// SupportedExtensions gets all supported file extensions
+func (hr *HandlerRegistry) SupportedExtensions() []string {
+	extensionSet := make(map[string]bool)
+	for _, handler := range hr.handlers {
+		for _, ext := range handler.SupportedExtensions() {
+			extensionSet[strings.ToLower(ext)] = true
+		}
+	}
+
+	var extensions []string
+	for ext := range extensionSet {
+		extensions = append(extensions, ext)
+	}
+	return extensions
+}
+
+// IsSupported checks if a file is supported by any handler
+func (hr *HandlerRegistry) IsSupported(filePath string) bool {
+	return hr.FindHandler(filePath) != nil
+}
+
+// ToJSON converts any struct to JSON string
+func ToJSON(v interface{}) (string, error) {
+	data, err := json.MarshalIndent(v, "", "  ")
+	if err != nil {
+		return "", err
+	}
+	return string(data), nil
+}
