@@ -126,6 +126,25 @@ func (pc *PluginCapabilities) Can(capability string) bool {
 	return false
 }
 
+// Plugin types supported by LBVR
+type PluginType string
+
+const (
+	PluginTypeDocumentHandler PluginType = "document_handler"
+	PluginTypeModelService    PluginType = "model_service"
+	PluginTypeEmbeddingService PluginType = "embedding_service"
+	PluginTypeSystemService   PluginType = "system_service"
+)
+
+// Plugin priority levels
+type PluginPriority string
+
+const (
+	PluginPriorityOptional    PluginPriority = "optional"
+	PluginPriorityRecommended PluginPriority = "recommended"
+	PluginPriorityCritical    PluginPriority = "critical"
+)
+
 // PluginInfo represents plugin information
 type PluginInfo struct {
 	// Plugin name
@@ -137,14 +156,82 @@ type PluginInfo struct {
 	// Plugin description
 	Description string `json:"description"`
 
-	// Supported file extensions
-	Extensions []string `json:"extensions"`
+	// Plugin type
+	PluginType PluginType `json:"plugin_type"`
+
+	// Plugin priority level
+	Priority PluginPriority `json:"priority"`
+
+	// Whether this plugin is critical to system operation (legacy compatibility)
+	SystemCritical bool `json:"system_critical,omitempty"`
+
+	// Supported file extensions (for document handlers)
+	Extensions []string `json:"extensions,omitempty"`
+
+	// Available service endpoints (for service plugins)
+	ServiceEndpoints []string `json:"service_endpoints,omitempty"`
 
 	// Plugin capabilities
 	Capabilities *PluginCapabilities `json:"capabilities"`
 
 	// Plugin author/maintainer
 	Author *string `json:"author,omitempty"`
+}
+
+// NewDocumentHandlerPluginInfo creates a new document handler plugin info
+func NewDocumentHandlerPluginInfo(name, version, description string, extensions []string, capabilities *PluginCapabilities) *PluginInfo {
+	return &PluginInfo{
+		Name:           name,
+		Version:        version,
+		Description:    description,
+		PluginType:     PluginTypeDocumentHandler,
+		Priority:       PluginPriorityOptional,
+		SystemCritical: false,
+		Extensions:     extensions,
+		Capabilities:   capabilities,
+	}
+}
+
+// NewModelServicePluginInfo creates a new model service plugin info
+func NewModelServicePluginInfo(name, version, description string, serviceEndpoints []string, capabilities *PluginCapabilities, priority PluginPriority) *PluginInfo {
+	return &PluginInfo{
+		Name:             name,
+		Version:          version,
+		Description:      description,
+		PluginType:       PluginTypeModelService,
+		Priority:         priority,
+		SystemCritical:   priority == PluginPriorityCritical,
+		ServiceEndpoints: serviceEndpoints,
+		Capabilities:     capabilities,
+	}
+}
+
+// NewEmbeddingServicePluginInfo creates a new embedding service plugin info
+func NewEmbeddingServicePluginInfo(name, version, description string, serviceEndpoints []string, capabilities *PluginCapabilities, priority PluginPriority) *PluginInfo {
+	return &PluginInfo{
+		Name:             name,
+		Version:          version,
+		Description:      description,
+		PluginType:       PluginTypeEmbeddingService,
+		Priority:         priority,
+		SystemCritical:   priority == PluginPriorityCritical,
+		ServiceEndpoints: serviceEndpoints,
+		Capabilities:     capabilities,
+	}
+}
+
+// NewSystemServicePluginInfo creates a new system service plugin info
+func NewSystemServicePluginInfo(name, version, description string, serviceEndpoints []string, capabilities *PluginCapabilities, priority PluginPriority) *PluginInfo {
+	return &PluginInfo{
+		Name:             name,
+		Version:          version,
+		Description:      description,
+		PluginType:       PluginTypeSystemService,
+		Priority:         priority,
+		SystemCritical:   priority == PluginPriorityCritical,
+		ServiceEndpoints: serviceEndpoints,
+		Capabilities:     capabilities,
+	}
 }
 
 // PluginMetadata interface for plugins to provide metadata about themselves
