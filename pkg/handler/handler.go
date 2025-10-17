@@ -20,8 +20,8 @@ type DocumentHandler interface {
 	// Get the version of this handler
 	Version() string
 
-	// Get the file extensions this handler supports (e.g., ["pdf"])
-	SupportedExtensions() []string
+	// Get handler capabilities with file type specificity
+	GetCapabilities() *PluginCapabilities
 
 	// Check if this handler can process the given file
 	CanHandle(filePath string) bool
@@ -44,27 +44,19 @@ type DocumentHandler interface {
 	// Generate thumbnail image for the document
 	// Returns PNG image data
 	GenerateThumbnail(ctx context.Context, filePath string, width, height uint32) ([]byte, error)
-
-	// Get handler capabilities
-	GetCapabilities() *PluginCapabilities
 }
 
 // BaseDocumentHandler provides default implementations for optional methods
 type BaseDocumentHandler struct{}
 
-// CanHandle provides default implementation based on file extension
-func (b *BaseDocumentHandler) CanHandle(filePath string, supportedExtensions []string) bool {
+// CanHandle provides default implementation based on capabilities
+func (b *BaseDocumentHandler) CanHandle(filePath string, capabilities *PluginCapabilities) bool {
 	ext := strings.ToLower(filepath.Ext(filePath))
 	if strings.HasPrefix(ext, ".") {
 		ext = ext[1:] // Remove the dot
 	}
 
-	for _, supportedExt := range supportedExtensions {
-		if strings.EqualFold(ext, supportedExt) {
-			return true
-		}
-	}
-	return false
+	return capabilities.CanHandleFileType(ext)
 }
 
 // GetCapabilities provides default capabilities
@@ -126,15 +118,81 @@ func (pc *PluginCapabilities) Can(capability string) bool {
 	return false
 }
 
-// Plugin types supported by LBVR
-type PluginType string
+// CanHandleFileType checks if the plugin can handle a specific file type
+func (pc *PluginCapabilities) CanHandleFileType(fileType string) bool {
+	// Check for exact match with file type (e.g., "extract_metadata:pdf")
+	for _, capability := range pc.Capabilities {
+		if strings.Contains(capability, ":") {
+			parts := strings.SplitN(capability, ":", 2)
+			if len(parts) == 2 {
+				operation, filetype := parts[0], parts[1]
+				if filetype == fileType && pc.isExtractOperation(operation) {
+					return true
+				}
+			}
+		}
+	}
+	
+	// Check for wildcard match (e.g., "extract_metadata:*")
+	for _, capability := range pc.Capabilities {
+		if strings.Contains(capability, ":") {
+			parts := strings.SplitN(capability, ":", 2)
+			if len(parts) == 2 {
+				operation, filetype := parts[0], parts[1]
+				if filetype == "*" && pc.isExtractOperation(operation) {
+					return true
+				}
+			}
+		}
+	}
+	
+	return false
+}
 
-const (
-	PluginTypeDocumentHandler PluginType = "document_handler"
-	PluginTypeModelService    PluginType = "model_service"
-	PluginTypeEmbeddingService PluginType = "embedding_service"
-	PluginTypeSystemService   PluginType = "system_service"
-)
+// isExtractOperation checks if an operation is a document processing operation
+func (pc *PluginCapabilities) isExtractOperation(operation string) bool {
+	switch operation {
+	case "extract_metadata", "extract_outline", "extract_pages", 
+		 "extract_text", "validate_file", "generate_thumbnail":
+		return true
+	default:
+		return false
+	}
+}
+
+// GetMostSpecificCapability gets the most specific capability for a given operation and file type
+func (pc *PluginCapabilities) GetMostSpecificCapability(operation, fileType string) *string {
+	// First look for exact file type match
+	specific := operation + ":" + fileType
+	for _, cap := range pc.Capabilities {
+		if cap == specific {
+			return &specific
+		}
+	}
+	
+	// Then look for wildcard match
+	wildcard := operation + ":*"
+	for _, cap := range pc.Capabilities {
+		if cap == wildcard {
+			return &wildcard
+		}
+	}
+	
+	// Finally check for operation without file type specifier (legacy support)
+	for _, cap := range pc.Capabilities {
+		if cap == operation {
+			return &operation
+		}
+	}
+	
+	return nil
+}
+
+// CanPerformOperation checks if the plugin can perform an operation on a specific file type
+func (pc *PluginCapabilities) CanPerformOperation(operation, fileType string) bool {
+	return pc.GetMostSpecificCapability(operation, fileType) != nil
+}
+
 
 // Plugin priority levels
 type PluginPriority string
@@ -156,82 +214,31 @@ type PluginInfo struct {
 	// Plugin description
 	Description string `json:"description"`
 
-	// Plugin type
-	PluginType PluginType `json:"plugin_type"`
-
 	// Plugin priority level
 	Priority PluginPriority `json:"priority"`
 
-	// Whether this plugin is critical to system operation (legacy compatibility)
-	SystemCritical bool `json:"system_critical,omitempty"`
-
-	// Supported file extensions (for document handlers)
-	Extensions []string `json:"extensions,omitempty"`
-
-	// Available service endpoints (for service plugins)
-	ServiceEndpoints []string `json:"service_endpoints,omitempty"`
-
-	// Plugin capabilities
+	// Plugin capabilities with file type specificity
 	Capabilities *PluginCapabilities `json:"capabilities"`
 
 	// Plugin author/maintainer
 	Author *string `json:"author,omitempty"`
 }
 
-// NewDocumentHandlerPluginInfo creates a new document handler plugin info
-func NewDocumentHandlerPluginInfo(name, version, description string, extensions []string, capabilities *PluginCapabilities) *PluginInfo {
+// NewPluginInfo creates a new plugin info
+func NewPluginInfo(name, version, description string, capabilities *PluginCapabilities, priority PluginPriority) *PluginInfo {
 	return &PluginInfo{
-		Name:           name,
-		Version:        version,
-		Description:    description,
-		PluginType:     PluginTypeDocumentHandler,
-		Priority:       PluginPriorityOptional,
-		SystemCritical: false,
-		Extensions:     extensions,
-		Capabilities:   capabilities,
+		Name:         name,
+		Version:      version,
+		Description:  description,
+		Priority:     priority,
+		Capabilities: capabilities,
 	}
 }
 
-// NewModelServicePluginInfo creates a new model service plugin info
-func NewModelServicePluginInfo(name, version, description string, serviceEndpoints []string, capabilities *PluginCapabilities, priority PluginPriority) *PluginInfo {
-	return &PluginInfo{
-		Name:             name,
-		Version:          version,
-		Description:      description,
-		PluginType:       PluginTypeModelService,
-		Priority:         priority,
-		SystemCritical:   priority == PluginPriorityCritical,
-		ServiceEndpoints: serviceEndpoints,
-		Capabilities:     capabilities,
-	}
-}
-
-// NewEmbeddingServicePluginInfo creates a new embedding service plugin info
-func NewEmbeddingServicePluginInfo(name, version, description string, serviceEndpoints []string, capabilities *PluginCapabilities, priority PluginPriority) *PluginInfo {
-	return &PluginInfo{
-		Name:             name,
-		Version:          version,
-		Description:      description,
-		PluginType:       PluginTypeEmbeddingService,
-		Priority:         priority,
-		SystemCritical:   priority == PluginPriorityCritical,
-		ServiceEndpoints: serviceEndpoints,
-		Capabilities:     capabilities,
-	}
-}
-
-// NewSystemServicePluginInfo creates a new system service plugin info
-func NewSystemServicePluginInfo(name, version, description string, serviceEndpoints []string, capabilities *PluginCapabilities, priority PluginPriority) *PluginInfo {
-	return &PluginInfo{
-		Name:             name,
-		Version:          version,
-		Description:      description,
-		PluginType:       PluginTypeSystemService,
-		Priority:         priority,
-		SystemCritical:   priority == PluginPriorityCritical,
-		ServiceEndpoints: serviceEndpoints,
-		Capabilities:     capabilities,
-	}
+// WithAuthor sets the author of the plugin
+func (pi *PluginInfo) WithAuthor(author string) *PluginInfo {
+	pi.Author = &author
+	return pi
 }
 
 // PluginMetadata interface for plugins to provide metadata about themselves
@@ -314,15 +321,12 @@ func (hr *HandlerRegistry) Handlers() []DocumentHandler {
 	return hr.handlers
 }
 
-// HandlersForExtension gets handlers that support a specific extension
-func (hr *HandlerRegistry) HandlersForExtension(extension string) []DocumentHandler {
+// HandlersForFileType gets handlers that support a specific file type
+func (hr *HandlerRegistry) HandlersForFileType(fileType string) []DocumentHandler {
 	var result []DocumentHandler
 	for _, handler := range hr.handlers {
-		for _, ext := range handler.SupportedExtensions() {
-			if strings.EqualFold(ext, extension) {
-				result = append(result, handler)
-				break
-			}
+		if handler.GetCapabilities().CanHandleFileType(fileType) {
+			result = append(result, handler)
 		}
 	}
 	return result
@@ -333,20 +337,55 @@ func (hr *HandlerRegistry) HandlerCount() int {
 	return len(hr.handlers)
 }
 
-// SupportedExtensions gets all supported file extensions
-func (hr *HandlerRegistry) SupportedExtensions() []string {
-	extensionSet := make(map[string]bool)
+// SupportedFileTypes gets all supported file types
+func (hr *HandlerRegistry) SupportedFileTypes() []string {
+	fileTypeSet := make(map[string]bool)
 	for _, handler := range hr.handlers {
-		for _, ext := range handler.SupportedExtensions() {
-			extensionSet[strings.ToLower(ext)] = true
+		for _, capability := range handler.GetCapabilities().Capabilities {
+			if strings.Contains(capability, ":") {
+				parts := strings.SplitN(capability, ":", 2)
+				if len(parts) == 2 {
+					fileType := parts[1]
+					if fileType != "*" {
+						fileTypeSet[strings.ToLower(fileType)] = true
+					}
+				}
+			}
 		}
 	}
 
-	var extensions []string
-	for ext := range extensionSet {
-		extensions = append(extensions, ext)
+	var fileTypes []string
+	for fileType := range fileTypeSet {
+		fileTypes = append(fileTypes, fileType)
 	}
-	return extensions
+	return fileTypes
+}
+
+// FindBestHandler finds the best handler for a specific operation and file type
+func (hr *HandlerRegistry) FindBestHandler(operation, fileType string) DocumentHandler {
+	var bestHandler DocumentHandler
+	bestSpecificity := 0
+	
+	for _, handler := range hr.handlers {
+		capabilities := handler.GetCapabilities()
+		if capability := capabilities.GetMostSpecificCapability(operation, fileType); capability != nil {
+			specificity := 0
+			if strings.Contains(*capability, ":"+fileType) {
+				specificity = 2 // Exact file type match
+			} else if strings.Contains(*capability, ":*") {
+				specificity = 1 // Wildcard match
+			} else {
+				specificity = 0 // Legacy operation-only match
+			}
+			
+			if specificity > bestSpecificity {
+				bestHandler = handler
+				bestSpecificity = specificity
+			}
+		}
+	}
+	
+	return bestHandler
 }
 
 // IsSupported checks if a file is supported by any handler
