@@ -19,7 +19,6 @@ type PluginRegistry struct {
 type PluginEntry struct {
 	BinaryPath string
 	Capabilities []string
-	Priority uint8 // 0=optional, 1=recommended, 2=critical
 }
 
 // CapabilityCaller provides the unified interface for calling plugin capabilities
@@ -43,11 +42,10 @@ func NewPluginRegistry() *PluginRegistry {
 }
 
 // RegisterPlugin registers a plugin with its capabilities
-func (pr *PluginRegistry) RegisterPlugin(name, binaryPath string, capabilities []string, priority uint8) {
+func (pr *PluginRegistry) RegisterPlugin(name, binaryPath string, capabilities []string) {
 	entry := &PluginEntry{
 		BinaryPath: binaryPath,
 		Capabilities: capabilities,
-		Priority: priority,
 	}
 	
 	// Update capability index
@@ -132,14 +130,14 @@ func (rw *ResponseWrapper) AsBool() (bool, error) {
 	return result, err
 }
 
-// findBestPluginForCapability finds the plugin with the highest priority for a capability
+// findBestPluginForCapability finds the best plugin for a capability
 func (pr *PluginRegistry) findBestPluginForCapability(capability string) string {
 	candidates := pr.getCapabilityCandidates(capability)
 	if len(candidates) == 0 {
 		return ""
 	}
 	
-	// Find the candidate with the highest priority and specificity
+	// Find the candidate with the highest specificity
 	bestPlugin := ""
 	bestScore := -1
 	
@@ -176,9 +174,9 @@ func (pr *PluginRegistry) getCapabilityCandidates(capability string) []string {
 	return []string{}
 }
 
-// calculateCapabilityScore calculates priority and specificity score for a plugin capability match
+// calculateCapabilityScore calculates specificity score for a plugin capability match
 func (pr *PluginRegistry) calculateCapabilityScore(plugin *PluginEntry, capability string) int {
-	score := int(plugin.Priority) * 100 // Priority weight
+	score := 0
 	
 	// Add specificity score
 	for _, cap := range plugin.Capabilities {
@@ -206,15 +204,6 @@ func (pr *PluginRegistry) ListCapabilities() []string {
 	return capabilities
 }
 
-// Plugin priority levels
-type PluginPriority string
-
-const (
-	PluginPriorityOptional    PluginPriority = "optional"
-	PluginPriorityRecommended PluginPriority = "recommended"
-	PluginPriorityCritical    PluginPriority = "critical"
-)
-
 // PluginCapabilities represents plugin capabilities
 type PluginCapabilities struct {
 	Capabilities []string `json:"capabilities"`
@@ -231,9 +220,6 @@ type PluginInfo struct {
 	// Plugin description
 	Description string `json:"description"`
 
-	// Plugin priority level
-	Priority PluginPriority `json:"priority"`
-
 	// Plugin capabilities with file type specificity
 	Capabilities *PluginCapabilities `json:"capabilities"`
 
@@ -242,12 +228,11 @@ type PluginInfo struct {
 }
 
 // NewPluginInfo creates a new plugin info
-func NewPluginInfo(name, version, description string, capabilities []string, priority PluginPriority) *PluginInfo {
+func NewPluginInfo(name, version, description string, capabilities []string) *PluginInfo {
 	return &PluginInfo{
 		Name:         name,
 		Version:      version,
 		Description:  description,
-		Priority:     priority,
 		Capabilities: &PluginCapabilities{Capabilities: capabilities},
 	}
 }
