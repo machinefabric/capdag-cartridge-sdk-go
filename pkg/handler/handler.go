@@ -92,7 +92,6 @@ func (cc *CapabilityCaller) Call(ctx context.Context, args []interface{}) (*Resp
 	for _, arg := range args {
 		cmdArgs = append(cmdArgs, fmt.Sprintf("%v", arg))
 	}
-	cmdArgs = append(cmdArgs, "--json")
 	
 	// Execute the plugin
 	cmd := exec.CommandContext(ctx, cc.BinaryPath, cmdArgs...)
