@@ -11,7 +11,7 @@ import (
 func ExtractMetadataCapability() *capdef.Capability {
 	id, _ := capdef.NewCapabilityIdFromString("document:extract:metadata")
 	
-	command := "--extract-metadata"
+	command := "extract-metadata"
 	
 	arguments := capdef.NewCapabilityArguments()
 	
@@ -66,7 +66,7 @@ func ExtractMetadataCapability() *capdef.Capability {
 func GenerateThumbnailCapability() *capdef.Capability {
 	id, _ := capdef.NewCapabilityIdFromString("document:generate:thumbnail")
 	
-	command := "--generate-thumbnail"
+	command := "generate-thumbnail"
 	
 	arguments := capdef.NewCapabilityArguments()
 	
@@ -167,7 +167,7 @@ func GenerateThumbnailCapability() *capdef.Capability {
 func ExtractOutlineCapability() *capdef.Capability {
 	id, _ := capdef.NewCapabilityIdFromString("document:extract:outline")
 	
-	command := "--extract-outline"
+	command := "extract-outline"
 	
 	arguments := capdef.NewCapabilityArguments()
 	
@@ -247,7 +247,7 @@ func ExtractOutlineCapability() *capdef.Capability {
 func ExtractPagesCapability() *capdef.Capability {
 	id, _ := capdef.NewCapabilityIdFromString("document:extract:pages")
 	
-	command := "--extract-pages"
+	command := "extract-pages"
 	
 	arguments := capdef.NewCapabilityArguments()
 	
