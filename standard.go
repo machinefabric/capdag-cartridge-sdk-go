@@ -252,13 +252,13 @@ func ExtractOutlineCapability() *capdef.Capability {
 	return capability
 }
 
-// ExtractTextCapability creates the standard extract-text capability with full argument definition
-func ExtractTextCapability() *capdef.Capability {
-	id, _ := capdef.NewCapabilityIdFromString("document:extract:text")
+// ExtractPagesCapability creates the standard extract-pages capability with full argument definition
+func ExtractPagesCapability() *capdef.Capability {
+	id, _ := capdef.NewCapabilityIdFromString("document:extract:pages")
 	
 	commandInterface := &capdef.CommandInterface{
-		CliFlag:      "--extract-text",
-		UsagePattern: "plugin_binary --extract-text <file_path> [--output <output_file>]",
+		CliFlag:      "--extract-pages",
+		UsagePattern: "plugin_binary --extract-pages <file_path> [--output <output_file>]",
 	}
 	
 	arguments := capdef.NewCapabilityArguments()
@@ -291,16 +291,17 @@ func ExtractTextCapability() *capdef.Capability {
 	arguments.AddOptional(outputArg)
 	
 	output := &capdef.CapabilityOutput{
-		Type:        capdef.OutputTypeString,
-		ContentType: stringPtr("text/plain"),
+		Type:        capdef.OutputTypeObject,
+		SchemaRef:   stringPtr("document-pages.json"),
+		ContentType: stringPtr("application/json"),
 		Validation:  &capdef.ArgumentValidation{},
-		Description: "Plain text content extracted from the document",
+		Description: "Structured page content extracted from the document",
 	}
 	
 	capability := capdef.NewCapabilityWithDescription(
 		id,
 		"1.0.0",
-		"Extract plain text content from the document",
+		"Extract structured page content from the document",
 	)
 	capability.SetCommandInterface(commandInterface)
 	capability.SetArguments(arguments)
@@ -315,7 +316,7 @@ func GetAllStandardCapabilities() *capdef.PluginCapabilities {
 	capabilities.AddCapability(ExtractMetadataCapability())
 	capabilities.AddCapability(GenerateThumbnailCapability())
 	capabilities.AddCapability(ExtractOutlineCapability())
-	capabilities.AddCapability(ExtractTextCapability())
+	capabilities.AddCapability(ExtractPagesCapability())
 	return capabilities
 }
 
@@ -328,8 +329,8 @@ func GetStandardCapability(name string) *capdef.Capability {
 		return GenerateThumbnailCapability()
 	case "extract-outline":
 		return ExtractOutlineCapability()
-	case "extract-text":
-		return ExtractTextCapability()
+	case "extract-pages":
+		return ExtractPagesCapability()
 	default:
 		return nil
 	}
@@ -344,8 +345,8 @@ func GetStandardCapabilityById(idStr string) *capdef.Capability {
 		return GenerateThumbnailCapability()
 	case "document:extract:outline":
 		return ExtractOutlineCapability()
-	case "document:extract:text":
-		return ExtractTextCapability()
+	case "document:extract:pages":
+		return ExtractPagesCapability()
 	default:
 		return nil
 	}
