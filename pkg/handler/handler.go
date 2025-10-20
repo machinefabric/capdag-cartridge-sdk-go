@@ -295,3 +295,101 @@ func ToJSON(v interface{}) (string, error) {
 	}
 	return string(data), nil
 }
+
+// DocumentHandler interface defines the contract for document processing plugins
+type DocumentHandler interface {
+	// GetPluginInfo returns plugin information including capabilities
+	GetPluginInfo() *PluginInfo
+	
+	// ExtractMetadata extracts metadata from a document
+	ExtractMetadata(filePath string) (*ProcessingResult, error)
+	
+	// ExtractOutline extracts the outline/table of contents from a document
+	ExtractOutline(filePath string) (*ProcessingResult, error)
+	
+	// ExtractText extracts plain text from a document
+	ExtractText(filePath string) (*ProcessingResult, error)
+	
+	// GenerateThumbnail generates a thumbnail image from a document
+	GenerateThumbnail(filePath string, width, height int, page int) (*ProcessingResult, error)
+}
+
+// PluginMetadata represents metadata about the plugin itself
+type PluginMetadata struct {
+	// Plugin name
+	Name string `json:"name"`
+	
+	// Plugin version
+	Version string `json:"version"`
+	
+	// Plugin description
+	Description string `json:"description"`
+	
+	// Supported file types
+	SupportedTypes []string `json:"supported_types"`
+	
+	// Plugin capabilities
+	Capabilities []string `json:"capabilities"`
+	
+	// Plugin author
+	Author *string `json:"author,omitempty"`
+}
+
+// ProcessingResult represents the result of a document processing operation
+type ProcessingResult struct {
+	// Whether the operation was successful
+	Success bool `json:"success"`
+	
+	// Result data (can be any type)
+	Data interface{} `json:"data,omitempty"`
+	
+	// Error message if operation failed
+	Error *string `json:"error,omitempty"`
+	
+	// Processing time in milliseconds
+	ProcessingTimeMs *int64 `json:"processing_time_ms,omitempty"`
+	
+	// File information
+	FileInfo *FileInfo `json:"file_info,omitempty"`
+}
+
+// HandlerRegistry manages document handlers for different file types
+type HandlerRegistry struct {
+	handlers map[string]DocumentHandler
+}
+
+// NewHandlerRegistry creates a new handler registry
+func NewHandlerRegistry() *HandlerRegistry {
+	return &HandlerRegistry{
+		handlers: make(map[string]DocumentHandler),
+	}
+}
+
+// RegisterHandler registers a handler for specific file types
+func (hr *HandlerRegistry) RegisterHandler(fileTypes []string, handler DocumentHandler) {
+	for _, fileType := range fileTypes {
+		hr.handlers[fileType] = handler
+	}
+}
+
+// GetHandler gets a handler for a specific file type
+func (hr *HandlerRegistry) GetHandler(fileType string) (DocumentHandler, bool) {
+	handler, exists := hr.handlers[fileType]
+	return handler, exists
+}
+
+// NewSuccessResult creates a successful processing result
+func NewSuccessResult(data interface{}) *ProcessingResult {
+	return &ProcessingResult{
+		Success: true,
+		Data:    data,
+	}
+}
+
+// NewFailureResult creates a failed processing result
+func NewFailureResult(errorMsg string) *ProcessingResult {
+	return &ProcessingResult{
+		Success: false,
+		Error:   &errorMsg,
+	}
+}

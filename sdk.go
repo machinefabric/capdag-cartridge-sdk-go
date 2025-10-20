@@ -35,13 +35,13 @@ type (
 	QuickMetadata       = handler.QuickMetadata
 	ProcessingResult    = handler.ProcessingResult
 	HandlerRegistry     = handler.HandlerRegistry
+	PluginInfo          = handler.PluginInfo
 	
 	// Capability types from capability SDK
 	CapabilityId        = capdef.CapabilityId
 	Capability          = capdef.Capability
 	PluginCapabilities  = capdef.PluginCapabilities
 	CapabilityMatcher   = capdef.CapabilityMatcher
-	PluginInfo          = handler.PluginInfo
 
 	// Output types
 	ExtractedData      = plugin.ExtractedData
@@ -92,13 +92,4 @@ var (
 	FindBestMatchStatic     = capdef.FindBestMatchStatic
 	FindAllMatchesStatic    = capdef.FindAllMatchesStatic
 	SortBySpecificityStatic = capdef.SortBySpecificityStatic
-	
-	// Standard capabilities
-	ExtractMetadataCapability    = capdef.ExtractMetadataCapability
-	GenerateThumbnailCapability  = capdef.GenerateThumbnailCapability
-	ExtractOutlineCapability     = capdef.ExtractOutlineCapability
-	ExtractTextCapability        = capdef.ExtractTextCapability
-	GetAllStandardCapabilities   = capdef.GetAllStandardCapabilities
-	GetStandardCapability        = capdef.GetStandardCapability
-	GetStandardCapabilityById    = capdef.GetStandardCapabilityById
 )
