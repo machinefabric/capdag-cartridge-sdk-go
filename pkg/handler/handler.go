@@ -85,10 +85,10 @@ func (pr *PluginRegistry) Can(capability string) (*CapabilityCaller, error) {
 func (cc *CapabilityCaller) Call(ctx context.Context, args []interface{}) (*ResponseWrapper, error) {
 	// Convert capability to CLI flag
 	operation := strings.SplitN(cc.Capability, ":", 2)[0]
-	cliFlag := "--" + operation
+	command := "--" + operation
 	
 	// Build command arguments
-	cmdArgs := []string{cliFlag}
+	cmdArgs := []string{command}
 	for _, arg := range args {
 		cmdArgs = append(cmdArgs, fmt.Sprintf("%v", arg))
 	}

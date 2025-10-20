@@ -11,10 +11,7 @@ import (
 func ExtractMetadataCapability() *capdef.Capability {
 	id, _ := capdef.NewCapabilityIdFromString("document:extract:metadata")
 	
-	commandInterface := &capdef.CommandInterface{
-		CliFlag:      "--extract-metadata",
-		UsagePattern: "plugin_binary --extract-metadata <file_path> [--output <output_file>]",
-	}
+	command := "--extract-metadata"
 	
 	arguments := capdef.NewCapabilityArguments()
 	
@@ -40,7 +37,7 @@ func ExtractMetadataCapability() *capdef.Capability {
 		Name:        "output",
 		Type:        capdef.ArgumentTypeString,
 		Description: "Write output to specified file instead of stdout",
-		CliFlag:     stringPtr("--output"),
+		Command:     stringPtr("--output"),
 		Validation:  outputValidation,
 	}
 	arguments.AddOptional(outputArg)
@@ -58,7 +55,7 @@ func ExtractMetadataCapability() *capdef.Capability {
 		"1.0.0",
 		"Extract document metadata including title, author, creation date, file size, and other properties",
 	)
-	capability.SetCommandInterface(commandInterface)
+	capability.SetCommand(command)
 	capability.SetArguments(arguments)
 	capability.SetOutput(output)
 	
@@ -69,10 +66,7 @@ func ExtractMetadataCapability() *capdef.Capability {
 func GenerateThumbnailCapability() *capdef.Capability {
 	id, _ := capdef.NewCapabilityIdFromString("document:generate:thumbnail")
 	
-	commandInterface := &capdef.CommandInterface{
-		CliFlag:      "--generate-thumbnail",
-		UsagePattern: "plugin_binary --generate-thumbnail <file_path> [--width <width>] [--height <height>] [--output <output_file>] [--page <page>]",
-	}
+	command := "--generate-thumbnail"
 	
 	arguments := capdef.NewCapabilityArguments()
 	
@@ -100,7 +94,7 @@ func GenerateThumbnailCapability() *capdef.Capability {
 		Name:        "width",
 		Type:        capdef.ArgumentTypeInteger,
 		Description: "Width of the thumbnail in pixels",
-		CliFlag:     stringPtr("--width"),
+		Command:     stringPtr("--width"),
 		Validation:  widthValidation,
 		Default:     widthDefault,
 	}
@@ -116,7 +110,7 @@ func GenerateThumbnailCapability() *capdef.Capability {
 		Name:        "height",
 		Type:        capdef.ArgumentTypeInteger,
 		Description: "Height of the thumbnail in pixels",
-		CliFlag:     stringPtr("--height"),
+		Command:     stringPtr("--height"),
 		Validation:  heightValidation,
 		Default:     heightDefault,
 	}
@@ -130,7 +124,7 @@ func GenerateThumbnailCapability() *capdef.Capability {
 		Name:        "output",
 		Type:        capdef.ArgumentTypeString,
 		Description: "Write thumbnail to specified file instead of stdout",
-		CliFlag:     stringPtr("--output"),
+		Command:     stringPtr("--output"),
 		Validation:  outputValidation,
 	}
 	arguments.AddOptional(outputArg)
@@ -144,7 +138,7 @@ func GenerateThumbnailCapability() *capdef.Capability {
 		Name:        "page",
 		Type:        capdef.ArgumentTypeInteger,
 		Description: "Page number to generate thumbnail from (1-based, default: 1)",
-		CliFlag:     stringPtr("--page"),
+		Command:     stringPtr("--page"),
 		Validation:  pageValidation,
 		Default:     pageDefault,
 	}
@@ -162,7 +156,7 @@ func GenerateThumbnailCapability() *capdef.Capability {
 		"1.0.0",
 		"Generate a thumbnail image preview of the document",
 	)
-	capability.SetCommandInterface(commandInterface)
+	capability.SetCommand(command)
 	capability.SetArguments(arguments)
 	capability.SetOutput(output)
 	
@@ -173,10 +167,7 @@ func GenerateThumbnailCapability() *capdef.Capability {
 func ExtractOutlineCapability() *capdef.Capability {
 	id, _ := capdef.NewCapabilityIdFromString("document:extract:outline")
 	
-	commandInterface := &capdef.CommandInterface{
-		CliFlag:      "--extract-outline",
-		UsagePattern: "plugin_binary --extract-outline <file_path> [--max-depth <depth>] [--include-page-numbers] [--output <output_file>]",
-	}
+	command := "--extract-outline"
 	
 	arguments := capdef.NewCapabilityArguments()
 	
@@ -203,7 +194,7 @@ func ExtractOutlineCapability() *capdef.Capability {
 		Name:        "max_depth",
 		Type:        capdef.ArgumentTypeInteger,
 		Description: "Maximum outline depth to extract (1-10)",
-		CliFlag:     stringPtr("--max-depth"),
+		Command:     stringPtr("--max-depth"),
 		Validation:  maxDepthValidation,
 	}
 	arguments.AddOptional(maxDepthArg)
@@ -213,7 +204,7 @@ func ExtractOutlineCapability() *capdef.Capability {
 		Name:        "include_page_numbers",
 		Type:        capdef.ArgumentTypeBoolean,
 		Description: "Include page numbers in the outline (default: true)",
-		CliFlag:     stringPtr("--include-page-numbers"),
+		Command:     stringPtr("--include-page-numbers"),
 		Validation:  &capdef.ArgumentValidation{},
 		Default:     true,
 	}
@@ -227,7 +218,7 @@ func ExtractOutlineCapability() *capdef.Capability {
 		Name:        "output",
 		Type:        capdef.ArgumentTypeString,
 		Description: "Write output to specified file instead of stdout",
-		CliFlag:     stringPtr("--output"),
+		Command:     stringPtr("--output"),
 		Validation:  outputValidation,
 	}
 	arguments.AddOptional(outputArg)
@@ -245,7 +236,7 @@ func ExtractOutlineCapability() *capdef.Capability {
 		"1.0.0",
 		"Extract document outline/table of contents with hierarchical structure",
 	)
-	capability.SetCommandInterface(commandInterface)
+	capability.SetCommand(command)
 	capability.SetArguments(arguments)
 	capability.SetOutput(output)
 	
@@ -256,10 +247,7 @@ func ExtractOutlineCapability() *capdef.Capability {
 func ExtractPagesCapability() *capdef.Capability {
 	id, _ := capdef.NewCapabilityIdFromString("document:extract:pages")
 	
-	commandInterface := &capdef.CommandInterface{
-		CliFlag:      "--extract-pages",
-		UsagePattern: "plugin_binary --extract-pages <file_path> [--output <output_file>]",
-	}
+	command := "--extract-pages"
 	
 	arguments := capdef.NewCapabilityArguments()
 	
@@ -285,7 +273,7 @@ func ExtractPagesCapability() *capdef.Capability {
 		Name:        "output",
 		Type:        capdef.ArgumentTypeString,
 		Description: "Write output to specified file instead of stdout",
-		CliFlag:     stringPtr("--output"),
+		Command:     stringPtr("--output"),
 		Validation:  outputValidation,
 	}
 	arguments.AddOptional(outputArg)
@@ -303,7 +291,7 @@ func ExtractPagesCapability() *capdef.Capability {
 		"1.0.0",
 		"Extract structured page content from the document",
 	)
-	capability.SetCommandInterface(commandInterface)
+	capability.SetCommand(command)
 	capability.SetArguments(arguments)
 	capability.SetOutput(output)
 	
