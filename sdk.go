@@ -86,10 +86,19 @@ var (
 	NewCapabilityWithMetadata           = capdef.NewCapabilityWithMetadata
 	NewCapabilityWithDescriptionAndMetadata = capdef.NewCapabilityWithDescriptionAndMetadata
 	NewPluginCapabilities               = capdef.NewPluginCapabilities
-	NewPluginCapabilitiesWithArray      = capdef.NewPluginCapabilitiesWithArray
+	NewPluginInfo                       = handler.NewPluginInfo
 	
 	// Capability utility functions
 	FindBestMatchStatic     = capdef.FindBestMatchStatic
 	FindAllMatchesStatic    = capdef.FindAllMatchesStatic
 	SortBySpecificityStatic = capdef.SortBySpecificityStatic
+	
+	// Standard capabilities
+	ExtractMetadataCapability    = capdef.ExtractMetadataCapability
+	GenerateThumbnailCapability  = capdef.GenerateThumbnailCapability
+	ExtractOutlineCapability     = capdef.ExtractOutlineCapability
+	ExtractTextCapability        = capdef.ExtractTextCapability
+	GetAllStandardCapabilities   = capdef.GetAllStandardCapabilities
+	GetStandardCapability        = capdef.GetStandardCapability
+	GetStandardCapabilityById    = capdef.GetStandardCapabilityById
 )

@@ -7,6 +7,8 @@ import (
 	"fmt"
 	"os/exec"
 	"strings"
+	
+	capdef "github.com/lbvr/capdef-go"
 )
 
 // PluginRegistry provides unified capability-based access to plugins
@@ -204,10 +206,6 @@ func (pr *PluginRegistry) ListCapabilities() []string {
 	return capabilities
 }
 
-// PluginCapabilities represents plugin capabilities
-type PluginCapabilities struct {
-	Capabilities []string `json:"capabilities"`
-}
 
 // PluginInfo represents plugin information for --plugin-info output
 type PluginInfo struct {
@@ -220,20 +218,20 @@ type PluginInfo struct {
 	// Plugin description
 	Description string `json:"description"`
 
-	// Plugin capabilities with file type specificity
-	Capabilities *PluginCapabilities `json:"capabilities"`
+	// Plugin capabilities
+	Capabilities *capdef.PluginCapabilities `json:"capabilities"`
 
 	// Plugin author/maintainer
 	Author *string `json:"author,omitempty"`
 }
 
 // NewPluginInfo creates a new plugin info
-func NewPluginInfo(name, version, description string, capabilities []string) *PluginInfo {
+func NewPluginInfo(name, version, description string, capabilities *capdef.PluginCapabilities) *PluginInfo {
 	return &PluginInfo{
 		Name:         name,
 		Version:      version,
 		Description:  description,
-		Capabilities: &PluginCapabilities{Capabilities: capabilities},
+		Capabilities: capabilities,
 	}
 }
 
@@ -273,15 +271,6 @@ type QuickMetadata struct {
 	PageCount *uint64 `json:"page_count,omitempty"`
 }
 
-// Can checks if plugin has a specific capability
-func (pc *PluginCapabilities) Can(capability string) bool {
-	for _, cap := range pc.Capabilities {
-		if cap == capability {
-			return true
-		}
-	}
-	return false
-}
 
 // StandardizedCapabilities are the standard capability names
 var StandardizedCapabilities = struct {

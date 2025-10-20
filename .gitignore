@@ -21,7 +21,6 @@ _glide/
 
 # Go workspace and cache
 go.work
-pkg/
 *.modcache
 
 # IDEs and editors
