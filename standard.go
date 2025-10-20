@@ -37,7 +37,7 @@ func ExtractMetadataCapability() *capdef.Capability {
 		Name:        "output",
 		Type:        capdef.ArgumentTypeString,
 		Description: "Write output to specified file instead of stdout",
-		Command:     stringPtr("--output"),
+		CliFlag:     stringPtr("--output"),
 		Validation:  outputValidation,
 	}
 	arguments.AddOptional(outputArg)
@@ -94,7 +94,7 @@ func GenerateThumbnailCapability() *capdef.Capability {
 		Name:        "width",
 		Type:        capdef.ArgumentTypeInteger,
 		Description: "Width of the thumbnail in pixels",
-		Command:     stringPtr("--width"),
+		CliFlag:     stringPtr("--width"),
 		Validation:  widthValidation,
 		Default:     widthDefault,
 	}
@@ -110,7 +110,7 @@ func GenerateThumbnailCapability() *capdef.Capability {
 		Name:        "height",
 		Type:        capdef.ArgumentTypeInteger,
 		Description: "Height of the thumbnail in pixels",
-		Command:     stringPtr("--height"),
+		CliFlag:     stringPtr("--height"),
 		Validation:  heightValidation,
 		Default:     heightDefault,
 	}
@@ -124,7 +124,7 @@ func GenerateThumbnailCapability() *capdef.Capability {
 		Name:        "output",
 		Type:        capdef.ArgumentTypeString,
 		Description: "Write thumbnail to specified file instead of stdout",
-		Command:     stringPtr("--output"),
+		CliFlag:     stringPtr("--output"),
 		Validation:  outputValidation,
 	}
 	arguments.AddOptional(outputArg)
@@ -138,7 +138,7 @@ func GenerateThumbnailCapability() *capdef.Capability {
 		Name:        "page",
 		Type:        capdef.ArgumentTypeInteger,
 		Description: "Page number to generate thumbnail from (1-based, default: 1)",
-		Command:     stringPtr("--page"),
+		CliFlag:     stringPtr("--page"),
 		Validation:  pageValidation,
 		Default:     pageDefault,
 	}
@@ -194,7 +194,7 @@ func ExtractOutlineCapability() *capdef.Capability {
 		Name:        "max_depth",
 		Type:        capdef.ArgumentTypeInteger,
 		Description: "Maximum outline depth to extract (1-10)",
-		Command:     stringPtr("--max-depth"),
+		CliFlag:     stringPtr("--max-depth"),
 		Validation:  maxDepthValidation,
 	}
 	arguments.AddOptional(maxDepthArg)
@@ -204,7 +204,7 @@ func ExtractOutlineCapability() *capdef.Capability {
 		Name:        "include_page_numbers",
 		Type:        capdef.ArgumentTypeBoolean,
 		Description: "Include page numbers in the outline (default: true)",
-		Command:     stringPtr("--include-page-numbers"),
+		CliFlag:     stringPtr("--include-page-numbers"),
 		Validation:  &capdef.ArgumentValidation{},
 		Default:     true,
 	}
@@ -218,7 +218,7 @@ func ExtractOutlineCapability() *capdef.Capability {
 		Name:        "output",
 		Type:        capdef.ArgumentTypeString,
 		Description: "Write output to specified file instead of stdout",
-		Command:     stringPtr("--output"),
+		CliFlag:     stringPtr("--output"),
 		Validation:  outputValidation,
 	}
 	arguments.AddOptional(outputArg)
@@ -273,7 +273,7 @@ func ExtractPagesCapability() *capdef.Capability {
 		Name:        "output",
 		Type:        capdef.ArgumentTypeString,
 		Description: "Write output to specified file instead of stdout",
-		Command:     stringPtr("--output"),
+		CliFlag:     stringPtr("--output"),
 		Validation:  outputValidation,
 	}
 	arguments.AddOptional(outputArg)
