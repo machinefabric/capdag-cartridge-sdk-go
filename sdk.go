@@ -7,6 +7,9 @@ import (
 	"github.com/jowharshamshiri/lbvr-plugin-sdk-go/pkg/outline"
 	"github.com/jowharshamshiri/lbvr-plugin-sdk-go/pkg/pages"
 	"github.com/jowharshamshiri/lbvr-plugin-sdk-go/pkg/plugin"
+	
+	// Re-export capability SDK types
+	capability_sdk "github.com/lbvr/capability-sdk-go"
 )
 
 // Version of the LBVR Plugin SDK
@@ -30,10 +33,15 @@ type (
 	// Handler types
 	FileInfo            = handler.FileInfo
 	QuickMetadata       = handler.QuickMetadata
-	PluginCapabilities  = handler.PluginCapabilities
-	PluginInfo          = handler.PluginInfo
 	ProcessingResult    = handler.ProcessingResult
 	HandlerRegistry     = handler.HandlerRegistry
+	
+	// Capability types from capability SDK
+	CapabilityId        = capability_sdk.CapabilityId
+	Capability          = capability_sdk.Capability
+	PluginCapabilities  = capability_sdk.PluginCapabilities
+	CapabilityMatcher   = capability_sdk.CapabilityMatcher
+	PluginInfo          = handler.PluginInfo
 
 	// Output types
 	ExtractedData      = plugin.ExtractedData
@@ -69,4 +77,19 @@ var (
 	// Output constructors
 	NewExtractedData     = plugin.NewExtractedData
 	NewExtractionSummary = plugin.NewExtractionSummary
+	
+	// Capability constructors
+	NewCapabilityIdFromString           = capability_sdk.NewCapabilityIdFromString
+	NewCapabilityIdFromSegments         = capability_sdk.NewCapabilityIdFromSegments
+	NewCapability                       = capability_sdk.NewCapability
+	NewCapabilityWithDescription        = capability_sdk.NewCapabilityWithDescription
+	NewCapabilityWithMetadata           = capability_sdk.NewCapabilityWithMetadata
+	NewCapabilityWithDescriptionAndMetadata = capability_sdk.NewCapabilityWithDescriptionAndMetadata
+	NewPluginCapabilities               = capability_sdk.NewPluginCapabilities
+	NewPluginCapabilitiesWithArray      = capability_sdk.NewPluginCapabilitiesWithArray
+	
+	// Capability utility functions
+	FindBestMatchStatic     = capability_sdk.FindBestMatchStatic
+	FindAllMatchesStatic    = capability_sdk.FindAllMatchesStatic
+	SortBySpecificityStatic = capability_sdk.SortBySpecificityStatic
 )
