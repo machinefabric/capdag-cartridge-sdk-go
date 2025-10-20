@@ -9,7 +9,7 @@ import (
 	"github.com/jowharshamshiri/lbvr-plugin-sdk-go/pkg/plugin"
 	
 	// Re-export capability SDK types
-	capability_sdk "github.com/lbvr/capability-sdk-go"
+	capdef "github.com/lbvr/capdef-go"
 )
 
 // Version of the LBVR Plugin SDK
@@ -37,10 +37,10 @@ type (
 	HandlerRegistry     = handler.HandlerRegistry
 	
 	// Capability types from capability SDK
-	CapabilityId        = capability_sdk.CapabilityId
-	Capability          = capability_sdk.Capability
-	PluginCapabilities  = capability_sdk.PluginCapabilities
-	CapabilityMatcher   = capability_sdk.CapabilityMatcher
+	CapabilityId        = capdef.CapabilityId
+	Capability          = capdef.Capability
+	PluginCapabilities  = capdef.PluginCapabilities
+	CapabilityMatcher   = capdef.CapabilityMatcher
 	PluginInfo          = handler.PluginInfo
 
 	// Output types
@@ -79,17 +79,17 @@ var (
 	NewExtractionSummary = plugin.NewExtractionSummary
 	
 	// Capability constructors
-	NewCapabilityIdFromString           = capability_sdk.NewCapabilityIdFromString
-	NewCapabilityIdFromSegments         = capability_sdk.NewCapabilityIdFromSegments
-	NewCapability                       = capability_sdk.NewCapability
-	NewCapabilityWithDescription        = capability_sdk.NewCapabilityWithDescription
-	NewCapabilityWithMetadata           = capability_sdk.NewCapabilityWithMetadata
-	NewCapabilityWithDescriptionAndMetadata = capability_sdk.NewCapabilityWithDescriptionAndMetadata
-	NewPluginCapabilities               = capability_sdk.NewPluginCapabilities
-	NewPluginCapabilitiesWithArray      = capability_sdk.NewPluginCapabilitiesWithArray
+	NewCapabilityIdFromString           = capdef.NewCapabilityIdFromString
+	NewCapabilityIdFromSegments         = capdef.NewCapabilityIdFromSegments
+	NewCapability                       = capdef.NewCapability
+	NewCapabilityWithDescription        = capdef.NewCapabilityWithDescription
+	NewCapabilityWithMetadata           = capdef.NewCapabilityWithMetadata
+	NewCapabilityWithDescriptionAndMetadata = capdef.NewCapabilityWithDescriptionAndMetadata
+	NewPluginCapabilities               = capdef.NewPluginCapabilities
+	NewPluginCapabilitiesWithArray      = capdef.NewPluginCapabilitiesWithArray
 	
 	// Capability utility functions
-	FindBestMatchStatic     = capability_sdk.FindBestMatchStatic
-	FindAllMatchesStatic    = capability_sdk.FindAllMatchesStatic
-	SortBySpecificityStatic = capability_sdk.SortBySpecificityStatic
+	FindBestMatchStatic     = capdef.FindBestMatchStatic
+	FindAllMatchesStatic    = capdef.FindAllMatchesStatic
+	SortBySpecificityStatic = capdef.SortBySpecificityStatic
 )
