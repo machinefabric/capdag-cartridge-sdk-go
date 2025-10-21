@@ -193,7 +193,7 @@ This SDK implements the JSON schemas defined in the `lbvr/plugin-schemas/` direc
 - `file-metadata.json` - FileMetadata structure
 - `document-outline.json` - DocumentOutline structure  
 - `document-pages.json` - DocumentPages structure
-- `plugin-info.json` - Plugin information
+- `manifest.json` - Plugin manifest
 - `handler-interface.json` - DocumentHandler interface
 
 ## Testing

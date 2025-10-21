@@ -207,8 +207,8 @@ func (pr *PluginRegistry) ListCapabilities() []string {
 }
 
 
-// PluginInfo represents plugin information for --plugin-info output
-type PluginInfo struct {
+// PluginManifest represents plugin manifest for --manifest output
+type PluginManifest struct {
 	// Plugin name
 	Name string `json:"name"`
 
@@ -225,9 +225,9 @@ type PluginInfo struct {
 	Author *string `json:"author,omitempty"`
 }
 
-// NewPluginInfo creates a new plugin info
-func NewPluginInfo(name, version, description string, capabilities *capdef.PluginCapabilities) *PluginInfo {
-	return &PluginInfo{
+// NewPluginManifest creates a new plugin manifest
+func NewPluginManifest(name, version, description string, capabilities *capdef.PluginCapabilities) *PluginManifest {
+	return &PluginManifest{
 		Name:         name,
 		Version:      version,
 		Description:  description,
@@ -236,7 +236,7 @@ func NewPluginInfo(name, version, description string, capabilities *capdef.Plugi
 }
 
 // WithAuthor sets the author of the plugin
-func (pi *PluginInfo) WithAuthor(author string) *PluginInfo {
+func (pi *PluginManifest) WithAuthor(author string) *PluginManifest {
 	pi.Author = &author
 	return pi
 }
@@ -298,8 +298,8 @@ func ToJSON(v interface{}) (string, error) {
 
 // DocumentHandler interface defines the contract for document processing plugins
 type DocumentHandler interface {
-	// GetPluginInfo returns plugin information including capabilities
-	GetPluginInfo() *PluginInfo
+	// GetPluginManifest returns plugin manifest including capabilities
+	GetPluginManifest() *PluginManifest
 	
 	// ExtractMetadata extracts metadata from a document
 	ExtractMetadata(filePath string) (*ProcessingResult, error)

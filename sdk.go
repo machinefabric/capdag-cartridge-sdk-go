@@ -35,7 +35,7 @@ type (
 	QuickMetadata       = handler.QuickMetadata
 	ProcessingResult    = handler.ProcessingResult
 	HandlerRegistry     = handler.HandlerRegistry
-	PluginInfo          = handler.PluginInfo
+	PluginManifest          = handler.PluginManifest
 	
 	// Capability types from capability SDK
 	CapabilityId        = capdef.CapabilityId
@@ -86,7 +86,7 @@ var (
 	NewCapabilityWithMetadata           = capdef.NewCapabilityWithMetadata
 	NewCapabilityWithDescriptionAndMetadata = capdef.NewCapabilityWithDescriptionAndMetadata
 	NewPluginCapabilities               = capdef.NewPluginCapabilities
-	NewPluginInfo                       = handler.NewPluginInfo
+	NewPluginManifest                       = handler.NewPluginManifest
 	
 	// Capability utility functions
 	FindBestMatchStatic     = capdef.FindBestMatchStatic
