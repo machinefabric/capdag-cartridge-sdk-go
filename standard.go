@@ -65,7 +65,7 @@ func ExtractMetadataCapability() *capdef.Capability {
 
 // GenerateThumbnailCapability creates the standard generate-thumbnail capability with full argument definition
 func GenerateThumbnailCapability() *capdef.Capability {
-	id, _ := capdef.NewCapabilityIdFromString("document:generate:thumbnail")
+	id, _ := capdef.NewCapabilityIdFromString("bin:document:generate:thumbnail")
 	
 	command := "generate-thumbnail"
 	
@@ -346,7 +346,7 @@ func GetStandardCapabilityById(idStr string) *capdef.Capability {
 	switch idStr {
 	case "document:extract:metadata":
 		return ExtractMetadataCapability()
-	case "document:generate:thumbnail":
+	case "bin:document:generate:thumbnail":
 		return GenerateThumbnailCapability()
 	case "document:extract:outline":
 		return ExtractOutlineCapability()
