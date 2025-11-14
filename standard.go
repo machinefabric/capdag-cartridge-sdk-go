@@ -9,7 +9,7 @@ import (
 
 // ExtractMetadataCapability creates the standard extract-metadata capability with full argument definition
 func ExtractMetadataCapability() *capdef.Capability {
-	id, _ := capdef.NewCapabilityIdFromString("document:extract:metadata")
+	id, _ := capdef.NewCapabilityKeyFromString("document:extract:metadata")
 	
 	command := "extract-metadata"
 	
@@ -65,7 +65,7 @@ func ExtractMetadataCapability() *capdef.Capability {
 
 // GenerateThumbnailCapability creates the standard generate-thumbnail capability with full argument definition
 func GenerateThumbnailCapability() *capdef.Capability {
-	id, _ := capdef.NewCapabilityIdFromString("bin:document:generate:thumbnail")
+	id, _ := capdef.NewCapabilityKeyFromString("bin:document:generate:thumbnail")
 	
 	command := "generate-thumbnail"
 	
@@ -167,7 +167,7 @@ func GenerateThumbnailCapability() *capdef.Capability {
 
 // ExtractOutlineCapability creates the standard extract-outline capability with full argument definition
 func ExtractOutlineCapability() *capdef.Capability {
-	id, _ := capdef.NewCapabilityIdFromString("document:extract:outline")
+	id, _ := capdef.NewCapabilityKeyFromString("document:extract:outline")
 	
 	command := "extract-outline"
 	
@@ -248,7 +248,7 @@ func ExtractOutlineCapability() *capdef.Capability {
 
 // ExtractPagesCapability creates the standard extract-pages capability with full argument definition
 func ExtractPagesCapability() *capdef.Capability {
-	id, _ := capdef.NewCapabilityIdFromString("document:extract:pages")
+	id, _ := capdef.NewCapabilityKeyFromString("document:extract:pages")
 	
 	command := "extract-pages"
 	

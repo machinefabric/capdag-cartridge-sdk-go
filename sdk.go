@@ -38,7 +38,7 @@ type (
 	PluginManifest          = handler.PluginManifest
 	
 	// Capability types from capability SDK
-	CapabilityId        = capdef.CapabilityId
+	CapabilityKey        = capdef.CapabilityKey
 	Capability          = capdef.Capability
 	PluginCapabilities  = capdef.PluginCapabilities
 	CapabilityMatcher   = capdef.CapabilityMatcher
@@ -79,8 +79,8 @@ var (
 	NewExtractionSummary = plugin.NewExtractionSummary
 	
 	// Capability constructors
-	NewCapabilityIdFromString           = capdef.NewCapabilityIdFromString
-	NewCapabilityIdFromSegments         = capdef.NewCapabilityIdFromSegments
+	NewCapabilityKeyFromString           = capdef.NewCapabilityKeyFromString
+	NewCapabilityKeyFromSegments         = capdef.NewCapabilityKeyFromSegments
 	NewCapability                       = capdef.NewCapability
 	NewCapabilityWithDescription        = capdef.NewCapabilityWithDescription
 	NewCapabilityWithMetadata           = capdef.NewCapabilityWithMetadata
