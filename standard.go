@@ -9,7 +9,7 @@ import (
 
 // ExtractMetadataCapability creates the standard extract-metadata capability with full argument definition
 func ExtractMetadataCapability() *capdef.Capability {
-	id, _ := capdef.NewCapabilityKeyFromString("document:extract:metadata")
+	id, _ := capdef.NewCapabilityKeyFromString("action=extract;target=metadata;type=document")
 	
 	command := "extract-metadata"
 	
@@ -65,7 +65,7 @@ func ExtractMetadataCapability() *capdef.Capability {
 
 // GenerateThumbnailCapability creates the standard generate-thumbnail capability with full argument definition
 func GenerateThumbnailCapability() *capdef.Capability {
-	id, _ := capdef.NewCapabilityKeyFromString("bin:document:generate:thumbnail")
+	id, _ := capdef.NewCapabilityKeyFromString("action=generate;output=binary;target=thumbnail;type=document")
 	
 	command := "generate-thumbnail"
 	
@@ -167,7 +167,7 @@ func GenerateThumbnailCapability() *capdef.Capability {
 
 // ExtractOutlineCapability creates the standard extract-outline capability with full argument definition
 func ExtractOutlineCapability() *capdef.Capability {
-	id, _ := capdef.NewCapabilityKeyFromString("document:extract:outline")
+	id, _ := capdef.NewCapabilityKeyFromString("action=extract;target=outline;type=document")
 	
 	command := "extract-outline"
 	
@@ -248,7 +248,7 @@ func ExtractOutlineCapability() *capdef.Capability {
 
 // ExtractPagesCapability creates the standard extract-pages capability with full argument definition
 func ExtractPagesCapability() *capdef.Capability {
-	id, _ := capdef.NewCapabilityKeyFromString("document:extract:pages")
+	id, _ := capdef.NewCapabilityKeyFromString("action=extract;target=pages;type=document")
 	
 	command := "extract-pages"
 	
@@ -344,13 +344,13 @@ func GetStandardCapability(name string) *capdef.Capability {
 // GetStandardCapabilityById returns a standard capability by capability ID string
 func GetStandardCapabilityById(idStr string) *capdef.Capability {
 	switch idStr {
-	case "document:extract:metadata":
+	case "action=extract;target=metadata;type=document":
 		return ExtractMetadataCapability()
-	case "bin:document:generate:thumbnail":
+	case "action=generate;output=binary;target=thumbnail;type=document":
 		return GenerateThumbnailCapability()
-	case "document:extract:outline":
+	case "action=extract;target=outline;type=document":
 		return ExtractOutlineCapability()
-	case "document:extract:pages":
+	case "action=extract;target=pages;type=document":
 		return ExtractPagesCapability()
 	default:
 		return nil
