@@ -60,6 +60,9 @@ func ExtractMetadataCapability() *capdef.Capability {
 	capability.SetArguments(arguments)
 	capability.SetOutput(output)
 	
+	// Metadata extraction can accept stdin for direct file content processing
+	capability.AcceptsStdin = true
+	
 	return capability
 }
 
@@ -162,6 +165,9 @@ func GenerateThumbnailCapability() *capdef.Capability {
 	capability.SetArguments(arguments)
 	capability.SetOutput(output)
 	
+	// Thumbnail generation can accept stdin for direct file content processing
+	capability.AcceptsStdin = true
+	
 	return capability
 }
 
@@ -243,6 +249,9 @@ func ExtractOutlineCapability() *capdef.Capability {
 	capability.SetArguments(arguments)
 	capability.SetOutput(output)
 	
+	// Outline extraction can accept stdin for direct file content processing
+	capability.AcceptsStdin = true
+	
 	return capability
 }
 
@@ -311,6 +320,9 @@ func ExtractPagesCapability() *capdef.Capability {
 	)
 	capability.SetArguments(arguments)
 	capability.SetOutput(output)
+	
+	// Page extraction can accept stdin for direct file content processing
+	capability.AcceptsStdin = true
 	
 	return capability
 }

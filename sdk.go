@@ -80,16 +80,12 @@ var (
 	
 	// Capability constructors
 	NewCapabilityKeyFromString           = capdef.NewCapabilityKeyFromString
-	NewCapabilityKeyFromSegments         = capdef.NewCapabilityKeyFromSegments
+	NewCapabilityKeyFromTags             = capdef.NewCapabilityKeyFromTags
+	NewCapabilityKeyBuilder              = capdef.NewCapabilityKeyBuilder
 	NewCapability                       = capdef.NewCapability
 	NewCapabilityWithDescription        = capdef.NewCapabilityWithDescription
 	NewCapabilityWithMetadata           = capdef.NewCapabilityWithMetadata
 	NewCapabilityWithDescriptionAndMetadata = capdef.NewCapabilityWithDescriptionAndMetadata
 	NewPluginCapabilities               = capdef.NewPluginCapabilities
 	NewPluginManifest                       = handler.NewPluginManifest
-	
-	// Capability utility functions
-	FindBestMatchStatic     = capdef.FindBestMatchStatic
-	FindAllMatchesStatic    = capdef.FindAllMatchesStatic
-	SortBySpecificityStatic = capdef.SortBySpecificityStatic
 )
