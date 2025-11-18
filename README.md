@@ -158,13 +158,13 @@ page := sdk.NewDocumentPageWithText(1, "Page content here...")
 pages.AddPage(*page)
 ```
 
-## Plugin Capabilities
+## Plugin Caps
 
-The SDK supports a capability-based system:
+The SDK supports a cap-based system:
 
 ```go
-capabilities := &sdk.PluginCapabilities{
-    Capabilities: []string{
+caps := &sdk.PluginCaps{
+    Caps: []string{
         "extract_metadata",
         "extract_outline", 
         "extract_pages",

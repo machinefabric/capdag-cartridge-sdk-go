@@ -8,7 +8,7 @@ import (
 	"github.com/jowharshamshiri/lbvr-plugin-sdk-go/pkg/pages"
 	"github.com/jowharshamshiri/lbvr-plugin-sdk-go/pkg/plugin"
 	
-	// Re-export capability SDK types
+	// Re-export cap SDK types
 	capdef "github.com/lbvr/capdef-go"
 )
 
@@ -35,12 +35,12 @@ type (
 	QuickMetadata       = handler.QuickMetadata
 	ProcessingResult    = handler.ProcessingResult
 	HandlerRegistry     = handler.HandlerRegistry
-	PluginManifest          = capdef.CapabilityManifest
+	PluginManifest          = capdef.CapManifest
 	
-	// Capability types from capability SDK
-	CapabilityKey        = capdef.CapabilityKey
-	Capability          = capdef.Capability
-	CapabilityMatcher   = capdef.CapabilityMatcher
+	// Cap types from cap SDK
+	CapCard        = capdef.CapCard
+	Cap          = capdef.Cap
+	CapMatcher   = capdef.CapMatcher
 
 	// Output types
 	ExtractedData      = plugin.ExtractedData
@@ -77,13 +77,13 @@ var (
 	NewExtractedData     = plugin.NewExtractedData
 	NewExtractionSummary = plugin.NewExtractionSummary
 	
-	// Capability constructors
-	NewCapabilityKeyFromString           = capdef.NewCapabilityKeyFromString
-	NewCapabilityKeyFromTags             = capdef.NewCapabilityKeyFromTags
-	NewCapabilityKeyBuilder              = capdef.NewCapabilityKeyBuilder
-	NewCapability                       = capdef.NewCapability
-	NewCapabilityWithDescription        = capdef.NewCapabilityWithDescription
-	NewCapabilityWithMetadata           = capdef.NewCapabilityWithMetadata
-	NewCapabilityWithDescriptionAndMetadata = capdef.NewCapabilityWithDescriptionAndMetadata
-	NewPluginManifest                       = capdef.NewCapabilityManifest
+	// Cap constructors
+	NewCapCardFromString           = capdef.NewCapCardFromString
+	NewCapCardFromTags             = capdef.NewCapCardFromTags
+	NewCapCardBuilder              = capdef.NewCapCardBuilder
+	NewCap                       = capdef.NewCap
+	NewCapWithDescription        = capdef.NewCapWithDescription
+	NewCapWithMetadata           = capdef.NewCapWithMetadata
+	NewCapWithDescriptionAndMetadata = capdef.NewCapWithDescriptionAndMetadata
+	NewPluginManifest                       = capdef.NewCapManifest
 )

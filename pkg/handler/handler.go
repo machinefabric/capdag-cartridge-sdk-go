@@ -1,4 +1,4 @@
-// Package handler provides the unified capability-based plugin interface
+// Package handler provides the unified cap-based plugin interface
 package handler
 
 import (
@@ -11,22 +11,22 @@ import (
 	capdef "github.com/lbvr/capdef-go"
 )
 
-// PluginRegistry provides unified capability-based access to plugins
+// PluginRegistry provides unified cap-based access to plugins
 type PluginRegistry struct {
 	plugins map[string]*PluginEntry
-	capabilityIndex map[string][]string // capability -> plugin names
+	capIndex map[string][]string // cap -> plugin names
 }
 
 // PluginEntry represents a registered plugin
 type PluginEntry struct {
 	BinaryPath string
-	Capabilities []string
+	Caps []string
 }
 
-// CapabilityCaller provides the unified interface for calling plugin capabilities
-type CapabilityCaller struct {
+// CapCaller provides the unified interface for calling plugin caps
+type CapCaller struct {
 	PluginName string
-	Capability string
+	Cap string
 	BinaryPath string
 }
 
@@ -39,34 +39,34 @@ type ResponseWrapper struct {
 func NewPluginRegistry() *PluginRegistry {
 	return &PluginRegistry{
 		plugins: make(map[string]*PluginEntry),
-		capabilityIndex: make(map[string][]string),
+		capIndex: make(map[string][]string),
 	}
 }
 
-// RegisterPlugin registers a plugin with its capabilities
-func (pr *PluginRegistry) RegisterPlugin(name, binaryPath string, capabilities []string) {
+// RegisterPlugin registers a plugin with its caps
+func (pr *PluginRegistry) RegisterPlugin(name, binaryPath string, caps []string) {
 	entry := &PluginEntry{
 		BinaryPath: binaryPath,
-		Capabilities: capabilities,
+		Caps: caps,
 	}
 	
-	// Update capability index
-	for _, capability := range capabilities {
-		if _, exists := pr.capabilityIndex[capability]; !exists {
-			pr.capabilityIndex[capability] = make([]string, 0)
+	// Update cap index
+	for _, cap := range caps {
+		if _, exists := pr.capIndex[cap]; !exists {
+			pr.capIndex[cap] = make([]string, 0)
 		}
-		pr.capabilityIndex[capability] = append(pr.capabilityIndex[capability], name)
+		pr.capIndex[cap] = append(pr.capIndex[cap], name)
 	}
 	
 	pr.plugins[name] = entry
 }
 
-// Can checks if a capability is available and returns a caller
-func (pr *PluginRegistry) Can(capability string) (*CapabilityCaller, error) {
-	// Find the best plugin for this capability
-	pluginName := pr.findBestPluginForCapability(capability)
+// Can checks if a cap is available and returns a caller
+func (pr *PluginRegistry) Can(cap string) (*CapCaller, error) {
+	// Find the best plugin for this cap
+	pluginName := pr.findBestPluginForCap(cap)
 	if pluginName == "" {
-		return nil, fmt.Errorf("capability '%s' is not available in any registered plugin", capability)
+		return nil, fmt.Errorf("cap '%s' is not available in any registered plugin", cap)
 	}
 	
 	plugin, exists := pr.plugins[pluginName]
@@ -74,17 +74,17 @@ func (pr *PluginRegistry) Can(capability string) (*CapabilityCaller, error) {
 		return nil, fmt.Errorf("plugin '%s' not found in registry", pluginName)
 	}
 	
-	return &CapabilityCaller{
+	return &CapCaller{
 		PluginName: pluginName,
-		Capability: capability,
+		Cap: cap,
 		BinaryPath: plugin.BinaryPath,
 	}, nil
 }
 
-// Call executes the capability with the given arguments
-func (cc *CapabilityCaller) Call(ctx context.Context, args []interface{}) (*ResponseWrapper, error) {
-	// Convert capability to CLI flag
-	operation := strings.SplitN(cc.Capability, ":", 2)[0]
+// Call executes the cap with the given arguments
+func (cc *CapCaller) Call(ctx context.Context, args []interface{}) (*ResponseWrapper, error) {
+	// Convert cap to CLI flag
+	operation := strings.SplitN(cc.Cap, ":", 2)[0]
 	command := "--" + operation
 	
 	// Build command arguments
@@ -132,9 +132,9 @@ func (rw *ResponseWrapper) AsBool() (bool, error) {
 	return result, err
 }
 
-// findBestPluginForCapability finds the best plugin for a capability
-func (pr *PluginRegistry) findBestPluginForCapability(capability string) string {
-	candidates := pr.getCapabilityCandidates(capability)
+// findBestPluginForCap finds the best plugin for a cap
+func (pr *PluginRegistry) findBestPluginForCap(cap string) string {
+	candidates := pr.getCapCandidates(cap)
 	if len(candidates) == 0 {
 		return ""
 	}
@@ -145,7 +145,7 @@ func (pr *PluginRegistry) findBestPluginForCapability(capability string) string 
 	
 	for _, pluginName := range candidates {
 		plugin := pr.plugins[pluginName]
-		score := pr.calculateCapabilityScore(plugin, capability)
+		score := pr.calculateCapScore(plugin, cap)
 		if score > bestScore {
 			bestPlugin = pluginName
 			bestScore = score
@@ -155,19 +155,19 @@ func (pr *PluginRegistry) findBestPluginForCapability(capability string) string 
 	return bestPlugin
 }
 
-// getCapabilityCandidates returns plugins that might support the capability
-func (pr *PluginRegistry) getCapabilityCandidates(capability string) []string {
+// getCapCandidates returns plugins that might support the cap
+func (pr *PluginRegistry) getCapCandidates(cap string) []string {
 	// Direct match
-	if plugins, exists := pr.capabilityIndex[capability]; exists {
+	if plugins, exists := pr.capIndex[cap]; exists {
 		return plugins
 	}
 	
 	// Try wildcard variations
-	if strings.Contains(capability, ":") {
-		parts := strings.SplitN(capability, ":", 2)
+	if strings.Contains(cap, ":") {
+		parts := strings.SplitN(cap, ":", 2)
 		if len(parts) == 2 {
-			wildcardCapability := parts[0] + ":*"
-			if plugins, exists := pr.capabilityIndex[wildcardCapability]; exists {
+			wildcardCap := parts[0] + ":*"
+			if plugins, exists := pr.capIndex[wildcardCap]; exists {
 				return plugins
 			}
 		}
@@ -176,13 +176,13 @@ func (pr *PluginRegistry) getCapabilityCandidates(capability string) []string {
 	return []string{}
 }
 
-// calculateCapabilityScore calculates specificity score for a plugin capability match
-func (pr *PluginRegistry) calculateCapabilityScore(plugin *PluginEntry, capability string) int {
+// calculateCapScore calculates specificity score for a plugin cap match
+func (pr *PluginRegistry) calculateCapScore(plugin *PluginEntry, cap string) int {
 	score := 0
 	
 	// Add specificity score
-	for _, cap := range plugin.Capabilities {
-		if cap == capability {
+	for _, cap := range plugin.Caps {
+		if cap == cap {
 			if strings.Contains(cap, ":") && !strings.HasSuffix(cap, ":*") {
 				score += 20 // Exact file type match
 			} else if strings.HasSuffix(cap, ":*") {
@@ -197,22 +197,22 @@ func (pr *PluginRegistry) calculateCapabilityScore(plugin *PluginEntry, capabili
 	return score
 }
 
-// ListCapabilities returns all available capabilities
-func (pr *PluginRegistry) ListCapabilities() []string {
-	capabilities := make([]string, 0, len(pr.capabilityIndex))
-	for capability := range pr.capabilityIndex {
-		capabilities = append(capabilities, capability)
+// ListCaps returns all available caps
+func (pr *PluginRegistry) ListCaps() []string {
+	caps := make([]string, 0, len(pr.capIndex))
+	for cap := range pr.capIndex {
+		caps = append(caps, cap)
 	}
-	return capabilities
+	return caps
 }
 
 
-// Re-export CapabilityManifest from capdef as PluginManifest for backward compatibility
-type PluginManifest = capdef.CapabilityManifest
+// Re-export CapManifest from capdef as PluginManifest for backward compatibility
+type PluginManifest = capdef.CapManifest
 
 // NewPluginManifest creates a new plugin manifest
-func NewPluginManifest(name, version, description string, capabilities []capdef.Capability) *capdef.CapabilityManifest {
-	return capdef.NewCapabilityManifest(name, version, description, capabilities)
+func NewPluginManifest(name, version, description string, caps []capdef.Cap) *capdef.CapManifest {
+	return capdef.NewCapManifest(name, version, description, caps)
 }
 
 // FileInfo represents basic file information
@@ -246,8 +246,8 @@ type QuickMetadata struct {
 }
 
 
-// StandardizedCapabilities are the standard capability names
-var StandardizedCapabilities = struct {
+// StandardizedCaps are the standard cap names
+var StandardizedCaps = struct {
 	ExtractMetadata   string
 	ExtractOutline    string
 	ExtractPages      string
@@ -272,7 +272,7 @@ func ToJSON(v interface{}) (string, error) {
 
 // DocumentHandler interface defines the contract for document processing plugins
 type DocumentHandler interface {
-	// GetPluginManifest returns plugin manifest including capabilities
+	// GetPluginManifest returns plugin manifest including caps
 	GetPluginManifest() *PluginManifest
 	
 	// ExtractMetadata extracts metadata from a document
@@ -302,8 +302,8 @@ type PluginMetadata struct {
 	// Supported file types
 	SupportedTypes []string `json:"supported_types"`
 	
-	// Plugin capabilities
-	Capabilities []string `json:"capabilities"`
+	// Plugin caps
+	Caps []string `json:"caps"`
 	
 	// Plugin author
 	Author *string `json:"author,omitempty"`

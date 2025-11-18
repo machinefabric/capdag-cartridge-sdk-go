@@ -1,4 +1,4 @@
-// Package sdk provides standard capability definitions with arguments
+// Package sdk provides standard cap definitions with arguments
 package sdk
 
 import (
@@ -7,20 +7,20 @@ import (
 	capdef "github.com/lbvr/capdef-go"
 )
 
-// ExtractMetadataCapability creates the standard extract-metadata capability with full argument definition
-func ExtractMetadataCapability() *capdef.Capability {
-	id, _ := capdef.NewCapabilityKeyFromString("action=extract;target=metadata;type=document")
+// ExtractMetadataCap creates the standard extract-metadata cap with full argument definition
+func ExtractMetadataCap() *capdef.Cap {
+	id, _ := capdef.NewCapCardFromString("action=extract;target=metadata;type=document")
 	
 	command := "extract-metadata"
 	
-	arguments := capdef.NewCapabilityArguments()
+	arguments := capdef.NewCapArguments()
 	
 	// Required file_path argument
 	filePathValidation := &capdef.ArgumentValidation{
 		Pattern:   stringPtr("^[^\\0]+$"),
 		MinLength: intPtr(1),
 	}
-	filePathArg := capdef.CapabilityArgument{
+	filePathArg := capdef.CapArgument{
 		Name:        "file_path",
 		Type:        capdef.ArgumentTypeString,
 		Description: "Path to the document file to process",
@@ -34,7 +34,7 @@ func ExtractMetadataCapability() *capdef.Capability {
 	outputValidation := &capdef.ArgumentValidation{
 		Pattern: stringPtr("^[^\\0]+$"),
 	}
-	outputArg := capdef.CapabilityArgument{
+	outputArg := capdef.CapArgument{
 		Name:        "output",
 		Type:        capdef.ArgumentTypeString,
 		Description: "Write output to specified file instead of stdout",
@@ -43,7 +43,7 @@ func ExtractMetadataCapability() *capdef.Capability {
 	}
 	arguments.AddOptional(outputArg)
 	
-	output := &capdef.CapabilityOutput{
+	output := &capdef.CapOutput{
 		Type:        capdef.OutputTypeObject,
 		SchemaRef:   stringPtr("file-metadata.json"),
 		ContentType: stringPtr("application/json"),
@@ -51,35 +51,35 @@ func ExtractMetadataCapability() *capdef.Capability {
 		Description: "Structured metadata including file properties, document properties, and format-specific metadata",
 	}
 	
-	capability := capdef.NewCapabilityWithDescription(
+	cap := capdef.NewCapWithDescription(
 		id,
 		"1.0.0",
 		command,
 		"Extract document metadata including title, author, creation date, file size, and other properties",
 	)
-	capability.SetArguments(arguments)
-	capability.SetOutput(output)
+	cap.SetArguments(arguments)
+	cap.SetOutput(output)
 	
 	// Metadata extraction can accept stdin for direct file content processing
-	capability.AcceptsStdin = true
+	cap.AcceptsStdin = true
 	
-	return capability
+	return cap
 }
 
-// GenerateThumbnailCapability creates the standard generate-thumbnail capability with full argument definition
-func GenerateThumbnailCapability() *capdef.Capability {
-	id, _ := capdef.NewCapabilityKeyFromString("action=generate;output=binary;target=thumbnail;type=document")
+// GenerateThumbnailCap creates the standard generate-thumbnail cap with full argument definition
+func GenerateThumbnailCap() *capdef.Cap {
+	id, _ := capdef.NewCapCardFromString("action=generate;output=binary;target=thumbnail;type=document")
 	
 	command := "generate-thumbnail"
 	
-	arguments := capdef.NewCapabilityArguments()
+	arguments := capdef.NewCapArguments()
 	
 	// Required file_path argument
 	filePathValidation := &capdef.ArgumentValidation{
 		Pattern:   stringPtr("^[^\\0]+$"),
 		MinLength: intPtr(1),
 	}
-	filePathArg := capdef.CapabilityArgument{
+	filePathArg := capdef.CapArgument{
 		Name:        "file_path",
 		Type:        capdef.ArgumentTypeString,
 		Description: "Path to the document file to process",
@@ -95,7 +95,7 @@ func GenerateThumbnailCapability() *capdef.Capability {
 		Max: float64Ptr(2000.0),
 	}
 	widthDefault := json.Number("200")
-	widthArg := capdef.CapabilityArgument{
+	widthArg := capdef.CapArgument{
 		Name:        "width",
 		Type:        capdef.ArgumentTypeInteger,
 		Description: "Width of the thumbnail in pixels",
@@ -111,7 +111,7 @@ func GenerateThumbnailCapability() *capdef.Capability {
 		Max: float64Ptr(2000.0),
 	}
 	heightDefault := json.Number("300")
-	heightArg := capdef.CapabilityArgument{
+	heightArg := capdef.CapArgument{
 		Name:        "height",
 		Type:        capdef.ArgumentTypeInteger,
 		Description: "Height of the thumbnail in pixels",
@@ -125,7 +125,7 @@ func GenerateThumbnailCapability() *capdef.Capability {
 	outputValidation := &capdef.ArgumentValidation{
 		Pattern: stringPtr("\\.(png|jpg|jpeg)$"),
 	}
-	outputArg := capdef.CapabilityArgument{
+	outputArg := capdef.CapArgument{
 		Name:        "output",
 		Type:        capdef.ArgumentTypeString,
 		Description: "Write thumbnail to specified file instead of stdout",
@@ -139,7 +139,7 @@ func GenerateThumbnailCapability() *capdef.Capability {
 		Min: float64Ptr(1.0),
 	}
 	pageDefault := json.Number("1")
-	pageArg := capdef.CapabilityArgument{
+	pageArg := capdef.CapArgument{
 		Name:        "page",
 		Type:        capdef.ArgumentTypeInteger,
 		Description: "Page number to generate thumbnail from (1-based, default: 1)",
@@ -149,42 +149,42 @@ func GenerateThumbnailCapability() *capdef.Capability {
 	}
 	arguments.AddOptional(pageArg)
 	
-	output := &capdef.CapabilityOutput{
+	output := &capdef.CapOutput{
 		Type:        capdef.OutputTypeBinary,
 		ContentType: stringPtr("image/png"),
 		Validation:  &capdef.ArgumentValidation{},
 		Description: "PNG image data representing a thumbnail of the document",
 	}
 	
-	capability := capdef.NewCapabilityWithDescription(
+	cap := capdef.NewCapWithDescription(
 		id,
 		"1.0.0",
 		command,
 		"Generate a thumbnail image preview of the document",
 	)
-	capability.SetArguments(arguments)
-	capability.SetOutput(output)
+	cap.SetArguments(arguments)
+	cap.SetOutput(output)
 	
 	// Thumbnail generation can accept stdin for direct file content processing
-	capability.AcceptsStdin = true
+	cap.AcceptsStdin = true
 	
-	return capability
+	return cap
 }
 
-// ExtractOutlineCapability creates the standard extract-outline capability with full argument definition
-func ExtractOutlineCapability() *capdef.Capability {
-	id, _ := capdef.NewCapabilityKeyFromString("action=extract;target=outline;type=document")
+// ExtractOutlineCap creates the standard extract-outline cap with full argument definition
+func ExtractOutlineCap() *capdef.Cap {
+	id, _ := capdef.NewCapCardFromString("action=extract;target=outline;type=document")
 	
 	command := "extract-outline"
 	
-	arguments := capdef.NewCapabilityArguments()
+	arguments := capdef.NewCapArguments()
 	
 	// Required file_path argument
 	filePathValidation := &capdef.ArgumentValidation{
 		Pattern:   stringPtr("^[^\\0]+$"),
 		MinLength: intPtr(1),
 	}
-	filePathArg := capdef.CapabilityArgument{
+	filePathArg := capdef.CapArgument{
 		Name:        "file_path",
 		Type:        capdef.ArgumentTypeString,
 		Description: "Path to the document file to process",
@@ -199,7 +199,7 @@ func ExtractOutlineCapability() *capdef.Capability {
 		Min: float64Ptr(1.0),
 		Max: float64Ptr(10.0),
 	}
-	maxDepthArg := capdef.CapabilityArgument{
+	maxDepthArg := capdef.CapArgument{
 		Name:        "max_depth",
 		Type:        capdef.ArgumentTypeInteger,
 		Description: "Maximum outline depth to extract (1-10)",
@@ -209,7 +209,7 @@ func ExtractOutlineCapability() *capdef.Capability {
 	arguments.AddOptional(maxDepthArg)
 	
 	// Optional include_page_numbers argument
-	includePageNumbersArg := capdef.CapabilityArgument{
+	includePageNumbersArg := capdef.CapArgument{
 		Name:        "include_page_numbers",
 		Type:        capdef.ArgumentTypeBoolean,
 		Description: "Include page numbers in the outline (default: true)",
@@ -223,7 +223,7 @@ func ExtractOutlineCapability() *capdef.Capability {
 	outputValidation := &capdef.ArgumentValidation{
 		Pattern: stringPtr("^[^\\0]+$"),
 	}
-	outputArg := capdef.CapabilityArgument{
+	outputArg := capdef.CapArgument{
 		Name:        "output",
 		Type:        capdef.ArgumentTypeString,
 		Description: "Write output to specified file instead of stdout",
@@ -232,7 +232,7 @@ func ExtractOutlineCapability() *capdef.Capability {
 	}
 	arguments.AddOptional(outputArg)
 	
-	output := &capdef.CapabilityOutput{
+	output := &capdef.CapOutput{
 		Type:        capdef.OutputTypeObject,
 		SchemaRef:   stringPtr("document-outline.json"),
 		ContentType: stringPtr("application/json"),
@@ -240,35 +240,35 @@ func ExtractOutlineCapability() *capdef.Capability {
 		Description: "Hierarchical document outline with section titles and optional page numbers",
 	}
 	
-	capability := capdef.NewCapabilityWithDescription(
+	cap := capdef.NewCapWithDescription(
 		id,
 		"1.0.0",
 		command,
 		"Extract document outline/table of contents with hierarchical structure",
 	)
-	capability.SetArguments(arguments)
-	capability.SetOutput(output)
+	cap.SetArguments(arguments)
+	cap.SetOutput(output)
 	
 	// Outline extraction can accept stdin for direct file content processing
-	capability.AcceptsStdin = true
+	cap.AcceptsStdin = true
 	
-	return capability
+	return cap
 }
 
-// ExtractPagesCapability creates the standard extract-pages capability with full argument definition
-func ExtractPagesCapability() *capdef.Capability {
-	id, _ := capdef.NewCapabilityKeyFromString("action=extract;target=pages;type=document")
+// ExtractPagesCap creates the standard extract-pages cap with full argument definition
+func ExtractPagesCap() *capdef.Cap {
+	id, _ := capdef.NewCapCardFromString("action=extract;target=pages;type=document")
 	
 	command := "extract-pages"
 	
-	arguments := capdef.NewCapabilityArguments()
+	arguments := capdef.NewCapArguments()
 	
 	// Required file_path argument
 	filePathValidation := &capdef.ArgumentValidation{
 		Pattern:   stringPtr("^[^\\0]+$"),
 		MinLength: intPtr(1),
 	}
-	filePathArg := capdef.CapabilityArgument{
+	filePathArg := capdef.CapArgument{
 		Name:        "file_path",
 		Type:        capdef.ArgumentTypeString,
 		Description: "Path to the document file to process",
@@ -282,7 +282,7 @@ func ExtractPagesCapability() *capdef.Capability {
 	outputValidation := &capdef.ArgumentValidation{
 		Pattern: stringPtr("^[^\\0]+$"),
 	}
-	outputArg := capdef.CapabilityArgument{
+	outputArg := capdef.CapArgument{
 		Name:        "output",
 		Type:        capdef.ArgumentTypeString,
 		Description: "Write output to specified file instead of stdout",
@@ -295,7 +295,7 @@ func ExtractPagesCapability() *capdef.Capability {
 	pageRangeValidation := &capdef.ArgumentValidation{
 		Pattern: stringPtr("^\\d+(-\\d*)?$"),
 	}
-	pageRangeArg := capdef.CapabilityArgument{
+	pageRangeArg := capdef.CapArgument{
 		Name:        "page_range",
 		Type:        capdef.ArgumentTypeString,
 		Description: "Page range to extract (e.g., '1-5' or '10-')",
@@ -304,7 +304,7 @@ func ExtractPagesCapability() *capdef.Capability {
 	}
 	arguments.AddOptional(pageRangeArg)
 	
-	output := &capdef.CapabilityOutput{
+	output := &capdef.CapOutput{
 		Type:        capdef.OutputTypeObject,
 		SchemaRef:   stringPtr("document-pages.json"),
 		ContentType: stringPtr("application/json"),
@@ -312,58 +312,58 @@ func ExtractPagesCapability() *capdef.Capability {
 		Description: "Structured page content extracted from the document",
 	}
 	
-	capability := capdef.NewCapabilityWithDescription(
+	cap := capdef.NewCapWithDescription(
 		id,
 		"1.0.0",
 		command,
 		"Extract structured page content from the document",
 	)
-	capability.SetArguments(arguments)
-	capability.SetOutput(output)
+	cap.SetArguments(arguments)
+	cap.SetOutput(output)
 	
 	// Page extraction can accept stdin for direct file content processing
-	capability.AcceptsStdin = true
+	cap.AcceptsStdin = true
 	
-	return capability
+	return cap
 }
 
-// GetAllStandardCapabilities returns all standard plugin capabilities
-func GetAllStandardCapabilities() []*capdef.Capability {
-	return []*capdef.Capability{
-		ExtractMetadataCapability(),
-		GenerateThumbnailCapability(),
-		ExtractOutlineCapability(),
-		ExtractPagesCapability(),
+// GetAllStandardCaps returns all standard plugin caps
+func GetAllStandardCaps() []*capdef.Cap {
+	return []*capdef.Cap{
+		ExtractMetadataCap(),
+		GenerateThumbnailCap(),
+		ExtractOutlineCap(),
+		ExtractPagesCap(),
 	}
 }
 
-// GetStandardCapability returns a standard capability by name
-func GetStandardCapability(name string) *capdef.Capability {
+// GetStandardCap returns a standard cap by name
+func GetStandardCap(name string) *capdef.Cap {
 	switch name {
 	case "extract-metadata":
-		return ExtractMetadataCapability()
+		return ExtractMetadataCap()
 	case "generate-thumbnail":
-		return GenerateThumbnailCapability()
+		return GenerateThumbnailCap()
 	case "extract-outline":
-		return ExtractOutlineCapability()
+		return ExtractOutlineCap()
 	case "extract-pages":
-		return ExtractPagesCapability()
+		return ExtractPagesCap()
 	default:
 		return nil
 	}
 }
 
-// GetStandardCapabilityById returns a standard capability by capability ID string
-func GetStandardCapabilityById(idStr string) *capdef.Capability {
+// GetStandardCapById returns a standard cap by cap ID string
+func GetStandardCapById(idStr string) *capdef.Cap {
 	switch idStr {
 	case "action=extract;target=metadata;type=document":
-		return ExtractMetadataCapability()
+		return ExtractMetadataCap()
 	case "action=generate;output=binary;target=thumbnail;type=document":
-		return GenerateThumbnailCapability()
+		return GenerateThumbnailCap()
 	case "action=extract;target=outline;type=document":
-		return ExtractOutlineCapability()
+		return ExtractOutlineCap()
 	case "action=extract;target=pages;type=document":
-		return ExtractPagesCapability()
+		return ExtractPagesCap()
 	default:
 		return nil
 	}
