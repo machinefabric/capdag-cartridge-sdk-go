@@ -35,12 +35,11 @@ type (
 	QuickMetadata       = handler.QuickMetadata
 	ProcessingResult    = handler.ProcessingResult
 	HandlerRegistry     = handler.HandlerRegistry
-	PluginManifest          = handler.PluginManifest
+	PluginManifest          = capdef.CapabilityManifest
 	
 	// Capability types from capability SDK
 	CapabilityKey        = capdef.CapabilityKey
 	Capability          = capdef.Capability
-	PluginCapabilities  = capdef.PluginCapabilities
 	CapabilityMatcher   = capdef.CapabilityMatcher
 
 	// Output types
@@ -86,6 +85,5 @@ var (
 	NewCapabilityWithDescription        = capdef.NewCapabilityWithDescription
 	NewCapabilityWithMetadata           = capdef.NewCapabilityWithMetadata
 	NewCapabilityWithDescriptionAndMetadata = capdef.NewCapabilityWithDescriptionAndMetadata
-	NewPluginCapabilities               = capdef.NewPluginCapabilities
-	NewPluginManifest                       = handler.NewPluginManifest
+	NewPluginManifest                       = capdef.NewCapabilityManifest
 )

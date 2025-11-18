@@ -207,38 +207,12 @@ func (pr *PluginRegistry) ListCapabilities() []string {
 }
 
 
-// PluginManifest represents plugin manifest for --manifest output
-type PluginManifest struct {
-	// Plugin name
-	Name string `json:"name"`
-
-	// Plugin version
-	Version string `json:"version"`
-
-	// Plugin description
-	Description string `json:"description"`
-
-	// Plugin capabilities
-	Capabilities *capdef.PluginCapabilities `json:"capabilities"`
-
-	// Plugin author/maintainer
-	Author *string `json:"author,omitempty"`
-}
+// Re-export CapabilityManifest from capdef as PluginManifest for backward compatibility
+type PluginManifest = capdef.CapabilityManifest
 
 // NewPluginManifest creates a new plugin manifest
-func NewPluginManifest(name, version, description string, capabilities *capdef.PluginCapabilities) *PluginManifest {
-	return &PluginManifest{
-		Name:         name,
-		Version:      version,
-		Description:  description,
-		Capabilities: capabilities,
-	}
-}
-
-// WithAuthor sets the author of the plugin
-func (pi *PluginManifest) WithAuthor(author string) *PluginManifest {
-	pi.Author = &author
-	return pi
+func NewPluginManifest(name, version, description string, capabilities []capdef.Capability) *capdef.CapabilityManifest {
+	return capdef.NewCapabilityManifest(name, version, description, capabilities)
 }
 
 // FileInfo represents basic file information

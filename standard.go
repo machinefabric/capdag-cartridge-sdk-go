@@ -328,13 +328,13 @@ func ExtractPagesCapability() *capdef.Capability {
 }
 
 // GetAllStandardCapabilities returns all standard plugin capabilities
-func GetAllStandardCapabilities() *capdef.PluginCapabilities {
-	capabilities := capdef.NewPluginCapabilities()
-	capabilities.AddCapability(ExtractMetadataCapability())
-	capabilities.AddCapability(GenerateThumbnailCapability())
-	capabilities.AddCapability(ExtractOutlineCapability())
-	capabilities.AddCapability(ExtractPagesCapability())
-	return capabilities
+func GetAllStandardCapabilities() []*capdef.Capability {
+	return []*capdef.Capability{
+		ExtractMetadataCapability(),
+		GenerateThumbnailCapability(),
+		ExtractOutlineCapability(),
+		ExtractPagesCapability(),
+	}
 }
 
 // GetStandardCapability returns a standard capability by name
