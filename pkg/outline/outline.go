@@ -6,9 +6,9 @@ import (
 	"time"
 )
 
-// TocEntry represents a single entry in a document's table of contents
-type TocEntry struct {
-	// The title/label of this TOC entry
+// OutlineEntry represents a single entry in a document's table of contents
+type OutlineEntry struct {
+	// The title/label of this Outline entry
 	Title string `json:"title"`
 
 	// Hierarchical level (0 = top level, 1 = first sublevel, etc.)
@@ -21,37 +21,37 @@ type TocEntry struct {
 	SourceRef *string `json:"source_ref,omitempty"`
 
 	// Child entries under this one
-	Children []TocEntry `json:"children"`
+	Children []OutlineEntry `json:"children"`
 }
 
-// NewTocEntry creates a new TOC entry
-func NewTocEntry(title string, level uint) *TocEntry {
-	return &TocEntry{
+// NewOutlineEntry creates a new Outline entry
+func NewOutlineEntry(title string, level uint) *OutlineEntry {
+	return &OutlineEntry{
 		Title:    title,
 		Level:    level,
-		Children: make([]TocEntry, 0),
+		Children: make([]OutlineEntry, 0),
 	}
 }
 
 // WithPage sets the page/section number
-func (t *TocEntry) WithPage(page uint) *TocEntry {
+func (t *OutlineEntry) WithPage(page uint) *OutlineEntry {
 	t.Page = &page
 	return t
 }
 
 // WithSourceRef sets the source reference
-func (t *TocEntry) WithSourceRef(sourceRef string) *TocEntry {
+func (t *OutlineEntry) WithSourceRef(sourceRef string) *OutlineEntry {
 	t.SourceRef = &sourceRef
 	return t
 }
 
 // AddChild adds a child entry
-func (t *TocEntry) AddChild(child TocEntry) {
+func (t *OutlineEntry) AddChild(child OutlineEntry) {
 	t.Children = append(t.Children, child)
 }
 
 // CountAllEntries gets total number of entries (including children)
-func (t *TocEntry) CountAllEntries() uint {
+func (t *OutlineEntry) CountAllEntries() uint {
 	count := uint(1) // This entry
 	for _, child := range t.Children {
 		count += child.CountAllEntries()
@@ -60,7 +60,7 @@ func (t *TocEntry) CountAllEntries() uint {
 }
 
 // FindByTitle finds entry by title (depth-first search)
-func (t *TocEntry) FindByTitle(title string) *TocEntry {
+func (t *OutlineEntry) FindByTitle(title string) *OutlineEntry {
 	if t.Title == title {
 		return t
 	}
@@ -119,8 +119,8 @@ type DocumentOutline struct {
 	// Total number of pages/sections in document
 	TotalPages uint `json:"total_pages"`
 
-	// Root-level TOC entries
-	Entries []TocEntry `json:"entries"`
+	// Root-level Outline entries
+	Entries []OutlineEntry `json:"entries"`
 
 	// Whether this document has any outline/bookmarks
 	HasOutline bool `json:"has_outline"`
@@ -135,7 +135,7 @@ func NewDocumentOutline(sourceFile, documentType string, totalPages uint) *Docum
 		SourceFile:     sourceFile,
 		DocumentType:   documentType,
 		TotalPages:     totalPages,
-		Entries:        make([]TocEntry, 0),
+		Entries:        make([]OutlineEntry, 0),
 		HasOutline:     false,
 		ExtractionInfo: *NewExtractionInfo("unknown", "unknown"),
 	}
@@ -147,13 +147,13 @@ func (d *DocumentOutline) WithTitle(title string) *DocumentOutline {
 	return d
 }
 
-// AddEntry adds a root-level TOC entry
-func (d *DocumentOutline) AddEntry(entry TocEntry) {
+// AddEntry adds a root-level Outline entry
+func (d *DocumentOutline) AddEntry(entry OutlineEntry) {
 	d.Entries = append(d.Entries, entry)
 	d.HasOutline = true
 }
 
-// TotalEntries gets total number of TOC entries (including all children)
+// TotalEntries gets total number of Outline entries (including all children)
 func (d *DocumentOutline) TotalEntries() uint {
 	total := uint(0)
 	for _, entry := range d.Entries {

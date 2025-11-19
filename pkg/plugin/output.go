@@ -92,7 +92,7 @@ type ExtractedData struct {
 	// Document metadata
 	Metadata *metadata.FileMetadata `json:"metadata,omitempty"`
 
-	// Document outline/TOC
+	// Document outline
 	Outline *outline.DocumentOutline `json:"outline,omitempty"`
 
 	// Document pages with text content
@@ -187,7 +187,7 @@ func (of *OutlineFormatter) FormatText(outline *outline.DocumentOutline) string 
 	if outline.HasOutline {
 		result += "Table of Contents:\n"
 		for _, entry := range outline.Entries {
-			result += of.formatTocEntry(&entry, 0)
+			result += of.formatOutlineEntry(&entry, 0)
 		}
 	} else {
 		result += "No table of contents available.\n"
@@ -201,7 +201,7 @@ func (of *OutlineFormatter) FormatJSON(outline *outline.DocumentOutline) (string
 	return outline.ToJSON()
 }
 
-func (of *OutlineFormatter) formatTocEntry(entry *outline.TocEntry, depth int) string {
+func (of *OutlineFormatter) formatOutlineEntry(entry *outline.OutlineEntry, depth int) string {
 	indent := ""
 	for i := 0; i < depth; i++ {
 		indent += "  "
@@ -214,7 +214,7 @@ func (of *OutlineFormatter) formatTocEntry(entry *outline.TocEntry, depth int) s
 	result += "\n"
 
 	for _, child := range entry.Children {
-		result += of.formatTocEntry(&child, depth+1)
+		result += of.formatOutlineEntry(&child, depth+1)
 	}
 
 	return result

@@ -27,7 +27,7 @@ type (
 	DocumentPages    = pages.DocumentPages
 	DocumentPage     = pages.DocumentPage
 	DocumentParagraph = pages.DocumentParagraph
-	TocEntry         = outline.TocEntry
+	OutlineEntry         = outline.OutlineEntry
 	ExtractionInfo   = outline.ExtractionInfo
 	
 	// Handler types
@@ -59,7 +59,7 @@ var (
 
 	// Outline constructors
 	NewDocumentOutline = outline.NewDocumentOutline
-	NewTocEntry        = outline.NewTocEntry
+	NewOutlineEntry        = outline.NewOutlineEntry
 	NewExtractionInfo  = outline.NewExtractionInfo
 
 	// Pages constructors

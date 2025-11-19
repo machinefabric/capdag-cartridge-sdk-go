@@ -135,13 +135,13 @@ metadata.SetExtended("custom_field", "custom_value")
 ### DocumentOutline
 
 Hierarchical table of contents:
-- Nested TOC entries with unlimited depth
+- Nested Outline entries with unlimited depth
 - Page/section references
 - Source references (filenames, anchors)
 
 ```go
 outline := sdk.NewDocumentOutline("/path/to/file.pdf", "pdf", 100)
-entry := sdk.NewTocEntry("Chapter 1", 0).WithPage(5)
+entry := sdk.NewOutlineEntry("Chapter 1", 0).WithPage(5)
 outline.AddEntry(*entry)
 ```
 
