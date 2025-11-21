@@ -9,7 +9,7 @@ import (
 
 // ExtractMetadataCap creates the standard extract-metadata cap with full argument definition
 func ExtractMetadataCap() *capdef.Cap {
-	id, _ := capdef.NewCapCardFromString("action=extract;target=metadata;type=document")
+	id, _ := capdef.NewCapCardFromString("action=extract;target=metadata;")
 	
 	command := "extract-metadata"
 	
@@ -68,7 +68,7 @@ func ExtractMetadataCap() *capdef.Cap {
 
 // GenerateThumbnailCap creates the standard generate-thumbnail cap with full argument definition
 func GenerateThumbnailCap() *capdef.Cap {
-	id, _ := capdef.NewCapCardFromString("action=generate;output=binary;target=thumbnail;type=document")
+	id, _ := capdef.NewCapCardFromString("action=generate;output=binary;target=thumbnail;")
 	
 	command := "generate-thumbnail"
 	
@@ -173,7 +173,7 @@ func GenerateThumbnailCap() *capdef.Cap {
 
 // ExtractOutlineCap creates the standard extract-outline cap with full argument definition
 func ExtractOutlineCap() *capdef.Cap {
-	id, _ := capdef.NewCapCardFromString("action=extract;target=outline;type=document")
+	id, _ := capdef.NewCapCardFromString("action=extract;target=outline;")
 	
 	command := "extract-outline"
 	
@@ -257,7 +257,7 @@ func ExtractOutlineCap() *capdef.Cap {
 
 // ExtractPagesCap creates the standard extract-pages cap with full argument definition
 func ExtractPagesCap() *capdef.Cap {
-	id, _ := capdef.NewCapCardFromString("action=extract;target=pages;type=document")
+	id, _ := capdef.NewCapCardFromString("action=extract;target=pages;")
 	
 	command := "extract-pages"
 	
@@ -356,13 +356,13 @@ func GetStandardCap(name string) *capdef.Cap {
 // GetStandardCapById returns a standard cap by cap ID string
 func GetStandardCapById(idStr string) *capdef.Cap {
 	switch idStr {
-	case "action=extract;target=metadata;type=document":
+	case "action=extract;target=metadata;":
 		return ExtractMetadataCap()
-	case "action=generate;output=binary;target=thumbnail;type=document":
+	case "action=generate;output=binary;target=thumbnail;":
 		return GenerateThumbnailCap()
-	case "action=extract;target=outline;type=document":
+	case "action=extract;target=outline;":
 		return ExtractOutlineCap()
-	case "action=extract;target=pages;type=document":
+	case "action=extract;target=pages;":
 		return ExtractPagesCap()
 	default:
 		return nil
