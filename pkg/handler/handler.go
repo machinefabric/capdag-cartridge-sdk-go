@@ -81,8 +81,8 @@ func (pr *PluginRegistry) Can(cap string) (*CapCaller, error) {
 	}, nil
 }
 
-// CallWithStdin executes the cap with the given arguments and optional stdin data
-func (cc *CapCaller) CallWithStdin(ctx context.Context, args []interface{}, stdinData []byte) (*ResponseWrapper, error) {
+// Call executes the cap with the given arguments and optional stdin data
+func (cc *CapCaller) Call(ctx context.Context, args []interface{}, stdinData []byte) (*ResponseWrapper, error) {
 	// Convert cap to CLI flag
 	operation := strings.SplitN(cc.Cap, ":", 2)[0]
 	command := "--" + operation
