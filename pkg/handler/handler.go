@@ -81,11 +81,6 @@ func (pr *PluginRegistry) Can(cap string) (*CapCaller, error) {
 	}, nil
 }
 
-// Call executes the cap with the given arguments
-func (cc *CapCaller) Call(ctx context.Context, args []interface{}) (*ResponseWrapper, error) {
-	return cc.CallWithStdin(ctx, args, nil)
-}
-
 // CallWithStdin executes the cap with the given arguments and optional stdin data
 func (cc *CapCaller) CallWithStdin(ctx context.Context, args []interface{}, stdinData []byte) (*ResponseWrapper, error) {
 	// Convert cap to CLI flag
