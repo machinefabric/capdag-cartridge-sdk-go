@@ -83,6 +83,11 @@ func (pr *PluginRegistry) Can(cap string) (*CapCaller, error) {
 
 // Call executes the cap with the given arguments
 func (cc *CapCaller) Call(ctx context.Context, args []interface{}) (*ResponseWrapper, error) {
+	return cc.CallWithStdin(ctx, args, nil)
+}
+
+// CallWithStdin executes the cap with the given arguments and optional stdin data
+func (cc *CapCaller) CallWithStdin(ctx context.Context, args []interface{}, stdinData []byte) (*ResponseWrapper, error) {
 	// Convert cap to CLI flag
 	operation := strings.SplitN(cc.Cap, ":", 2)[0]
 	command := "--" + operation
@@ -95,6 +100,20 @@ func (cc *CapCaller) Call(ctx context.Context, args []interface{}) (*ResponseWra
 	
 	// Execute the plugin
 	cmd := exec.CommandContext(ctx, cc.BinaryPath, cmdArgs...)
+	
+	// Set stdin if provided
+	if stdinData != nil {
+		stdin, err := cmd.StdinPipe()
+		if err != nil {
+			return nil, fmt.Errorf("failed to create stdin pipe: %w", err)
+		}
+		
+		go func() {
+			defer stdin.Close()
+			stdin.Write(stdinData)
+		}()
+	}
+	
 	output, err := cmd.Output()
 	if err != nil {
 		return nil, fmt.Errorf("plugin execution failed: %w", err)

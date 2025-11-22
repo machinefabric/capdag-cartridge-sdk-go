@@ -55,43 +55,38 @@ type DocumentPage struct {
 	// Page number (1-indexed)
 	PageNumber uint `json:"page_number"`
 
-	// Paragraphs within this page
-	Paragraphs []DocumentParagraph `json:"paragraphs"`
+	// Text content of this page
+	TextContent string `json:"text_content"`
 
 	// Optional source reference (filename, section, etc.)
 	SourceRef *string `json:"source_ref,omitempty"`
+
+	// Word count for this page
+	WordCount *uint `json:"word_count,omitempty"`
+
+	// Character count for this page
+	CharacterCount *uint `json:"character_count,omitempty"`
 }
 
 // NewDocumentPage creates a new document page
 func NewDocumentPage(pageNumber uint) *DocumentPage {
 	return &DocumentPage{
-		PageNumber: pageNumber,
-		Paragraphs: make([]DocumentParagraph, 0),
+		PageNumber:  pageNumber,
+		TextContent: "",
 	}
 }
 
-// NewDocumentPageWithText creates a new document page with text content split into paragraphs
+// NewDocumentPageWithText creates a new document page with text content
 func NewDocumentPageWithText(pageNumber uint, textContent string) *DocumentPage {
-	page := NewDocumentPage(pageNumber)
+	wordCount := uint(countWords(textContent))
+	charCount := uint(len(textContent))
 
-	// Split text into paragraphs (by double newline or single newline)
-	paragraphs := strings.Split(textContent, "\n\n")
-	if len(paragraphs) == 1 {
-		// If no double newlines, split by single newlines
-		paragraphs = strings.Split(textContent, "\n")
+	return &DocumentPage{
+		PageNumber:     pageNumber,
+		TextContent:    textContent,
+		WordCount:      &wordCount,
+		CharacterCount: &charCount,
 	}
-
-	paragraphNumber := uint(1)
-	for _, paragraphText := range paragraphs {
-		trimmed := strings.TrimSpace(paragraphText)
-		if trimmed != "" {
-			paragraph := NewDocumentParagraph(paragraphNumber, trimmed)
-			page.AddParagraph(*paragraph)
-			paragraphNumber++
-		}
-	}
-
-	return page
 }
 
 // WithSourceRef sets the source reference
@@ -100,45 +95,39 @@ func (p *DocumentPage) WithSourceRef(sourceRef string) *DocumentPage {
 	return p
 }
 
-// AddParagraph adds a paragraph to this page
-func (p *DocumentPage) AddParagraph(paragraph DocumentParagraph) {
-	p.Paragraphs = append(p.Paragraphs, paragraph)
+// SetTextContent sets the text content and updates word/character counts
+func (p *DocumentPage) SetTextContent(textContent string) {
+	p.TextContent = textContent
+	wordCount := uint(countWords(textContent))
+	charCount := uint(len(textContent))
+	p.WordCount = &wordCount
+	p.CharacterCount = &charCount
 }
 
-// GetTextContent gets all text content from paragraphs concatenated
+// GetTextContent gets the text content of this page
 func (p *DocumentPage) GetTextContent() string {
-	var parts []string
-	for _, paragraph := range p.Paragraphs {
-		parts = append(parts, paragraph.TextContent)
-	}
-	return strings.Join(parts, "\n\n")
+	return p.TextContent
 }
 
-// WordCount gets word count for this page
-func (p *DocumentPage) WordCount() uint {
-	total := uint(0)
-	for _, paragraph := range p.Paragraphs {
-		if paragraph.WordCount != nil {
-			total += *paragraph.WordCount
-		}
+// GetWordCount gets word count for this page
+func (p *DocumentPage) GetWordCount() uint {
+	if p.WordCount != nil {
+		return *p.WordCount
 	}
-	return total
+	return uint(countWords(p.TextContent))
 }
 
-// CharacterCount gets character count for this page
-func (p *DocumentPage) CharacterCount() uint {
-	total := uint(0)
-	for _, paragraph := range p.Paragraphs {
-		if paragraph.CharacterCount != nil {
-			total += *paragraph.CharacterCount
-		}
+// GetCharacterCount gets character count for this page
+func (p *DocumentPage) GetCharacterCount() uint {
+	if p.CharacterCount != nil {
+		return *p.CharacterCount
 	}
-	return total
+	return uint(len(p.TextContent))
 }
 
 // IsEmpty checks if page is empty
 func (p *DocumentPage) IsEmpty() bool {
-	return len(p.Paragraphs) == 0
+	return strings.TrimSpace(p.TextContent) == ""
 }
 
 // ExtractionInfo contains information about the extraction process
@@ -241,7 +230,7 @@ func (d *DocumentPages) GetAllText() string {
 func (d *DocumentPages) TotalWordCount() uint {
 	total := uint(0)
 	for _, page := range d.Pages {
-		total += page.WordCount()
+		total += page.GetWordCount()
 	}
 	return total
 }
@@ -250,16 +239,7 @@ func (d *DocumentPages) TotalWordCount() uint {
 func (d *DocumentPages) TotalCharacterCount() uint {
 	total := uint(0)
 	for _, page := range d.Pages {
-		total += page.CharacterCount()
-	}
-	return total
-}
-
-// TotalParagraphCount gets total paragraph count across all pages
-func (d *DocumentPages) TotalParagraphCount() uint {
-	total := uint(0)
-	for _, page := range d.Pages {
-		total += uint(len(page.Paragraphs))
+		total += page.GetCharacterCount()
 	}
 	return total
 }

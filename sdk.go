@@ -26,8 +26,7 @@ type (
 	DocumentOutline  = outline.DocumentOutline
 	DocumentPages    = pages.DocumentPages
 	DocumentPage     = pages.DocumentPage
-	DocumentParagraph = pages.DocumentParagraph
-	OutlineEntry         = outline.OutlineEntry
+	OutlineEntry     = outline.OutlineEntry
 	ExtractionInfo   = outline.ExtractionInfo
 	
 	// Handler types
@@ -63,10 +62,9 @@ var (
 	NewExtractionInfo  = outline.NewExtractionInfo
 
 	// Pages constructors
-	NewDocumentPages         = pages.NewDocumentPages
-	NewDocumentPage          = pages.NewDocumentPage
-	NewDocumentPageWithText  = pages.NewDocumentPageWithText
-	NewDocumentParagraph     = pages.NewDocumentParagraph
+	NewDocumentPages        = pages.NewDocumentPages
+	NewDocumentPage         = pages.NewDocumentPage
+	NewDocumentPageWithText = pages.NewDocumentPageWithText
 
 	// Handler constructors
 	NewHandlerRegistry = handler.NewHandlerRegistry
