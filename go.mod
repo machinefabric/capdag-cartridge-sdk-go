@@ -1,7 +1,7 @@
-module github.com/jowharshamshiri/lbvr-plugin-sdk-go
+module github.com/jowharshamshiri/fmio-plugin-sdk-go
 
 go 1.21
 
-require github.com/lbvr/capdef-go v0.1.0
+require github.com/fmio/capdef-go v0.1.0
 
-replace github.com/lbvr/capdef-go => ../capdef-go
+replace github.com/fmio/capdef-go => ../capdef-go

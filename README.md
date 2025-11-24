@@ -1,6 +1,6 @@
-# LBVR Plugin SDK for Go
+# FMIO Plugin SDK for Go
 
-A Go SDK for building document processing plugins for the LBVR (Libvisor) system. This SDK provides unified data structures and interfaces for extracting metadata, outlines, and text content from various document formats.
+A Go SDK for building document processing plugins for the FMIO (Filemio) system. This SDK provides unified data structures and interfaces for extracting metadata, outlines, and text content from various document formats.
 
 ## Features
 
@@ -14,7 +14,7 @@ A Go SDK for building document processing plugins for the LBVR (Libvisor) system
 ## Installation
 
 ```bash
-go get github.com/jowharshamshiri/lbvr-plugin-sdk-go
+go get github.com/jowharshamshiri/fmio-plugin-sdk-go
 ```
 
 ## Quick Start
@@ -28,7 +28,7 @@ import (
     "context"
     "fmt"
     
-    sdk "github.com/jowharshamshiri/lbvr-plugin-sdk-go"
+    sdk "github.com/jowharshamshiri/fmio-plugin-sdk-go"
 )
 
 // MyDocumentHandler implements the DocumentHandler interface
@@ -189,7 +189,7 @@ if err != nil {
 
 ## JSON Schemas
 
-This SDK implements the JSON schemas defined in the `lbvr/plugin-schemas/` directory:
+This SDK implements the JSON schemas defined in the `fmio/plugin-schemas/` directory:
 - `file-metadata.json` - FileMetadata structure
 - `document-outline.json` - DocumentOutline structure  
 - `document-pages.json` - DocumentPages structure
@@ -211,7 +211,7 @@ See the `examples/` directory for complete implementation examples:
 
 ## Contributing
 
-1. Ensure all data structures match the JSON schemas in `../lbvr/plugin-schemas/`
+1. Ensure all data structures match the JSON schemas in `../fmio/plugin-schemas/`
 2. Implement the complete `DocumentHandler` interface
 3. Add appropriate tests
 4. Follow Go naming conventions
@@ -222,8 +222,8 @@ MIT License - see LICENSE file for details.
 
 ## Related Projects
 
-- **lbvr-plugin-sdk** - Rust SDK implementation
-- **lbvr** - Main LBVR engine
+- **fmio-plugin-sdk** - Rust SDK implementation
+- **fmio** - Main FMIO engine
 - **txtczar** - Text and Markdown processor
 - **pdfczar** - PDF processor  
 - **epubczar** - EPUB processor

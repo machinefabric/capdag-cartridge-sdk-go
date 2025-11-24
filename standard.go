@@ -4,7 +4,7 @@ package sdk
 import (
 	"encoding/json"
 	
-	capdef "github.com/lbvr/capdef-go"
+	capdef "github.com/fmio/capdef-go"
 )
 
 // ExtractMetadataCap creates the standard extract-metadata cap with full argument definition

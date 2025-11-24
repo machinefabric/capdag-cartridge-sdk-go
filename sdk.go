@@ -1,18 +1,18 @@
-// Package sdk provides the main LBVR Plugin SDK for Go
+// Package sdk provides the main FMIO Plugin SDK for Go
 package sdk
 
 import (
-	"github.com/jowharshamshiri/lbvr-plugin-sdk-go/pkg/handler"
-	"github.com/jowharshamshiri/lbvr-plugin-sdk-go/pkg/metadata"
-	"github.com/jowharshamshiri/lbvr-plugin-sdk-go/pkg/outline"
-	"github.com/jowharshamshiri/lbvr-plugin-sdk-go/pkg/pages"
-	"github.com/jowharshamshiri/lbvr-plugin-sdk-go/pkg/plugin"
+	"github.com/jowharshamshiri/fmio-plugin-sdk-go/pkg/handler"
+	"github.com/jowharshamshiri/fmio-plugin-sdk-go/pkg/metadata"
+	"github.com/jowharshamshiri/fmio-plugin-sdk-go/pkg/outline"
+	"github.com/jowharshamshiri/fmio-plugin-sdk-go/pkg/pages"
+	"github.com/jowharshamshiri/fmio-plugin-sdk-go/pkg/plugin"
 	
 	// Re-export cap SDK types
-	capdef "github.com/lbvr/capdef-go"
+	capdef "github.com/fmio/capdef-go"
 )
 
-// Version of the LBVR Plugin SDK
+// Version of the FMIO Plugin SDK
 const Version = "0.1.0"
 
 // Re-export commonly used types for convenience

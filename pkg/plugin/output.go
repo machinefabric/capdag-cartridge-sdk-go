@@ -7,9 +7,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/jowharshamshiri/lbvr-plugin-sdk-go/pkg/metadata"
-	"github.com/jowharshamshiri/lbvr-plugin-sdk-go/pkg/outline"
-	"github.com/jowharshamshiri/lbvr-plugin-sdk-go/pkg/pages"
+	"github.com/jowharshamshiri/fmio-plugin-sdk-go/pkg/metadata"
+	"github.com/jowharshamshiri/fmio-plugin-sdk-go/pkg/outline"
+	"github.com/jowharshamshiri/fmio-plugin-sdk-go/pkg/pages"
 )
 
 // OutputFormat represents output format options

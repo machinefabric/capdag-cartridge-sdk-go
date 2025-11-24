@@ -8,7 +8,7 @@ import (
 	"os/exec"
 	"strings"
 	
-	capdef "github.com/lbvr/capdef-go"
+	capdef "github.com/fmio/capdef-go"
 )
 
 // PluginRegistry provides unified cap-based access to plugins
