@@ -257,7 +257,7 @@ func ExtractOutlineCap() *capdef.Cap {
 
 // ExtractPagesCap creates the standard extract-pages cap with full argument definition
 func ExtractPagesCap() *capdef.Cap {
-	id, _ := capdef.NewCapCardFromString("action=extract;target=pages;")
+	id, _ := capdef.NewCapCardFromString("action=extract;target=pages")
 	
 	command := "extract-pages"
 	
@@ -362,7 +362,7 @@ func GetStandardCapById(idStr string) *capdef.Cap {
 		return GenerateThumbnailCap()
 	case "action=extract;target=outline;":
 		return ExtractOutlineCap()
-	case "action=extract;target=pages;":
+	case "action=extract;target=pages":
 		return ExtractPagesCap()
 	default:
 		return nil
