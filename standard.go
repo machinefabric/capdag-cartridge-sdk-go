@@ -9,7 +9,7 @@ import (
 
 // ExtractMetadataCap creates the standard extract-metadata cap with full argument definition
 func ExtractMetadataCap() *capns.Cap {
-	id, _ := capns.NewCapCardFromString("cap:action=extract;target=metadata;")
+	id, _ := capns.NewCapUrnFromString("cap:action=extract;target=metadata;")
 	
 	command := "extract-metadata"
 	
@@ -68,7 +68,7 @@ func ExtractMetadataCap() *capns.Cap {
 
 // GenerateThumbnailCap creates the standard generate-thumbnail cap with full argument definition
 func GenerateThumbnailCap() *capns.Cap {
-	id, _ := capns.NewCapCardFromString("cap:action=generate;output=binary;target=thumbnail;")
+	id, _ := capns.NewCapUrnFromString("cap:action=generate;output=binary;target=thumbnail;")
 	
 	command := "generate-thumbnail"
 	
@@ -173,7 +173,7 @@ func GenerateThumbnailCap() *capns.Cap {
 
 // ExtractOutlineCap creates the standard extract-outline cap with full argument definition
 func ExtractOutlineCap() *capns.Cap {
-	id, _ := capns.NewCapCardFromString("cap:action=extract;target=outline;")
+	id, _ := capns.NewCapUrnFromString("cap:action=extract;target=outline;")
 	
 	command := "extract-outline"
 	
@@ -257,7 +257,7 @@ func ExtractOutlineCap() *capns.Cap {
 
 // ExtractPagesCap creates the standard extract-pages cap with full argument definition
 func ExtractPagesCap() *capns.Cap {
-	id, _ := capns.NewCapCardFromString("cap:action=extract;target=pages")
+	id, _ := capns.NewCapUrnFromString("cap:action=extract;target=pages")
 	
 	command := "extract-pages"
 	

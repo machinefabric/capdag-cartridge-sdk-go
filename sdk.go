@@ -37,7 +37,7 @@ type (
 	PluginManifest          = capns.CapManifest
 	
 	// Cap types from cap SDK
-	CapCard        = capns.CapCard
+	CapUrn        = capns.CapUrn
 	Cap          = capns.Cap
 	CapMatcher   = capns.CapMatcher
 
@@ -76,9 +76,9 @@ var (
 	NewExtractionSummary = plugin.NewExtractionSummary
 	
 	// Cap constructors
-	NewCapCardFromString           = capns.NewCapCardFromString
-	NewCapCardFromTags             = capns.NewCapCardFromTags
-	NewCapCardBuilder              = capns.NewCapCardBuilder
+	NewCapUrnFromString           = capns.NewCapUrnFromString
+	NewCapUrnFromTags             = capns.NewCapUrnFromTags
+	NewCapUrnBuilder              = capns.NewCapUrnBuilder
 	NewCap                       = capns.NewCap
 	NewCapWithDescription        = capns.NewCapWithDescription
 	NewCapWithMetadata           = capns.NewCapWithMetadata
