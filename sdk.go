@@ -9,7 +9,7 @@ import (
 	"github.com/jowharshamshiri/fmio-plugin-sdk-go/pkg/plugin"
 	
 	// Re-export cap SDK types
-	capdef "github.com/fmio/capdef-go"
+	capns "github.com/fmio/capns-go"
 )
 
 // Version of the FMIO Plugin SDK
@@ -34,12 +34,12 @@ type (
 	QuickMetadata       = handler.QuickMetadata
 	ProcessingResult    = handler.ProcessingResult
 	HandlerRegistry     = handler.HandlerRegistry
-	PluginManifest          = capdef.CapManifest
+	PluginManifest          = capns.CapManifest
 	
 	// Cap types from cap SDK
-	CapCard        = capdef.CapCard
-	Cap          = capdef.Cap
-	CapMatcher   = capdef.CapMatcher
+	CapCard        = capns.CapCard
+	Cap          = capns.Cap
+	CapMatcher   = capns.CapMatcher
 
 	// Output types
 	ExtractedData      = plugin.ExtractedData
@@ -76,12 +76,12 @@ var (
 	NewExtractionSummary = plugin.NewExtractionSummary
 	
 	// Cap constructors
-	NewCapCardFromString           = capdef.NewCapCardFromString
-	NewCapCardFromTags             = capdef.NewCapCardFromTags
-	NewCapCardBuilder              = capdef.NewCapCardBuilder
-	NewCap                       = capdef.NewCap
-	NewCapWithDescription        = capdef.NewCapWithDescription
-	NewCapWithMetadata           = capdef.NewCapWithMetadata
-	NewCapWithDescriptionAndMetadata = capdef.NewCapWithDescriptionAndMetadata
-	NewPluginManifest                       = capdef.NewCapManifest
+	NewCapCardFromString           = capns.NewCapCardFromString
+	NewCapCardFromTags             = capns.NewCapCardFromTags
+	NewCapCardBuilder              = capns.NewCapCardBuilder
+	NewCap                       = capns.NewCap
+	NewCapWithDescription        = capns.NewCapWithDescription
+	NewCapWithMetadata           = capns.NewCapWithMetadata
+	NewCapWithDescriptionAndMetadata = capns.NewCapWithDescriptionAndMetadata
+	NewPluginManifest                       = capns.NewCapManifest
 )

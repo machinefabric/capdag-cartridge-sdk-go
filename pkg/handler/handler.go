@@ -8,7 +8,7 @@ import (
 	"os/exec"
 	"strings"
 	
-	capdef "github.com/fmio/capdef-go"
+	capns "github.com/fmio/capns-go"
 )
 
 // PluginRegistry provides unified cap-based access to plugins
@@ -221,12 +221,12 @@ func (pr *PluginRegistry) ListCaps() []string {
 }
 
 
-// Re-export CapManifest from capdef as PluginManifest for backward compatibility
-type PluginManifest = capdef.CapManifest
+// Re-export CapManifest from capns as PluginManifest for backward compatibility
+type PluginManifest = capns.CapManifest
 
 // NewPluginManifest creates a new plugin manifest
-func NewPluginManifest(name, version, description string, caps []capdef.Cap) *capdef.CapManifest {
-	return capdef.NewCapManifest(name, version, description, caps)
+func NewPluginManifest(name, version, description string, caps []capns.Cap) *capns.CapManifest {
+	return capns.NewCapManifest(name, version, description, caps)
 }
 
 // FileInfo represents basic file information
