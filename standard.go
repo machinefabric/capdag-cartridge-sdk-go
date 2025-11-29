@@ -353,9 +353,9 @@ func GetStandardCap(name string) *capns.Cap {
 	}
 }
 
-// GetStandardCapById returns a standard cap by cap ID string
-func GetStandardCapById(idStr string) *capns.Cap {
-	switch idStr {
+// GetStandardCapByUrn returns a standard cap by cap URN string
+func GetStandardCapByUrn(urnStr string) *capns.Cap {
+	switch urnStr {
 	case "cap:action=extract;target=metadata;":
 		return ExtractMetadataCap()
 	case "cap:action=generate;output=binary;target=thumbnail;":

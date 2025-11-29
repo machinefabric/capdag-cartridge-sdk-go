@@ -195,11 +195,11 @@ func (pr *PluginRegistry) calculateCapScore(plugin *PluginEntry, cap string) int
 	score := 0
 	
 	// Add specificity score
-	for _, cap := range plugin.Caps {
-		if cap == cap {
-			if strings.Contains(cap, ":") && !strings.HasSuffix(cap, ":*") {
+	for _, pluginCap := range plugin.Caps {
+		if pluginCap == cap {
+			if strings.Contains(pluginCap, ":") && !strings.HasSuffix(pluginCap, ":*") {
 				score += 20 // Exact file type match
-			} else if strings.HasSuffix(cap, ":*") {
+			} else if strings.HasSuffix(pluginCap, ":*") {
 				score += 10 // Wildcard match
 			} else {
 				score += 5 // Operation-only match
