@@ -19,7 +19,6 @@ const Version = "0.1.0"
 type (
 	// Core interfaces
 	DocumentHandler = handler.DocumentHandler
-	PluginMetadata  = handler.PluginMetadata
 
 	// Data structures
 	FileMetadata     = metadata.FileMetadata
@@ -34,12 +33,16 @@ type (
 	QuickMetadata       = handler.QuickMetadata
 	ProcessingResult    = handler.ProcessingResult
 	HandlerRegistry     = handler.HandlerRegistry
-	PluginManifest          = capns.CapManifest
+	PluginManifest      = capns.CapManifest
 	
 	// Cap types from cap SDK
-	CapUrn        = capns.CapUrn
-	Cap          = capns.Cap
-	CapMatcher   = capns.CapMatcher
+	CapUrn         = capns.CapUrn
+	Cap           = capns.Cap
+	CapMatcher    = capns.CapMatcher
+	CapCaller     = capns.CapCaller
+	ResponseWrapper = capns.ResponseWrapper
+	CapHost       = capns.CapHost
+	HostResult    = capns.HostResult
 
 	// Output types
 	ExtractedData      = plugin.ExtractedData
@@ -84,4 +87,11 @@ var (
 	NewCapWithMetadata           = capns.NewCapWithMetadata
 	NewCapWithDescriptionAndMetadata = capns.NewCapWithDescriptionAndMetadata
 	NewPluginManifest                       = capns.NewCapManifest
+	
+	// Caller/Response constructors
+	NewCapCaller               = capns.NewCapCaller
+	NewResponseWrapperFromJSON = capns.NewResponseWrapperFromJSON
+	NewResponseWrapperFromText = capns.NewResponseWrapperFromText
+	NewResponseWrapperFromBinary = capns.NewResponseWrapperFromBinary
+	
 )
