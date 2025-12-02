@@ -9,11 +9,33 @@ import (
 	"github.com/jowharshamshiri/fmio-plugin-sdk-go/pkg/plugin"
 	
 	// Re-export cap SDK types
-	capns "github.com/fmio/capns-go"
+	capns "github.com/fmio/cap-sdk-go"
 )
 
 // Version of the FMIO Plugin SDK
 const Version = "0.1.0"
+
+// Re-export argument type constants
+const (
+	ArgumentTypeString  = capns.ArgumentTypeString
+	ArgumentTypeInteger = capns.ArgumentTypeInteger
+	ArgumentTypeNumber  = capns.ArgumentTypeNumber
+	ArgumentTypeBoolean = capns.ArgumentTypeBoolean
+	ArgumentTypeArray   = capns.ArgumentTypeArray
+	ArgumentTypeObject  = capns.ArgumentTypeObject
+	ArgumentTypeBinary  = capns.ArgumentTypeBinary
+)
+
+// Re-export output type constants
+const (
+	OutputTypeString  = capns.OutputTypeString
+	OutputTypeInteger = capns.OutputTypeInteger
+	OutputTypeNumber  = capns.OutputTypeNumber
+	OutputTypeBoolean = capns.OutputTypeBoolean
+	OutputTypeArray   = capns.OutputTypeArray
+	OutputTypeObject  = capns.OutputTypeObject
+	OutputTypeBinary  = capns.OutputTypeBinary
+)
 
 // Re-export commonly used types for convenience
 type (
@@ -43,6 +65,19 @@ type (
 	ResponseWrapper = capns.ResponseWrapper
 	CapHost       = capns.CapHost
 	HostResult    = capns.HostResult
+	
+	// Argument and output types
+	ArgumentType = capns.ArgumentType
+	OutputType   = capns.OutputType
+	
+	// Schema validation types
+	SchemaValidator            = capns.SchemaValidator
+	SchemaValidationError      = capns.SchemaValidationError
+	SchemaResolver             = capns.SchemaResolver
+	FileSchemaResolver         = capns.FileSchemaResolver
+	CapValidationCoordinator   = capns.CapValidationCoordinator
+	InputValidator             = capns.InputValidator
+	OutputValidator            = capns.OutputValidator
 
 	// Output types
 	ExtractedData      = plugin.ExtractedData
@@ -87,6 +122,23 @@ var (
 	NewCapWithMetadata           = capns.NewCapWithMetadata
 	NewCapWithDescriptionAndMetadata = capns.NewCapWithDescriptionAndMetadata
 	NewPluginManifest                       = capns.NewCapManifest
+	
+	// Schema-enabled constructors
+	NewCapArgumentWithSchema      = capns.NewCapArgumentWithSchema
+	NewCapArgumentWithSchemaRef   = capns.NewCapArgumentWithSchemaRef
+	NewCapOutputWithSchemaRef     = capns.NewCapOutputWithSchemaRef
+	NewCapOutputWithEmbeddedSchema = capns.NewCapOutputWithEmbeddedSchema
+	
+	// Validation constructors
+	NewSchemaValidator                     = capns.NewSchemaValidator
+	NewSchemaValidatorWithResolver         = capns.NewSchemaValidatorWithResolver
+	NewFileSchemaResolver                  = capns.NewFileSchemaResolver
+	NewCapValidationCoordinator            = capns.NewCapValidationCoordinator
+	NewCapValidationCoordinatorWithSchemaResolver = capns.NewCapValidationCoordinatorWithSchemaResolver
+	NewInputValidator                      = capns.NewInputValidator
+	NewInputValidatorWithSchemaResolver    = capns.NewInputValidatorWithSchemaResolver
+	NewOutputValidator                     = capns.NewOutputValidator
+	NewOutputValidatorWithSchemaResolver   = capns.NewOutputValidatorWithSchemaResolver
 	
 	// Caller/Response constructors
 	NewCapCaller               = capns.NewCapCaller

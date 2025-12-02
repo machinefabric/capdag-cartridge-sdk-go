@@ -7,7 +7,7 @@ import (
 	"os/exec"
 	"strings"
 
-	capns "github.com/fmio/capns-go"
+	capns "github.com/fmio/cap-sdk-go"
 )
 
 // PluginRegistry provides cap-based access to plugins with caller support

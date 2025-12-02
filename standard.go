@@ -4,7 +4,7 @@ package sdk
 import (
 	"encoding/json"
 	
-	capns "github.com/fmio/capns-go"
+	capns "github.com/fmio/cap-sdk-go"
 )
 
 // ExtractMetadataCap creates the standard extract-metadata cap with full argument definition

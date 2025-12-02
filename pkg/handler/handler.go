@@ -4,7 +4,7 @@ package handler
 import (
 	"encoding/json"
 	
-	capns "github.com/fmio/capns-go"
+	capns "github.com/fmio/cap-sdk-go"
 )
 
 // Re-export CapManifest from capns as PluginManifest for backward compatibility
