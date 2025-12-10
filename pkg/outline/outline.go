@@ -2,7 +2,6 @@
 package outline
 
 import (
-	"encoding/json"
 	"time"
 )
 
@@ -167,11 +166,3 @@ func (d *DocumentOutline) IsEmpty() bool {
 	return len(d.Entries) == 0
 }
 
-// ToJSON converts outline to JSON string
-func (d *DocumentOutline) ToJSON() (string, error) {
-	data, err := json.MarshalIndent(d, "", "  ")
-	if err != nil {
-		return "", err
-	}
-	return string(data), nil
-}

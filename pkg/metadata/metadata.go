@@ -2,7 +2,6 @@
 package metadata
 
 import (
-	"encoding/json"
 	"time"
 )
 
@@ -215,11 +214,3 @@ func (m *FileMetadata) ToPrompt() string {
 	return result
 }
 
-// ToJSON converts metadata to JSON string
-func (m *FileMetadata) ToJSON() (string, error) {
-	data, err := json.MarshalIndent(m, "", "  ")
-	if err != nil {
-		return "", err
-	}
-	return string(data), nil
-}

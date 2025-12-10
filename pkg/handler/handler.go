@@ -2,8 +2,6 @@
 package handler
 
 import (
-	"encoding/json"
-	
 	capns "github.com/fmio/cap-sdk-go"
 )
 
@@ -61,14 +59,6 @@ var StandardizedCaps = struct {
 	ValidateFile:      "validate-file",
 }
 
-// ToJSON converts any struct to JSON string
-func ToJSON(v interface{}) (string, error) {
-	data, err := json.MarshalIndent(v, "", "  ")
-	if err != nil {
-		return "", err
-	}
-	return string(data), nil
-}
 
 // DocumentHandler interface defines the contract for document processing plugins
 type DocumentHandler interface {

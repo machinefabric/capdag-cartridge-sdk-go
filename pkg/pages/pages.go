@@ -2,7 +2,6 @@
 package pages
 
 import (
-	"encoding/json"
 	"strings"
 	"time"
 	"unicode"
@@ -249,14 +248,6 @@ func (d *DocumentPages) IsEmpty() bool {
 	return len(d.Pages) == 0
 }
 
-// ToJSON converts document pages to JSON string
-func (d *DocumentPages) ToJSON() (string, error) {
-	data, err := json.MarshalIndent(d, "", "  ")
-	if err != nil {
-		return "", err
-	}
-	return string(data), nil
-}
 
 // countWords counts words in a string using simple whitespace splitting
 func countWords(text string) int {

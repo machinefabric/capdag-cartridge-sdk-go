@@ -9,7 +9,7 @@ import (
 
 // ExtractMetadataCap creates the standard extract-metadata cap with full argument definition
 func ExtractMetadataCap() *capns.Cap {
-	id, _ := capns.NewCapUrnFromString("cap:action=extract;target=metadata;")
+	id, _ := capns.NewCapUrnFromString("cap:action=extract;target=metadata")
 	
 	command := "extract-metadata"
 	
@@ -53,6 +53,7 @@ func ExtractMetadataCap() *capns.Cap {
 	
 	cap := capns.NewCapWithDescription(
 		id,
+		"Extract Document Metadata",
 		command,
 		"Extract document metadata including title, author, creation date, file size, and other properties",
 	)
@@ -67,7 +68,7 @@ func ExtractMetadataCap() *capns.Cap {
 
 // GenerateThumbnailCap creates the standard generate-thumbnail cap with full argument definition
 func GenerateThumbnailCap() *capns.Cap {
-	id, _ := capns.NewCapUrnFromString("cap:action=generate;output=binary;target=thumbnail;")
+	id, _ := capns.NewCapUrnFromString("cap:action=generate;output=binary;target=thumbnail")
 	
 	command := "generate-thumbnail"
 	
@@ -157,6 +158,7 @@ func GenerateThumbnailCap() *capns.Cap {
 	
 	cap := capns.NewCapWithDescription(
 		id,
+		"Generate Thumbnail",
 		command,
 		"Generate a thumbnail image preview of the document",
 	)
@@ -171,7 +173,7 @@ func GenerateThumbnailCap() *capns.Cap {
 
 // ExtractOutlineCap creates the standard extract-outline cap with full argument definition
 func ExtractOutlineCap() *capns.Cap {
-	id, _ := capns.NewCapUrnFromString("cap:action=extract;target=outline;")
+	id, _ := capns.NewCapUrnFromString("cap:action=extract;target=outline")
 	
 	command := "extract-outline"
 	
@@ -240,6 +242,7 @@ func ExtractOutlineCap() *capns.Cap {
 	
 	cap := capns.NewCapWithDescription(
 		id,
+		"Extract Document Outline",
 		command,
 		"Extract document outline/table of contents with hierarchical structure",
 	)
@@ -311,6 +314,7 @@ func ExtractPagesCap() *capns.Cap {
 	
 	cap := capns.NewCapWithDescription(
 		id,
+		"Extract Document Pages",
 		command,
 		"Extract structured page content from the document",
 	)
@@ -352,11 +356,11 @@ func GetStandardCap(name string) *capns.Cap {
 // GetStandardCapByUrn returns a standard cap by cap URN string
 func GetStandardCapByUrn(urnStr string) *capns.Cap {
 	switch urnStr {
-	case "cap:action=extract;target=metadata;":
+	case "cap:action=extract;target=metadata":
 		return ExtractMetadataCap()
-	case "cap:action=generate;output=binary;target=thumbnail;":
+	case "cap:action=generate;output=binary;target=thumbnail":
 		return GenerateThumbnailCap()
-	case "cap:action=extract;target=outline;":
+	case "cap:action=extract;target=outline":
 		return ExtractOutlineCap()
 	case "cap:action=extract;target=pages":
 		return ExtractPagesCap()

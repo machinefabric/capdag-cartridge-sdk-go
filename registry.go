@@ -227,7 +227,7 @@ func (pr *PluginRegistry) Can(capUrn string) (*capns.CapCaller, error) {
 			command = "unknown"
 		}
 
-		capDefinition = capns.NewCap(capUrnObj, command)
+		capDefinition = capns.NewCap(capUrnObj, "Plugin Capability", command)
 	}
 
 	// Create and return CapCaller

@@ -160,14 +160,6 @@ func (ed *ExtractedData) SetProcessingTime(timeMs uint64) {
 	ed.ExtractionSummary.SetProcessingTime(timeMs)
 }
 
-// ToJSON converts extracted data to JSON string
-func (ed *ExtractedData) ToJSON() (string, error) {
-	data, err := json.MarshalIndent(ed, "", "  ")
-	if err != nil {
-		return "", err
-	}
-	return string(data), nil
-}
 
 // OutlineFormatter provides formatting for document outlines
 type OutlineFormatter struct{}
@@ -198,7 +190,11 @@ func (of *OutlineFormatter) FormatText(outline *outline.DocumentOutline) string 
 
 // FormatJSON formats outline as JSON
 func (of *OutlineFormatter) FormatJSON(outline *outline.DocumentOutline) (string, error) {
-	return outline.ToJSON()
+	data, err := json.MarshalIndent(outline, "", "  ")
+	if err != nil {
+		return "", err
+	}
+	return string(data), nil
 }
 
 func (of *OutlineFormatter) formatOutlineEntry(entry *outline.OutlineEntry, depth int) string {
@@ -257,6 +253,10 @@ func (mf *MetadataFormatter) FormatText(metadata *metadata.FileMetadata) string 
 
 // FormatJSON formats metadata as JSON
 func (mf *MetadataFormatter) FormatJSON(metadata *metadata.FileMetadata) (string, error) {
-	return metadata.ToJSON()
+	data, err := json.MarshalIndent(metadata, "", "  ")
+	if err != nil {
+		return "", err
+	}
+	return string(data), nil
 }
 
