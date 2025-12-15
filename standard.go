@@ -208,16 +208,16 @@ func ExtractOutlineCap() *capns.Cap {
 	}
 	arguments.AddOptional(maxDepthArg)
 	
-	// Optional include_page_numbers argument
-	includePageNumbersArg := capns.CapArgument{
-		Name:        "include_page_numbers",
+	// Optional include_order_indexes argument
+	includeOrderIndexesArg := capns.CapArgument{
+		Name:        "include_order_indexes",
 		ArgType:        capns.ArgumentTypeBoolean,
 		ArgDescription: "Include page numbers in the outline (default: true)",
-		CliFlag:     "--include-page-numbers",
+		CliFlag:     "--include-order-indexes",
 		Validation:  &capns.ArgumentValidation{},
 		DefaultValue:     true,
 	}
-	arguments.AddOptional(includePageNumbersArg)
+	arguments.AddOptional(includeOrderIndexesArg)
 	
 	// Optional output argument
 	outputValidation := &capns.ArgumentValidation{

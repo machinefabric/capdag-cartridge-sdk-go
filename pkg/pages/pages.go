@@ -52,7 +52,7 @@ func (p *DocumentParagraph) IsEmpty() bool {
 // DocumentPage represents a single page within a document
 type DocumentPage struct {
 	// Page number (1-indexed)
-	PageNumber uint `json:"page_number"`
+	OrderIndex uint `json:"order_index"`
 
 	// Text content of this page
 	TextContent string `json:"text_content"`
@@ -68,20 +68,20 @@ type DocumentPage struct {
 }
 
 // NewDocumentPage creates a new document page
-func NewDocumentPage(pageNumber uint) *DocumentPage {
+func NewDocumentPage(orderIndex uint) *DocumentPage {
 	return &DocumentPage{
-		PageNumber:  pageNumber,
+		OrderIndex:  orderIndex,
 		TextContent: "",
 	}
 }
 
 // NewDocumentPageWithText creates a new document page with text content
-func NewDocumentPageWithText(pageNumber uint, textContent string) *DocumentPage {
+func NewDocumentPageWithText(orderIndex uint, textContent string) *DocumentPage {
 	wordCount := uint(countWords(textContent))
 	charCount := uint(len(textContent))
 
 	return &DocumentPage{
-		PageNumber:     pageNumber,
+		OrderIndex:     orderIndex,
 		TextContent:    textContent,
 		WordCount:      &wordCount,
 		CharacterCount: &charCount,
@@ -204,9 +204,9 @@ func (d *DocumentPages) AddPage(page DocumentPage) {
 }
 
 // GetPage gets a specific page by number (1-indexed)
-func (d *DocumentPages) GetPage(pageNumber uint) *DocumentPage {
+func (d *DocumentPages) GetPage(orderIndex uint) *DocumentPage {
 	for i := range d.Pages {
-		if d.Pages[i].PageNumber == pageNumber {
+		if d.Pages[i].OrderIndex == orderIndex {
 			return &d.Pages[i]
 		}
 	}
