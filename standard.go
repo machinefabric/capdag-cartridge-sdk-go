@@ -57,7 +57,6 @@ func ExtractMetadataCap() *capns.Cap {
 		command,
 		"Extract document metadata including title, author, creation date, file size, and other properties",
 	)
-	cap.SetCategory("Document Processing")
 	cap.SetArguments(arguments)
 	cap.SetOutput(output)
 	
@@ -163,7 +162,6 @@ func GenerateThumbnailCap() *capns.Cap {
 		command,
 		"Generate a thumbnail image preview of the document",
 	)
-	cap.SetCategory("Document Processing")
 	cap.SetArguments(arguments)
 	cap.SetOutput(output)
 	
@@ -248,7 +246,6 @@ func ExtractOutlineCap() *capns.Cap {
 		command,
 		"Extract document outline/table of contents with hierarchical structure",
 	)
-	cap.SetCategory("Document Processing")
 	cap.SetArguments(arguments)
 	cap.SetOutput(output)
 	
@@ -321,7 +318,6 @@ func ExtractPagesCap() *capns.Cap {
 		command,
 		"Extract structured page content from the document",
 	)
-	cap.SetCategory("Document Processing")
 	cap.SetArguments(arguments)
 	cap.SetOutput(output)
 	
