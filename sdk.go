@@ -1,18 +1,18 @@
-// Package sdk provides the main FMIO Plugin SDK for Go
+// Package sdk provides the main FGRND Plugin SDK for Go
 package sdk
 
 import (
-	"github.com/jowharshamshiri/fmio-plugin-sdk-go/pkg/handler"
-	"github.com/jowharshamshiri/fmio-plugin-sdk-go/pkg/metadata"
-	"github.com/jowharshamshiri/fmio-plugin-sdk-go/pkg/outline"
-	"github.com/jowharshamshiri/fmio-plugin-sdk-go/pkg/pages"
-	"github.com/jowharshamshiri/fmio-plugin-sdk-go/pkg/plugin"
+	"github.com/jowharshamshiri/fgrnd-plugin-sdk-go/pkg/handler"
+	"github.com/jowharshamshiri/fgrnd-plugin-sdk-go/pkg/metadata"
+	"github.com/jowharshamshiri/fgrnd-plugin-sdk-go/pkg/outline"
+	"github.com/jowharshamshiri/fgrnd-plugin-sdk-go/pkg/pages"
+	"github.com/jowharshamshiri/fgrnd-plugin-sdk-go/pkg/plugin"
 	
 	// Re-export cap SDK types
-	capns "github.com/fmio/cap-sdk-go"
+	capns "github.com/fgrnd/cap-sdk-go"
 )
 
-// Version of the FMIO Plugin SDK
+// Version of the FGRND Plugin SDK
 const Version = "0.1.0"
 
 // Re-export argument type constants

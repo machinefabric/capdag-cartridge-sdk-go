@@ -1,4 +1,4 @@
-// Example usage of the updated FMIO Plugin SDK with capns-go integration
+// Example usage of the updated FGRND Plugin SDK with capns-go integration
 package main
 
 import (
@@ -6,11 +6,11 @@ import (
 	"fmt"
 	"log"
 
-	sdk "github.com/jowharshamshiri/fmio-plugin-sdk-go"
+	sdk "github.com/jowharshamshiri/fgrnd-plugin-sdk-go"
 )
 
 func main() {
-	fmt.Println("FMIO Plugin SDK with CapCaller Integration Example")
+	fmt.Println("FGRND Plugin SDK with CapCaller Integration Example")
 	fmt.Println("=================================================")
 
 	// Create a new plugin registry

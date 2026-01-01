@@ -2,7 +2,7 @@
 package handler
 
 import (
-	capns "github.com/fmio/cap-sdk-go"
+	capns "github.com/fgrnd/cap-sdk-go"
 )
 
 // Re-export CapManifest from capns as PluginManifest for backward compatibility
