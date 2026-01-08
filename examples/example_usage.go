@@ -1,4 +1,4 @@
-// Example usage of the updated FGRND Plugin SDK with capns-go integration
+// Example usage of the updated FGND Plugin SDK with capns-go integration
 package main
 
 import (
@@ -6,11 +6,11 @@ import (
 	"fmt"
 	"log"
 
-	sdk "github.com/jowharshamshiri/fgrnd-plugin-sdk-go"
+	sdk "github.com/jowharshamshiri/fgnd-plugin-sdk-go"
 )
 
 func main() {
-	fmt.Println("FGRND Plugin SDK with CapCaller Integration Example")
+	fmt.Println("FGND Plugin SDK with CapCaller Integration Example")
 	fmt.Println("=================================================")
 
 	// Create a new plugin registry

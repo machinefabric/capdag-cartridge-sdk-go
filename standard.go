@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	capns "github.com/fgrnd/cap-sdk-go"
+	capns "github.com/fgnd/cap-sdk-go"
 )
 
 // Spec ID constants

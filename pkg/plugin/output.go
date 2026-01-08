@@ -7,9 +7,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/jowharshamshiri/fgrnd-plugin-sdk-go/pkg/metadata"
-	"github.com/jowharshamshiri/fgrnd-plugin-sdk-go/pkg/outline"
-	"github.com/jowharshamshiri/fgrnd-plugin-sdk-go/pkg/pages"
+	"github.com/jowharshamshiri/fgnd-plugin-sdk-go/pkg/metadata"
+	"github.com/jowharshamshiri/fgnd-plugin-sdk-go/pkg/outline"
+	"github.com/jowharshamshiri/fgnd-plugin-sdk-go/pkg/pages"
 )
 
 // OutputFormat represents output format options

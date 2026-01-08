@@ -7,7 +7,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	capns "github.com/fgrnd/cap-sdk-go"
+	capns "github.com/fgnd/cap-sdk-go"
 )
 
 func TestPluginRegistryCreation(t *testing.T) {
