@@ -3,13 +3,97 @@ package sdk
 
 import (
 	"encoding/json"
-	
+	"fmt"
+
 	capns "github.com/fgrnd/cap-sdk-go"
 )
 
+// Spec ID constants
+const (
+	SpecIdStr    = "std:str.v1"
+	SpecIdInt    = "std:int.v1"
+	SpecIdNum    = "std:num.v1"
+	SpecIdBool   = "std:bool.v1"
+	SpecIdObj    = "std:obj.v1"
+	SpecIdBinary = "std:binary.v1"
+
+	// Output spec IDs for PDF document processing (with full schemas)
+	SpecIdExtractMetadataOutput = "capns:extract-metadata-output.v1"
+	SpecIdExtractOutlineOutput  = "capns:extract-outline-output.v1"
+	SpecIdExtractPagesOutput    = "capns:extract-pages-output.v1"
+)
+
+// InputSpecIdForExt returns the input spec ID for a given file extension
+// - PDF files: std:binary.v1
+// - Text files (md, rst, log, txt): std:str.v1
+func InputSpecIdForExt(ext string) string {
+	if ext == "pdf" {
+		return SpecIdBinary
+	}
+	return SpecIdStr
+}
+
+// ExtractMetadataOutputSpecIdForExt returns the output spec ID for extract-metadata by extension
+// - PDF files: capns:extract-metadata-output.v1 (has full schema)
+// - Text files: std:obj.v1 (generic JSON object)
+func ExtractMetadataOutputSpecIdForExt(ext string) string {
+	if ext == "pdf" {
+		return SpecIdExtractMetadataOutput
+	}
+	return SpecIdObj
+}
+
+// ExtractOutlineOutputSpecIdForExt returns the output spec ID for extract-outline by extension
+// - PDF files: capns:extract-outline-output.v1 (has full schema)
+// - Text files: std:obj.v1 (generic JSON object)
+func ExtractOutlineOutputSpecIdForExt(ext string) string {
+	if ext == "pdf" {
+		return SpecIdExtractOutlineOutput
+	}
+	return SpecIdObj
+}
+
+// ExtractPagesOutputSpecIdForExt returns the output spec ID for extract-pages by extension
+// - PDF files: capns:extract-pages-output.v1 (has full schema)
+// - Text files: std:obj.v1 (generic JSON object)
+func ExtractPagesOutputSpecIdForExt(ext string) string {
+	if ext == "pdf" {
+		return SpecIdExtractPagesOutput
+	}
+	return SpecIdObj
+}
+
+// ExtractMetadataUrn builds the URN for extract-metadata capability with given extension
+func ExtractMetadataUrn(ext string) string {
+	inSpec := InputSpecIdForExt(ext)
+	outSpec := ExtractMetadataOutputSpecIdForExt(ext)
+	return fmt.Sprintf("cap:ext=%s;in=%s;op=extract_metadata;out=%s", ext, inSpec, outSpec)
+}
+
+// GenerateThumbnailUrn builds the URN for generate-thumbnail capability with given extension
+func GenerateThumbnailUrn(ext string) string {
+	inSpec := InputSpecIdForExt(ext)
+	return fmt.Sprintf("cap:ext=%s;in=%s;op=generate_thumbnail;out=std:binary.v1", ext, inSpec)
+}
+
+// ExtractOutlineUrn builds the URN for extract-outline capability with given extension
+func ExtractOutlineUrn(ext string) string {
+	inSpec := InputSpecIdForExt(ext)
+	outSpec := ExtractOutlineOutputSpecIdForExt(ext)
+	return fmt.Sprintf("cap:ext=%s;in=%s;op=extract_outline;out=%s", ext, inSpec, outSpec)
+}
+
+// ExtractPagesUrn builds the URN for extract-pages capability with given extension
+func ExtractPagesUrn(ext string) string {
+	inSpec := InputSpecIdForExt(ext)
+	outSpec := ExtractPagesOutputSpecIdForExt(ext)
+	return fmt.Sprintf("cap:ext=%s;in=%s;op=extract_pages;out=%s", ext, inSpec, outSpec)
+}
+
 // ExtractMetadataCap creates the standard extract-metadata cap with full argument definition
+// Note: This creates a generic cap without extension-specific URN. Use ExtractMetadataUrn for extension-specific URNs.
 func ExtractMetadataCap() *capns.Cap {
-	id, _ := capns.NewCapUrnFromString("cap:action=extract;target=metadata")
+	id, _ := capns.NewCapUrnFromString("cap:op=extract_metadata")
 	
 	command := "extract-metadata"
 	
@@ -67,8 +151,9 @@ func ExtractMetadataCap() *capns.Cap {
 }
 
 // GenerateThumbnailCap creates the standard generate-thumbnail cap with full argument definition
+// Note: This creates a generic cap without extension-specific URN. Use GenerateThumbnailUrn for extension-specific URNs.
 func GenerateThumbnailCap() *capns.Cap {
-	id, _ := capns.NewCapUrnFromString("cap:action=generate;output=binary;target=thumbnail")
+	id, _ := capns.NewCapUrnFromString("cap:op=generate_thumbnail")
 	
 	command := "generate-thumbnail"
 	
@@ -172,8 +257,9 @@ func GenerateThumbnailCap() *capns.Cap {
 }
 
 // ExtractOutlineCap creates the standard extract-outline cap with full argument definition
+// Note: This creates a generic cap without extension-specific URN. Use ExtractOutlineUrn for extension-specific URNs.
 func ExtractOutlineCap() *capns.Cap {
-	id, _ := capns.NewCapUrnFromString("cap:action=extract;target=outline")
+	id, _ := capns.NewCapUrnFromString("cap:op=extract_outline")
 	
 	command := "extract-outline"
 	
@@ -256,8 +342,9 @@ func ExtractOutlineCap() *capns.Cap {
 }
 
 // ExtractPagesCap creates the standard extract-pages cap with full argument definition
+// Note: This creates a generic cap without extension-specific URN. Use ExtractPagesUrn for extension-specific URNs.
 func ExtractPagesCap() *capns.Cap {
-	id, _ := capns.NewCapUrnFromString("cap:action=extract;target=pages")
+	id, _ := capns.NewCapUrnFromString("cap:op=extract_pages")
 	
 	command := "extract-pages"
 	
@@ -354,15 +441,16 @@ func GetStandardCap(name string) *capns.Cap {
 }
 
 // GetStandardCapByUrn returns a standard cap by cap URN string
+// Note: This matches generic URN format (without extension). For extension-specific URNs, use the URN builder functions.
 func GetStandardCapByUrn(urnStr string) *capns.Cap {
 	switch urnStr {
-	case "cap:action=extract;target=metadata":
+	case "cap:op=extract_metadata":
 		return ExtractMetadataCap()
-	case "cap:action=generate;output=binary;target=thumbnail":
+	case "cap:op=generate_thumbnail":
 		return GenerateThumbnailCap()
-	case "cap:action=extract;target=outline":
+	case "cap:op=extract_outline":
 		return ExtractOutlineCap()
-	case "cap:action=extract;target=pages":
+	case "cap:op=extract_pages":
 		return ExtractPagesCap()
 	default:
 		return nil

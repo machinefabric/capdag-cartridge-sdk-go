@@ -26,8 +26,8 @@ func TestPluginRegistration(t *testing.T) {
 
 	// Register a plugin with basic caps
 	caps := []string{
-		"cap:action=extract;target=metadata;",
-		"cap:action=generate;output=binary;target=thumbnail;",
+		"cap:op=extract;target=metadata;",
+		"cap:op=generate;output=binary;target=thumbnail;",
 	}
 	registry.RegisterPlugin("testplugin", "/path/to/testplugin", caps)
 
@@ -39,11 +39,11 @@ func TestPluginRegistration(t *testing.T) {
 	// Test that capabilities were indexed
 	capabilities := registry.GetCapabilities()
 	assert.Equal(t, 2, len(capabilities))
-	assert.Contains(t, capabilities, "cap:action=extract;target=metadata;")
-	assert.Contains(t, capabilities, "cap:action=generate;output=binary;target=thumbnail;")
+	assert.Contains(t, capabilities, "cap:op=extract;target=metadata;")
+	assert.Contains(t, capabilities, "cap:op=generate;output=binary;target=thumbnail;")
 
 	// Test plugin lookup for specific caps
-	pluginsForMetadata := registry.GetPluginsForCap("cap:action=extract;target=metadata;")
+	pluginsForMetadata := registry.GetPluginsForCap("cap:op=extract;target=metadata;")
 	assert.Equal(t, 1, len(pluginsForMetadata))
 	assert.Contains(t, pluginsForMetadata, "testplugin")
 }
@@ -59,8 +59,8 @@ func TestPluginRegistrationWithMetadata(t *testing.T) {
 		Description: "A test plugin for document processing",
 		Author:      "Test Author",
 		Caps: []string{
-			"cap:action=extract;target=metadata;",
-			"cap:action=extract;target=outline;",
+			"cap:op=extract;target=metadata;",
+			"cap:op=extract;target=outline;",
 		},
 	}
 
@@ -84,16 +84,16 @@ func TestCanMethodBasicFunctionality(t *testing.T) {
 	require.NoError(t, err)
 
 	// Register a plugin with extract-metadata capability
-	caps := []string{"cap:action=extract;target=metadata;"}
+	caps := []string{"cap:op=extract;target=metadata;"}
 	registry.RegisterPlugin("pdfplugin", "/usr/bin/pdfplugin", caps)
 
 	// Test that we can get a CapCaller for this capability
-	caller, err := registry.Can("cap:action=extract;target=metadata;")
+	caller, err := registry.Can("cap:op=extract;target=metadata;")
 	require.NoError(t, err)
 	require.NotNil(t, caller)
 
 	// Test that we get an error for unsupported capability
-	_, err = registry.Can("cap:action=unsupported;target=test;")
+	_, err = registry.Can("cap:op=unsupported;target=test;")
 	assert.Error(t, err)
 	assert.Contains(t, err.Error(), "not available")
 }
@@ -103,11 +103,11 @@ func TestCapCallerIntegration(t *testing.T) {
 	require.NoError(t, err)
 
 	// Register a plugin
-	caps := []string{"cap:action=extract;target=metadata;"}
+	caps := []string{"cap:op=extract;target=metadata;"}
 	registry.RegisterPlugin("testplugin", "/bin/echo", caps)
 
 	// Get caller for the capability
-	caller, err := registry.Can("cap:action=extract;target=metadata;")
+	caller, err := registry.Can("cap:op=extract;target=metadata;")
 	require.NoError(t, err)
 	require.NotNil(t, caller)
 
@@ -156,23 +156,23 @@ func TestCapPatternMatching(t *testing.T) {
 
 	// Register a plugin with pattern matching
 	caps := []string{
-		"cap:action=extract;target=metadata;",
-		"cap:action=extract;target=*;", // Wildcard target
+		"cap:op=extract;target=metadata;",
+		"cap:op=extract;target=*;", // Wildcard target
 	}
 	registry.RegisterPlugin("universalplugin", "/usr/bin/universalplugin", caps)
 
 	// Test exact match
-	caller, err := registry.Can("cap:action=extract;target=metadata;")
+	caller, err := registry.Can("cap:op=extract;target=metadata;")
 	assert.NoError(t, err)
 	assert.NotNil(t, caller)
 
 	// Test wildcard match
-	caller, err = registry.Can("cap:action=extract;target=text;")
+	caller, err = registry.Can("cap:op=extract;target=text;")
 	assert.NoError(t, err)
 	assert.NotNil(t, caller)
 
 	// Test no match
-	_, err = registry.Can("cap:action=generate;target=video;")
+	_, err = registry.Can("cap:op=generate;target=video;")
 	assert.Error(t, err)
 }
 
@@ -182,15 +182,15 @@ func TestMultiplePluginPriority(t *testing.T) {
 
 	// Register multiple plugins with overlapping capabilities
 	registry.RegisterPlugin("generic", "/usr/bin/generic", []string{
-		"cap:action=extract;target=*;", // Wildcard
+		"cap:op=extract;target=*;", // Wildcard
 	})
 	
 	registry.RegisterPlugin("specific", "/usr/bin/pdfspecific", []string{
-		"cap:action=extract;target=metadata;", // Exact match
+		"cap:op=extract;target=metadata;", // Exact match
 	})
 
 	// Test that specific plugin is chosen over generic
-	caller, err := registry.Can("cap:action=extract;target=metadata;")
+	caller, err := registry.Can("cap:op=extract;target=metadata;")
 	require.NoError(t, err)
 	require.NotNil(t, caller)
 
@@ -200,7 +200,7 @@ func TestMultiplePluginPriority(t *testing.T) {
 
 func TestGetStandardCapByUrnCanonical(t *testing.T) {
 	// Test with a known standard cap
-	cap, err := GetStandardCapByUrnCanonical("cap:action=extract;target=metadata;")
+	cap, err := GetStandardCapByUrnCanonical("cap:op=extract;target=metadata;")
 	if err != nil {
 		// If this fails, it might be because registry is not available
 		// which is acceptable in tests
@@ -212,9 +212,9 @@ func TestGetStandardCapByUrnCanonical(t *testing.T) {
 	// Note: The URN string format may vary (with or without trailing semicolon) 
 	// but should contain the expected content
 	urnStr := cap.UrnString()
-	assert.True(t, 
-		urnStr == "cap:action=extract;target=metadata;" || urnStr == "cap:action=extract;target=metadata",
-		"Expected URN to be 'cap:action=extract;target=metadata;' or 'cap:action=extract;target=metadata', got '%s'", urnStr)
+	assert.True(t,
+		urnStr == "cap:op=extract;target=metadata;" || urnStr == "cap:op=extract;target=metadata",
+		"Expected URN to be 'cap:op=extract;target=metadata;' or 'cap:op=extract;target=metadata', got '%s'", urnStr)
 }
 
 func TestValidateStandardCaps(t *testing.T) {
@@ -237,14 +237,14 @@ func TestHostImplementationInterface(t *testing.T) {
 
 	// Register a test plugin
 	registry.RegisterPlugin("testhost", "/bin/echo", []string{
-		"cap:action=test;target=interface;",
+		"cap:op=test;target=interface;",
 	})
 
 	// Test ExecuteCap method directly
 	ctx := context.Background()
 	result, err := registry.hostImpl.ExecuteCap(
 		ctx,
-		"cap:action=test;target=interface;",
+		"cap:op=test;target=interface;",
 		[]string{"test"},
 		map[string]string{"flag": "value"},
 		nil,

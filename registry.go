@@ -64,16 +64,16 @@ func (pch *PluginCapHost) ExecuteCap(
 		return nil, fmt.Errorf("invalid cap URN: %w", err)
 	}
 
-	// Build command based on cap action
+	// Build command based on cap op
 	var command string
-	if action, exists := capUrnObj.GetTag("action"); exists {
+	if op, exists := capUrnObj.GetTag("op"); exists {
 		if target, targetExists := capUrnObj.GetTag("target"); targetExists {
-			command = fmt.Sprintf("--%s-%s", action, target)
+			command = fmt.Sprintf("--%s-%s", op, target)
 		} else {
-			command = fmt.Sprintf("--%s", action)
+			command = fmt.Sprintf("--%s", op)
 		}
 	} else {
-		return nil, fmt.Errorf("cap URN missing action tag: %s", capUrn)
+		return nil, fmt.Errorf("cap URN missing op tag: %s", capUrn)
 	}
 
 	// Build full command arguments
@@ -217,11 +217,11 @@ func (pr *PluginRegistry) Can(capUrn string) (*capns.CapCaller, error) {
 		}
 
 		var command string
-		if action, exists := capUrnObj.GetTag("action"); exists {
+		if op, exists := capUrnObj.GetTag("op"); exists {
 			if target, targetExists := capUrnObj.GetTag("target"); targetExists {
-				command = fmt.Sprintf("%s-%s", action, target)
+				command = fmt.Sprintf("%s-%s", op, target)
 			} else {
-				command = action
+				command = op
 			}
 		} else {
 			command = "unknown"
@@ -431,10 +431,10 @@ func ValidateStandardCaps() error {
 	}
 
 	standardUrns := []string{
-		"cap:action=extract;target=metadata;",
-		"cap:action=generate;output=binary;target=thumbnail;",
-		"cap:action=extract;target=outline;",
-		"cap:action=extract;target=pages",
+		"cap:op=extract_metadata",
+		"cap:op=generate_thumbnail",
+		"cap:op=extract_outline",
+		"cap:op=extract_pages",
 	}
 
 	for _, urn := range standardUrns {

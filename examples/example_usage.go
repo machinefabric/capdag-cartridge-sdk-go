@@ -21,17 +21,17 @@ func main() {
 
 	// Register a sample plugin with capabilities
 	pluginCaps := []string{
-		"cap:action=extract;target=metadata;",
-		"cap:action=generate;output=binary;target=thumbnail;",
-		"cap:action=extract;target=outline;",
-		"cap:action=extract;target=pages",
+		"cap:op=extract;target=metadata;",
+		"cap:op=generate;output=binary;target=thumbnail;",
+		"cap:op=extract;target=outline;",
+		"cap:op=extract;target=pages",
 	}
 
 	registry.RegisterPlugin("samplePdfPlugin", "/usr/local/bin/pdfplugin", pluginCaps)
 
 	// Register another plugin with wildcard capability
 	registry.RegisterPlugin("genericPlugin", "/usr/local/bin/generic", []string{
-		"cap:action=extract;target=*;", // Wildcard - can handle any target
+		"cap:op=extract;target=*;", // Wildcard - can handle any target
 	})
 
 	// Show registered capabilities
@@ -42,7 +42,7 @@ func main() {
 
 	// Test capability discovery and caller creation
 	fmt.Printf("\n1. Testing capability: extract metadata\n")
-	if _, err := registry.Can("cap:action=extract;target=metadata;"); err != nil {
+	if _, err := registry.Can("cap:op=extract;target=metadata;"); err != nil {
 		fmt.Printf("   Error: %v\n", err)
 	} else {
 		fmt.Printf("   ✓ Found capability, got CapCaller\n")
@@ -51,7 +51,7 @@ func main() {
 
 	// Test wildcard matching
 	fmt.Printf("\n2. Testing wildcard capability: extract text\n")
-	if _, err := registry.Can("cap:action=extract;target=text;"); err != nil {
+	if _, err := registry.Can("cap:op=extract;target=text;"); err != nil {
 		fmt.Printf("   Error: %v\n", err)
 	} else {
 		fmt.Printf("   ✓ Wildcard match found, got CapCaller\n")
@@ -59,7 +59,7 @@ func main() {
 
 	// Test unsupported capability
 	fmt.Printf("\n3. Testing unsupported capability\n")
-	if _, err := registry.Can("cap:action=unsupported;target=test;"); err != nil {
+	if _, err := registry.Can("cap:op=unsupported;target=test;"); err != nil {
 		fmt.Printf("   ✓ Expected error: %v\n", err)
 	} else {
 		fmt.Printf("   ✗ Unexpected: Should have failed\n")
@@ -67,7 +67,7 @@ func main() {
 
 	// Demonstrate actual calling (would normally execute real plugin)
 	fmt.Printf("\n4. Example caller usage (mock execution)\n")
-	if caller, err := registry.Can("cap:action=extract;target=metadata;"); err == nil {
+	if caller, err := registry.Can("cap:op=extract;target=metadata;"); err == nil {
 		fmt.Printf("   CapCaller created for metadata extraction\n")
 		fmt.Printf("   Would call: caller.Call(ctx, args, namedArgs, stdinData)\n")
 		_ = caller // Use the variable
@@ -91,10 +91,10 @@ func main() {
 	// Show standard capabilities
 	fmt.Printf("\n5. Standard capabilities available:\n")
 	standardCaps := []string{
-		"cap:action=extract;target=metadata;",
-		"cap:action=generate;output=binary;target=thumbnail;", 
-		"cap:action=extract;target=outline;",
-		"cap:action=extract;target=pages",
+		"cap:op=extract;target=metadata;",
+		"cap:op=generate;output=binary;target=thumbnail;", 
+		"cap:op=extract;target=outline;",
+		"cap:op=extract;target=pages",
 	}
 	
 	for _, capUrn := range standardCaps {
