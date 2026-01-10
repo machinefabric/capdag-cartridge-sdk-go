@@ -72,7 +72,7 @@ func (h *MyDocumentHandler) ExtractOutline(ctx context.Context, filePath string)
     return outline, nil
 }
 
-func (h *MyDocumentHandler) ExtractPages(ctx context.Context, filePath string) (*sdk.DocumentPages, error) {
+func (h *MyDocumentHandler) Grind(ctx context.Context, filePath string) (*sdk.GroundChips, error) {
     // Read file content
     content, err := os.ReadFile(filePath)
     if err != nil {
@@ -80,8 +80,8 @@ func (h *MyDocumentHandler) ExtractPages(ctx context.Context, filePath string) (
     }
     
     // Create pages structure
-    pages := sdk.NewDocumentPages(filePath, "text", 1)
-    page := sdk.NewDocumentPageWithText(1, string(content))
+    pages := sdk.NewGroundChips(filePath, "text", 1)
+    page := sdk.NewFileChipWithText(1, string(content))
     pages.AddPage(*page)
     
     return pages, nil
@@ -145,7 +145,7 @@ entry := sdk.NewOutlineEntry("Chapter 1", 0).WithPage(5)
 outline.AddEntry(*entry)
 ```
 
-### DocumentPages
+### GroundChips
 
 Page-based text content organization:
 - Documents contain pages (1-indexed)
@@ -153,8 +153,8 @@ Page-based text content organization:
 - Automatic word/character counting
 
 ```go
-pages := sdk.NewDocumentPages("/path/to/file.pdf", "pdf", 10)
-page := sdk.NewDocumentPageWithText(1, "Page content here...")
+pages := sdk.NewGroundChips("/path/to/file.pdf", "pdf", 10)
+page := sdk.NewFileChipWithText(1, "Page content here...")
 pages.AddPage(*page)
 ```
 
@@ -167,7 +167,7 @@ caps := &sdk.PluginCaps{
     Caps: []string{
         "extract_metadata",
         "extract_outline", 
-        "extract_pages",
+        "grind",
         "validate_file",
         "generate_thumbnail",
         "supports_json_output",
@@ -192,7 +192,7 @@ if err != nil {
 This SDK implements the JSON schemas defined in the `fgnd/plugin-schemas/` directory:
 - `file-metadata.json` - FileMetadata structure
 - `document-outline.json` - DocumentOutline structure  
-- `document-pages.json` - DocumentPages structure
+- `file-chips.json` - GroundChips structure
 - `manifest.json` - Plugin manifest
 - `handler-interface.json` - DocumentHandler interface
 

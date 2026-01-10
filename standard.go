@@ -20,7 +20,7 @@ const (
 	// Output spec IDs for PDF document processing (with full schemas)
 	SpecIdExtractMetadataOutput = "capns:extract-metadata-output.v1"
 	SpecIdExtractOutlineOutput  = "capns:extract-outline-output.v1"
-	SpecIdExtractPagesOutput    = "capns:extract-pages-output.v1"
+	SpecIdGrindOutput    = "capns:grind-output.v1"
 )
 
 // InputSpecIdForExt returns the input spec ID for a given file extension
@@ -53,12 +53,12 @@ func ExtractOutlineOutputSpecIdForExt(ext string) string {
 	return SpecIdObj
 }
 
-// ExtractPagesOutputSpecIdForExt returns the output spec ID for extract-pages by extension
-// - PDF files: capns:extract-pages-output.v1 (has full schema)
+// GrindOutputSpecIdForExt returns the output spec ID for grind by extension
+// - PDF files: capns:grind-output.v1 (has full schema)
 // - Text files: std:obj.v1 (generic JSON object)
-func ExtractPagesOutputSpecIdForExt(ext string) string {
+func GrindOutputSpecIdForExt(ext string) string {
 	if ext == "pdf" {
-		return SpecIdExtractPagesOutput
+		return SpecIdGrindOutput
 	}
 	return SpecIdObj
 }
@@ -83,11 +83,11 @@ func ExtractOutlineUrn(ext string) string {
 	return fmt.Sprintf("cap:ext=%s;in=%s;op=extract_outline;out=%s", ext, inSpec, outSpec)
 }
 
-// ExtractPagesUrn builds the URN for extract-pages capability with given extension
-func ExtractPagesUrn(ext string) string {
+// GrindUrn builds the URN for grind capability with given extension
+func GrindUrn(ext string) string {
 	inSpec := InputSpecIdForExt(ext)
-	outSpec := ExtractPagesOutputSpecIdForExt(ext)
-	return fmt.Sprintf("cap:ext=%s;in=%s;op=extract_pages;out=%s", ext, inSpec, outSpec)
+	outSpec := GrindOutputSpecIdForExt(ext)
+	return fmt.Sprintf("cap:ext=%s;in=%s;op=grind;out=%s", ext, inSpec, outSpec)
 }
 
 // ExtractMetadataCap creates the standard extract-metadata cap with full argument definition
@@ -341,12 +341,12 @@ func ExtractOutlineCap() *capns.Cap {
 	return cap
 }
 
-// ExtractPagesCap creates the standard extract-pages cap with full argument definition
-// Note: This creates a generic cap without extension-specific URN. Use ExtractPagesUrn for extension-specific URNs.
-func ExtractPagesCap() *capns.Cap {
-	id, _ := capns.NewCapUrnFromString("cap:op=extract_pages")
+// GrindCap creates the standard grind cap with full argument definition
+// Note: This creates a generic cap without extension-specific URN. Use GrindUrn for extension-specific URNs.
+func GrindCap() *capns.Cap {
+	id, _ := capns.NewCapUrnFromString("cap:op=grind")
 	
-	command := "extract-pages"
+	command := "grind"
 	
 	arguments := capns.NewCapArguments()
 	
@@ -393,7 +393,7 @@ func ExtractPagesCap() *capns.Cap {
 	
 	output := &capns.CapOutput{
 		OutputType:        capns.OutputTypeObject,
-		SchemaRef:   stringPtr("document-pages.json"),
+		SchemaRef:   stringPtr("file-chips.json"),
 		ContentType: stringPtr("application/json"),
 		Validation:  &capns.ArgumentValidation{},
 		OutputDescription: "Structured page content extracted from the document",
@@ -401,7 +401,7 @@ func ExtractPagesCap() *capns.Cap {
 	
 	cap := capns.NewCapWithDescription(
 		id,
-		"Extract Document Pages",
+		"Extract File Chips",
 		command,
 		"Extract structured page content from the document",
 	)
@@ -420,7 +420,7 @@ func GetAllStandardCaps() []*capns.Cap {
 		ExtractMetadataCap(),
 		GenerateThumbnailCap(),
 		ExtractOutlineCap(),
-		ExtractPagesCap(),
+		GrindCap(),
 	}
 }
 
@@ -433,8 +433,8 @@ func GetStandardCap(name string) *capns.Cap {
 		return GenerateThumbnailCap()
 	case "extract-outline":
 		return ExtractOutlineCap()
-	case "extract-pages":
-		return ExtractPagesCap()
+	case "grind":
+		return GrindCap()
 	default:
 		return nil
 	}
@@ -450,8 +450,8 @@ func GetStandardCapByUrn(urnStr string) *capns.Cap {
 		return GenerateThumbnailCap()
 	case "cap:op=extract_outline":
 		return ExtractOutlineCap()
-	case "cap:op=extract_pages":
-		return ExtractPagesCap()
+	case "cap:op=grind":
+		return GrindCap()
 	default:
 		return nil
 	}

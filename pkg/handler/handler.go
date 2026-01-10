@@ -48,13 +48,13 @@ type QuickMetadata struct {
 var StandardizedCaps = struct {
 	ExtractMetadata   string
 	ExtractOutline    string
-	ExtractPages      string
+	Grind      string
 	GenerateThumbnail string
 	ValidateFile      string
 }{
 	ExtractMetadata:   "extract-metadata",
 	ExtractOutline:    "extract-outline", 
-	ExtractPages:      "extract-pages",
+	Grind:      "grind",
 	GenerateThumbnail: "generate-thumbnail",
 	ValidateFile:      "validate-file",
 }

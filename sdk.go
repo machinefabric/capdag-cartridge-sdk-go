@@ -45,8 +45,8 @@ type (
 	// Data structures
 	FileMetadata     = metadata.FileMetadata
 	DocumentOutline  = outline.DocumentOutline
-	DocumentPages    = pages.DocumentPages
-	DocumentPage     = pages.DocumentPage
+	GroundChips    = pages.GroundChips
+	FileChip     = pages.FileChip
 	OutlineEntry     = outline.OutlineEntry
 	ExtractionInfo   = outline.ExtractionInfo
 	
@@ -100,9 +100,9 @@ var (
 	NewExtractionInfo  = outline.NewExtractionInfo
 
 	// Pages constructors
-	NewDocumentPages        = pages.NewDocumentPages
-	NewDocumentPage         = pages.NewDocumentPage
-	NewDocumentPageWithText = pages.NewDocumentPageWithText
+	NewGroundChips        = pages.NewGroundChips
+	NewFileChip         = pages.NewFileChip
+	NewFileChipWithText = pages.NewFileChipWithText
 
 	// Handler constructors
 	NewHandlerRegistry = handler.NewHandlerRegistry

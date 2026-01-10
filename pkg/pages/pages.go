@@ -1,4 +1,4 @@
-// Package pages provides document page and paragraph structures
+// Package pages provides file chip and paragraph structures
 package pages
 
 import (
@@ -49,8 +49,8 @@ func (p *DocumentParagraph) IsEmpty() bool {
 	return strings.TrimSpace(p.TextContent) == ""
 }
 
-// DocumentPage represents a single page within a document
-type DocumentPage struct {
+// FileChip represents a single page within a document
+type FileChip struct {
 	// Page number (1-indexed)
 	OrderIndex uint `json:"order_index"`
 
@@ -67,20 +67,20 @@ type DocumentPage struct {
 	CharacterCount *uint `json:"character_count,omitempty"`
 }
 
-// NewDocumentPage creates a new document page
-func NewDocumentPage(orderIndex uint) *DocumentPage {
-	return &DocumentPage{
+// NewFileChip creates a new file chip
+func NewFileChip(orderIndex uint) *FileChip {
+	return &FileChip{
 		OrderIndex:  orderIndex,
 		TextContent: "",
 	}
 }
 
-// NewDocumentPageWithText creates a new document page with text content
-func NewDocumentPageWithText(orderIndex uint, textContent string) *DocumentPage {
+// NewFileChipWithText creates a new file chip with text content
+func NewFileChipWithText(orderIndex uint, textContent string) *FileChip {
 	wordCount := uint(countWords(textContent))
 	charCount := uint(len(textContent))
 
-	return &DocumentPage{
+	return &FileChip{
 		OrderIndex:     orderIndex,
 		TextContent:    textContent,
 		WordCount:      &wordCount,
@@ -89,13 +89,13 @@ func NewDocumentPageWithText(orderIndex uint, textContent string) *DocumentPage 
 }
 
 // WithSourceRef sets the source reference
-func (p *DocumentPage) WithSourceRef(sourceRef string) *DocumentPage {
+func (p *FileChip) WithSourceRef(sourceRef string) *FileChip {
 	p.SourceRef = &sourceRef
 	return p
 }
 
 // SetTextContent sets the text content and updates word/character counts
-func (p *DocumentPage) SetTextContent(textContent string) {
+func (p *FileChip) SetTextContent(textContent string) {
 	p.TextContent = textContent
 	wordCount := uint(countWords(textContent))
 	charCount := uint(len(textContent))
@@ -104,12 +104,12 @@ func (p *DocumentPage) SetTextContent(textContent string) {
 }
 
 // GetTextContent gets the text content of this page
-func (p *DocumentPage) GetTextContent() string {
+func (p *FileChip) GetTextContent() string {
 	return p.TextContent
 }
 
 // GetWordCount gets word count for this page
-func (p *DocumentPage) GetWordCount() uint {
+func (p *FileChip) GetWordCount() uint {
 	if p.WordCount != nil {
 		return *p.WordCount
 	}
@@ -117,7 +117,7 @@ func (p *DocumentPage) GetWordCount() uint {
 }
 
 // GetCharacterCount gets character count for this page
-func (p *DocumentPage) GetCharacterCount() uint {
+func (p *FileChip) GetCharacterCount() uint {
 	if p.CharacterCount != nil {
 		return *p.CharacterCount
 	}
@@ -125,7 +125,7 @@ func (p *DocumentPage) GetCharacterCount() uint {
 }
 
 // IsEmpty checks if page is empty
-func (p *DocumentPage) IsEmpty() bool {
+func (p *FileChip) IsEmpty() bool {
 	return strings.TrimSpace(p.TextContent) == ""
 }
 
@@ -160,8 +160,8 @@ func (e *ExtractionInfo) AddWarning(warning string) {
 	e.Warnings = append(e.Warnings, warning)
 }
 
-// DocumentPages represents the complete document with pages
-type DocumentPages struct {
+// GroundChips represents the complete document with pages
+type GroundChips struct {
 	// Source file path
 	SourceFile string `json:"source_file"`
 
@@ -175,36 +175,36 @@ type DocumentPages struct {
 	TotalPages uint `json:"total_pages"`
 
 	// All pages in the document
-	Pages []DocumentPage `json:"pages"`
+	Pages []FileChip `json:"pages"`
 
 	// Metadata about the extraction process
 	ExtractionInfo ExtractionInfo `json:"extraction_info"`
 }
 
-// NewDocumentPages creates a new document pages structure
-func NewDocumentPages(sourceFile, documentType string, totalPages uint) *DocumentPages {
-	return &DocumentPages{
+// NewGroundChips creates a new file chips structure
+func NewGroundChips(sourceFile, documentType string, totalPages uint) *GroundChips {
+	return &GroundChips{
 		SourceFile:     sourceFile,
 		DocumentType:   documentType,
 		TotalPages:     totalPages,
-		Pages:          make([]DocumentPage, 0),
+		Pages:          make([]FileChip, 0),
 		ExtractionInfo: *NewExtractionInfo("unknown", "unknown"),
 	}
 }
 
 // WithTitle sets the document title
-func (d *DocumentPages) WithTitle(title string) *DocumentPages {
+func (d *GroundChips) WithTitle(title string) *GroundChips {
 	d.DocumentTitle = &title
 	return d
 }
 
 // AddPage adds a page to the document
-func (d *DocumentPages) AddPage(page DocumentPage) {
+func (d *GroundChips) AddPage(page FileChip) {
 	d.Pages = append(d.Pages, page)
 }
 
-// GetPage gets a specific page by number (1-indexed)
-func (d *DocumentPages) GetPage(orderIndex uint) *DocumentPage {
+// GetChip gets a specific page by number (1-indexed)
+func (d *GroundChips) GetChip(orderIndex uint) *FileChip {
 	for i := range d.Pages {
 		if d.Pages[i].OrderIndex == orderIndex {
 			return &d.Pages[i]
@@ -214,7 +214,7 @@ func (d *DocumentPages) GetPage(orderIndex uint) *DocumentPage {
 }
 
 // GetAllText gets all text content concatenated
-func (d *DocumentPages) GetAllText() string {
+func (d *GroundChips) GetAllText() string {
 	var parts []string
 	for _, page := range d.Pages {
 		pageText := page.GetTextContent()
@@ -226,7 +226,7 @@ func (d *DocumentPages) GetAllText() string {
 }
 
 // TotalWordCount gets total word count across all pages
-func (d *DocumentPages) TotalWordCount() uint {
+func (d *GroundChips) TotalWordCount() uint {
 	total := uint(0)
 	for _, page := range d.Pages {
 		total += page.GetWordCount()
@@ -235,7 +235,7 @@ func (d *DocumentPages) TotalWordCount() uint {
 }
 
 // TotalCharacterCount gets total character count across all pages
-func (d *DocumentPages) TotalCharacterCount() uint {
+func (d *GroundChips) TotalCharacterCount() uint {
 	total := uint(0)
 	for _, page := range d.Pages {
 		total += page.GetCharacterCount()
@@ -244,7 +244,7 @@ func (d *DocumentPages) TotalCharacterCount() uint {
 }
 
 // IsEmpty checks if document is empty
-func (d *DocumentPages) IsEmpty() bool {
+func (d *GroundChips) IsEmpty() bool {
 	return len(d.Pages) == 0
 }
 

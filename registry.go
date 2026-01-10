@@ -434,7 +434,7 @@ func ValidateStandardCaps() error {
 		"cap:op=extract_metadata",
 		"cap:op=generate_thumbnail",
 		"cap:op=extract_outline",
-		"cap:op=extract_pages",
+		"cap:op=grind",
 	}
 
 	for _, urn := range standardUrns {
