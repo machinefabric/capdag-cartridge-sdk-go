@@ -378,18 +378,18 @@ func GrindCap() *capns.Cap {
 	}
 	arguments.AddOptional(outputArg)
 	
-	// Optional page_range argument
-	pageRangeValidation := &capns.ArgumentValidation{
+	// Optional index_range argument
+	indexRangeValidation := &capns.ArgumentValidation{
 		Pattern: stringPtr("^\\d+(-\\d*)?$"),
 	}
-	pageRangeArg := capns.CapArgument{
-		Name:        "page_range",
+	indexRangeArg := capns.CapArgument{
+		Name:        "index_range",
 		ArgType:        capns.ArgumentTypeString,
-		ArgDescription: "Page range to extract (e.g., '1-5' or '10-')",
-		CliFlag:     "--page-range",
-		Validation:  pageRangeValidation,
+		ArgDescription: "Index Range to extract (e.g., '1-5' or '10-')",
+		CliFlag:     "--index-range",
+		Validation:  indexRangeValidation,
 	}
-	arguments.AddOptional(pageRangeArg)
+	arguments.AddOptional(indexRangeArg)
 	
 	output := &capns.CapOutput{
 		OutputType:        capns.OutputTypeObject,
