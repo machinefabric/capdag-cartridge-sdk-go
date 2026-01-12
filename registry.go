@@ -15,7 +15,7 @@ type PluginRegistry struct {
 	plugins   map[string]*PluginEntry
 	capIndex  map[string][]string
 	registry  *capns.CapRegistry
-	hostImpl  *PluginCapHost
+	hostImpl  *PluginCapSet
 }
 
 // PluginEntry represents a registered plugin with its capabilities
@@ -34,13 +34,13 @@ type PluginMetadata struct {
 	Caps        []string `json:"caps"`
 }
 
-// PluginCapHost implements CapHost interface for plugin execution
-type PluginCapHost struct {
+// PluginCapSet implements CapSet interface for plugin execution
+type PluginCapSet struct {
 	registry *PluginRegistry
 }
 
-// ExecuteCap implements the CapHost interface for plugin execution
-func (pch *PluginCapHost) ExecuteCap(
+// ExecuteCap implements the CapSet interface for plugin execution
+func (pch *PluginCapSet) ExecuteCap(
 	ctx context.Context,
 	capUrn string,
 	positionalArgs []string,
@@ -141,7 +141,7 @@ func NewPluginRegistry() (*PluginRegistry, error) {
 		registry: registry,
 	}
 
-	pr.hostImpl = &PluginCapHost{registry: pr}
+	pr.hostImpl = &PluginCapSet{registry: pr}
 	return pr, nil
 }
 

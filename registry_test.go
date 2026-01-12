@@ -232,8 +232,8 @@ func TestHostImplementationInterface(t *testing.T) {
 	registry, err := NewPluginRegistry()
 	require.NoError(t, err)
 
-	// Test that our host implementation satisfies the CapHost interface
-	var _ capns.CapHost = registry.hostImpl
+	// Test that our host implementation satisfies the CapSet interface
+	var _ capns.CapSet = registry.hostImpl
 
 	// Register a test plugin
 	registry.RegisterPlugin("testhost", "/bin/echo", []string{

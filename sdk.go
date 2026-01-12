@@ -63,7 +63,7 @@ type (
 	CapMatcher    = capns.CapMatcher
 	CapCaller     = capns.CapCaller
 	ResponseWrapper = capns.ResponseWrapper
-	CapHost       = capns.CapHost
+	CapSet       = capns.CapSet
 	HostResult    = capns.HostResult
 	
 	// Argument and output types
