@@ -11,7 +11,7 @@ type FileMetadata struct {
 	FilePath      string `json:"file_path"`
 	FileSizeBytes uint64 `json:"file_size_bytes"`
 	ContentLength uint64 `json:"content_length"`
-	MimeType      *string `json:"mime_type,omitempty"`
+	MediaUrn      *string `json:"media_urn,omitempty"`
 	Encoding      *string `json:"encoding,omitempty"`
 
 	// Common document metadata
@@ -80,9 +80,9 @@ func NewFileMetadata(filePath, documentType string, fileSizeBytes uint64) *FileM
 }
 
 // NewMinimalFileMetadata creates minimal metadata with just basic file info
-func NewMinimalFileMetadata(filePath string, fileSizeBytes uint64, mimeType *string, documentType string) *FileMetadata {
+func NewMinimalFileMetadata(filePath string, fileSizeBytes uint64, mediaUrn *string, documentType string) *FileMetadata {
 	metadata := NewFileMetadata(filePath, documentType, fileSizeBytes)
-	metadata.MimeType = mimeType
+	metadata.MediaUrn = mediaUrn
 	return metadata
 }
 
