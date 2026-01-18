@@ -72,7 +72,7 @@ func (h *MyDocumentHandler) ExtractOutline(ctx context.Context, filePath string)
     return outline, nil
 }
 
-func (h *MyDocumentHandler) Grind(ctx context.Context, filePath string) (*sdk.GroundChips, error) {
+func (h *MyDocumentHandler) Grind(ctx context.Context, filePath string) (*sdk.DisboundPages, error) {
     // Read file content
     content, err := os.ReadFile(filePath)
     if err != nil {
@@ -80,7 +80,7 @@ func (h *MyDocumentHandler) Grind(ctx context.Context, filePath string) (*sdk.Gr
     }
     
     // Create pages structure
-    pages := sdk.NewGroundChips(filePath, "text", 1)
+    pages := sdk.NewDisboundPages(filePath, "text", 1)
     page := sdk.NewFileChipWithText(1, string(content))
     pages.AddPage(*page)
     
@@ -145,7 +145,7 @@ entry := sdk.NewOutlineEntry("Chapter 1", 0).WithPage(5)
 outline.AddEntry(*entry)
 ```
 
-### GroundChips
+### DisboundPages
 
 Page-based text content organization:
 - Documents contain pages (1-indexed)
@@ -153,7 +153,7 @@ Page-based text content organization:
 - Automatic word/character counting
 
 ```go
-pages := sdk.NewGroundChips("/path/to/file.pdf", "pdf", 10)
+pages := sdk.NewDisboundPages("/path/to/file.pdf", "pdf", 10)
 page := sdk.NewFileChipWithText(1, "Page content here...")
 pages.AddPage(*page)
 ```
@@ -192,7 +192,7 @@ if err != nil {
 This SDK implements the JSON schemas defined in the `fgnd/plugin-schemas/` directory:
 - `file-metadata.json` - FileMetadata structure
 - `document-outline.json` - DocumentOutline structure  
-- `file-chips.json` - GroundChips structure
+- `disbound-pages.json` - DisboundPages structure
 - `manifest.json` - Plugin manifest
 - `handler-interface.json` - DocumentHandler interface
 

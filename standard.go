@@ -18,9 +18,9 @@ const (
 	SpecIdBinary = "media:type=binary;v=1"
 
 	// Output spec IDs for PDF document processing (with full schemas)
-	SpecIdExtractMetadataOutput = "media:type=extract-metadata-output;v=1"
-	SpecIdExtractOutlineOutput  = "media:type=extract-outline-output;v=1"
-	SpecIdGrindOutput    = "media:type=grind-output;v=1"
+	SpecIdFileMetadata = "media:type=file-metadata;v=1"
+	SpecIdDocumentOutline  = "media:type=document-outline;v=1"
+	SpecIdDisboundPages    = "media:type=disbound-pages;v=1"
 )
 
 // InputSpecIdForExt returns the input spec ID for a given file extension
@@ -38,7 +38,7 @@ func InputSpecIdForExt(ext string) string {
 // - Text files: media:type=object;v=1 (generic JSON object)
 func ExtractMetadataOutputSpecIdForExt(ext string) string {
 	if ext == "pdf" {
-		return SpecIdExtractMetadataOutput
+		return SpecIdFileMetadata
 	}
 	return SpecIdObj
 }
@@ -48,17 +48,17 @@ func ExtractMetadataOutputSpecIdForExt(ext string) string {
 // - Text files: media:type=object;v=1 (generic JSON object)
 func ExtractOutlineOutputSpecIdForExt(ext string) string {
 	if ext == "pdf" {
-		return SpecIdExtractOutlineOutput
+		return SpecIdDocumentOutline
 	}
 	return SpecIdObj
 }
 
-// GrindOutputSpecIdForExt returns the output spec ID for grind by extension
-// - PDF files: media:type=grind-output;v=1 (has full schema)
+// DisboundPagesSpecIdForExt returns the output spec ID for grind by extension
+// - PDF files: media:type=disbound-pages;v=1 (has full schema)
 // - Text files: media:type=object;v=1 (generic JSON object)
-func GrindOutputSpecIdForExt(ext string) string {
+func DisboundPagesSpecIdForExt(ext string) string {
 	if ext == "pdf" {
-		return SpecIdGrindOutput
+		return SpecIdDisboundPages
 	}
 	return SpecIdObj
 }
@@ -86,7 +86,7 @@ func ExtractOutlineUrn(ext string) string {
 // GrindUrn builds the URN for grind capability with given extension
 func GrindUrn(ext string) string {
 	inSpec := InputSpecIdForExt(ext)
-	outSpec := GrindOutputSpecIdForExt(ext)
+	outSpec := DisboundPagesSpecIdForExt(ext)
 	return fmt.Sprintf("cap:ext=%s;in=%s;op=grind;out=%s", ext, inSpec, outSpec)
 }
 
@@ -341,9 +341,9 @@ func ExtractOutlineCap() *capns.Cap {
 	return cap
 }
 
-// GrindCap creates the standard grind cap with full argument definition
+// DisbindCap creates the standard grind cap with full argument definition
 // Note: This creates a generic cap without extension-specific URN. Use GrindUrn for extension-specific URNs.
-func GrindCap() *capns.Cap {
+func DisbindCap() *capns.Cap {
 	id, _ := capns.NewCapUrnFromString("cap:op=grind")
 	
 	command := "grind"
@@ -393,7 +393,7 @@ func GrindCap() *capns.Cap {
 	
 	output := &capns.CapOutput{
 		OutputType:        capns.OutputTypeObject,
-		SchemaRef:   stringPtr("file-chips.json"),
+		SchemaRef:   stringPtr("disbound-pages.json"),
 		ContentType: stringPtr("application/json"),
 		Validation:  &capns.ArgumentValidation{},
 		OutputDescription: "Structured page content extracted from the document",
@@ -420,7 +420,7 @@ func GetAllStandardCaps() []*capns.Cap {
 		ExtractMetadataCap(),
 		GenerateThumbnailCap(),
 		ExtractOutlineCap(),
-		GrindCap(),
+		DisbindCap(),
 	}
 }
 
@@ -434,7 +434,7 @@ func GetStandardCap(name string) *capns.Cap {
 	case "extract-outline":
 		return ExtractOutlineCap()
 	case "grind":
-		return GrindCap()
+		return DisbindCap()
 	default:
 		return nil
 	}
@@ -451,7 +451,7 @@ func GetStandardCapByUrn(urnStr string) *capns.Cap {
 	case "cap:op=extract_outline":
 		return ExtractOutlineCap()
 	case "cap:op=grind":
-		return GrindCap()
+		return DisbindCap()
 	default:
 		return nil
 	}

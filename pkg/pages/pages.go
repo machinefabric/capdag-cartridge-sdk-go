@@ -160,8 +160,8 @@ func (e *ExtractionInfo) AddWarning(warning string) {
 	e.Warnings = append(e.Warnings, warning)
 }
 
-// GroundChips represents the complete document with pages
-type GroundChips struct {
+// DisboundPages represents the complete document with pages
+type DisboundPages struct {
 	// Source file path
 	SourceFile string `json:"source_file"`
 
@@ -181,9 +181,9 @@ type GroundChips struct {
 	ExtractionInfo ExtractionInfo `json:"extraction_info"`
 }
 
-// NewGroundChips creates a new file chips structure
-func NewGroundChips(sourceFile, documentType string, totalPages uint) *GroundChips {
-	return &GroundChips{
+// NewDisboundPages creates a new file chips structure
+func NewDisboundPages(sourceFile, documentType string, totalPages uint) *DisboundPages {
+	return &DisboundPages{
 		SourceFile:     sourceFile,
 		DocumentType:   documentType,
 		TotalPages:     totalPages,
@@ -193,18 +193,18 @@ func NewGroundChips(sourceFile, documentType string, totalPages uint) *GroundChi
 }
 
 // WithTitle sets the document title
-func (d *GroundChips) WithTitle(title string) *GroundChips {
+func (d *DisboundPages) WithTitle(title string) *DisboundPages {
 	d.DocumentTitle = &title
 	return d
 }
 
 // AddPage adds a page to the document
-func (d *GroundChips) AddPage(page FileChip) {
+func (d *DisboundPages) AddPage(page FileChip) {
 	d.Pages = append(d.Pages, page)
 }
 
 // GetChip gets a specific page by number (1-indexed)
-func (d *GroundChips) GetChip(orderIndex uint) *FileChip {
+func (d *DisboundPages) GetChip(orderIndex uint) *FileChip {
 	for i := range d.Pages {
 		if d.Pages[i].OrderIndex == orderIndex {
 			return &d.Pages[i]
@@ -214,7 +214,7 @@ func (d *GroundChips) GetChip(orderIndex uint) *FileChip {
 }
 
 // GetAllText gets all text content concatenated
-func (d *GroundChips) GetAllText() string {
+func (d *DisboundPages) GetAllText() string {
 	var parts []string
 	for _, page := range d.Pages {
 		pageText := page.GetTextContent()
@@ -226,7 +226,7 @@ func (d *GroundChips) GetAllText() string {
 }
 
 // TotalWordCount gets total word count across all pages
-func (d *GroundChips) TotalWordCount() uint {
+func (d *DisboundPages) TotalWordCount() uint {
 	total := uint(0)
 	for _, page := range d.Pages {
 		total += page.GetWordCount()
@@ -235,7 +235,7 @@ func (d *GroundChips) TotalWordCount() uint {
 }
 
 // TotalCharacterCount gets total character count across all pages
-func (d *GroundChips) TotalCharacterCount() uint {
+func (d *DisboundPages) TotalCharacterCount() uint {
 	total := uint(0)
 	for _, page := range d.Pages {
 		total += page.GetCharacterCount()
@@ -244,7 +244,7 @@ func (d *GroundChips) TotalCharacterCount() uint {
 }
 
 // IsEmpty checks if document is empty
-func (d *GroundChips) IsEmpty() bool {
+func (d *DisboundPages) IsEmpty() bool {
 	return len(d.Pages) == 0
 }
 

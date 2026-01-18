@@ -45,7 +45,7 @@ type (
 	// Data structures
 	FileMetadata     = metadata.FileMetadata
 	DocumentOutline  = outline.DocumentOutline
-	GroundChips    = pages.GroundChips
+	DisboundPages    = pages.DisboundPages
 	FileChip     = pages.FileChip
 	OutlineEntry     = outline.OutlineEntry
 	ExtractionInfo   = outline.ExtractionInfo
@@ -100,7 +100,7 @@ var (
 	NewExtractionInfo  = outline.NewExtractionInfo
 
 	// Pages constructors
-	NewGroundChips        = pages.NewGroundChips
+	NewDisboundPages        = pages.NewDisboundPages
 	NewFileChip         = pages.NewFileChip
 	NewFileChipWithText = pages.NewFileChipWithText
 

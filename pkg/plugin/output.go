@@ -96,7 +96,7 @@ type ExtractedData struct {
 	Outline *outline.DocumentOutline `json:"outline,omitempty"`
 
 	// File chips with text content
-	Pages *pages.GroundChips `json:"pages,omitempty"`
+	Pages *pages.DisboundPages `json:"pages,omitempty"`
 
 	// Extracted text content (alternative to pages structure)
 	TextContent *string `json:"text_content,omitempty"`
@@ -130,7 +130,7 @@ func (ed *ExtractedData) WithOutline(outline *outline.DocumentOutline) *Extracte
 }
 
 // WithPages adds pages
-func (ed *ExtractedData) WithPages(pages *pages.GroundChips) *ExtractedData {
+func (ed *ExtractedData) WithPages(pages *pages.DisboundPages) *ExtractedData {
 	ed.Pages = pages
 	ed.ExtractionSummary.AddComponent("pages")
 	return ed
