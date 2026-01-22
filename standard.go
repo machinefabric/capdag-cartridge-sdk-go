@@ -10,22 +10,22 @@ import (
 
 // Spec ID constants
 const (
-	SpecIdStr    = "media:type=string;v=1"
-	SpecIdInt    = "media:type=integer;v=1"
-	SpecIdNum    = "media:type=number;v=1"
-	SpecIdBool   = "media:type=boolean;v=1"
-	SpecIdObj    = "media:type=object;v=1"
-	SpecIdBinary = "media:type=binary;v=1"
+	SpecIdStr    = "media:string"
+	SpecIdInt    = "media:integer"
+	SpecIdNum    = "media:number"
+	SpecIdBool   = "media:boolean"
+	SpecIdObj    = "media:object"
+	SpecIdBinary = "media:binary"
 
 	// Output spec IDs for PDF document processing (with full schemas)
-	SpecIdFileMetadata = "media:type=file-metadata;v=1"
-	SpecIdDocumentOutline  = "media:type=document-outline;v=1"
-	SpecIdDisboundPages    = "media:type=disbound-pages;v=1"
+	SpecIdFileMetadata = "media:file-metadata"
+	SpecIdDocumentOutline  = "media:document-outline"
+	SpecIdDisboundPages    = "media:disbound-pages"
 )
 
 // InputSpecIdForExt returns the input spec ID for a given file extension
-// - PDF files: media:type=binary;v=1
-// - Text files (md, rst, log, txt): media:type=string;v=1
+// - PDF files: media:binary
+// - Text files (md, rst, log, txt): media:string
 func InputSpecIdForExt(ext string) string {
 	if ext == "pdf" {
 		return SpecIdBinary
@@ -34,8 +34,8 @@ func InputSpecIdForExt(ext string) string {
 }
 
 // ExtractMetadataOutputSpecIdForExt returns the output spec ID for extract-metadata by extension
-// - PDF files: media:type=extract-metadata-output;v=1 (has full schema)
-// - Text files: media:type=object;v=1 (generic JSON object)
+// - PDF files: media:extract-metadata-output (has full schema)
+// - Text files: media:object (generic JSON object)
 func ExtractMetadataOutputSpecIdForExt(ext string) string {
 	if ext == "pdf" {
 		return SpecIdFileMetadata
@@ -44,8 +44,8 @@ func ExtractMetadataOutputSpecIdForExt(ext string) string {
 }
 
 // ExtractOutlineOutputSpecIdForExt returns the output spec ID for extract-outline by extension
-// - PDF files: media:type=extract-outline-output;v=1 (has full schema)
-// - Text files: media:type=object;v=1 (generic JSON object)
+// - PDF files: media:extract-outline-output (has full schema)
+// - Text files: media:object (generic JSON object)
 func ExtractOutlineOutputSpecIdForExt(ext string) string {
 	if ext == "pdf" {
 		return SpecIdDocumentOutline
@@ -54,8 +54,8 @@ func ExtractOutlineOutputSpecIdForExt(ext string) string {
 }
 
 // DisboundPagesSpecIdForExt returns the output spec ID for grind by extension
-// - PDF files: media:type=disbound-pages;v=1 (has full schema)
-// - Text files: media:type=object;v=1 (generic JSON object)
+// - PDF files: media:disbound-pages (has full schema)
+// - Text files: media:object (generic JSON object)
 func DisboundPagesSpecIdForExt(ext string) string {
 	if ext == "pdf" {
 		return SpecIdDisboundPages
@@ -73,7 +73,7 @@ func ExtractMetadataUrn(ext string) string {
 // GenerateThumbnailUrn builds the URN for generate-thumbnail capability with given extension
 func GenerateThumbnailUrn(ext string) string {
 	inSpec := InputSpecIdForExt(ext)
-	return fmt.Sprintf("cap:ext=%s;in=%s;op=generate_thumbnail;out=media:type=binary;v=1", ext, inSpec)
+	return fmt.Sprintf("cap:ext=%s;in=%s;op=generate_thumbnail;out=media:binary", ext, inSpec)
 }
 
 // ExtractOutlineUrn builds the URN for extract-outline capability with given extension
