@@ -100,7 +100,7 @@ func ExtractMetadataCap() *capns.Cap {
 	arguments := capns.NewCapArguments()
 	
 	// Required file_path argument
-	filePathValidation := &capns.ArgumentValidation{
+	filePathValidation := &capns.MediaValidation{
 		Pattern:   stringPtr("^[^\\0]+$"),
 		MinLength: intPtr(1),
 	}
@@ -115,7 +115,7 @@ func ExtractMetadataCap() *capns.Cap {
 	arguments.AddRequired(filePathArg)
 	
 	// Optional output argument
-	outputValidation := &capns.ArgumentValidation{
+	outputValidation := &capns.MediaValidation{
 		Pattern: stringPtr("^[^\\0]+$"),
 	}
 	outputArg := capns.CapArgument{
@@ -131,7 +131,7 @@ func ExtractMetadataCap() *capns.Cap {
 		OutputType:        capns.OutputTypeObject,
 		SchemaRef:   stringPtr("file-metadata.json"),
 		ContentType: stringPtr("application/json"),
-		Validation:  &capns.ArgumentValidation{},
+		Validation:  &capns.MediaValidation{},
 		OutputDescription: "Structured metadata including file properties, document properties, and format-specific metadata",
 	}
 	
@@ -160,7 +160,7 @@ func GenerateThumbnailCap() *capns.Cap {
 	arguments := capns.NewCapArguments()
 	
 	// Required file_path argument
-	filePathValidation := &capns.ArgumentValidation{
+	filePathValidation := &capns.MediaValidation{
 		Pattern:   stringPtr("^[^\\0]+$"),
 		MinLength: intPtr(1),
 	}
@@ -175,7 +175,7 @@ func GenerateThumbnailCap() *capns.Cap {
 	arguments.AddRequired(filePathArg)
 	
 	// Optional width argument
-	widthValidation := &capns.ArgumentValidation{
+	widthValidation := &capns.MediaValidation{
 		Min: float64Ptr(50.0),
 		Max: float64Ptr(2000.0),
 	}
@@ -191,7 +191,7 @@ func GenerateThumbnailCap() *capns.Cap {
 	arguments.AddOptional(widthArg)
 	
 	// Optional height argument
-	heightValidation := &capns.ArgumentValidation{
+	heightValidation := &capns.MediaValidation{
 		Min: float64Ptr(50.0),
 		Max: float64Ptr(2000.0),
 	}
@@ -207,7 +207,7 @@ func GenerateThumbnailCap() *capns.Cap {
 	arguments.AddOptional(heightArg)
 	
 	// Optional output argument
-	outputValidation := &capns.ArgumentValidation{
+	outputValidation := &capns.MediaValidation{
 		Pattern: stringPtr("\\.(png|jpg|jpeg)$"),
 	}
 	outputArg := capns.CapArgument{
@@ -220,7 +220,7 @@ func GenerateThumbnailCap() *capns.Cap {
 	arguments.AddOptional(outputArg)
 	
 	// Optional page argument
-	pageValidation := &capns.ArgumentValidation{
+	pageValidation := &capns.MediaValidation{
 		Min: float64Ptr(1.0),
 	}
 	pageDefault := json.Number("1")
@@ -237,7 +237,7 @@ func GenerateThumbnailCap() *capns.Cap {
 	output := &capns.CapOutput{
 		OutputType:        capns.OutputTypeBinary,
 		ContentType: stringPtr("image/png"),
-		Validation:  &capns.ArgumentValidation{},
+		Validation:  &capns.MediaValidation{},
 		OutputDescription: "PNG image data representing a thumbnail of the document",
 	}
 	
@@ -266,7 +266,7 @@ func ExtractOutlineCap() *capns.Cap {
 	arguments := capns.NewCapArguments()
 	
 	// Required file_path argument
-	filePathValidation := &capns.ArgumentValidation{
+	filePathValidation := &capns.MediaValidation{
 		Pattern:   stringPtr("^[^\\0]+$"),
 		MinLength: intPtr(1),
 	}
@@ -281,7 +281,7 @@ func ExtractOutlineCap() *capns.Cap {
 	arguments.AddRequired(filePathArg)
 	
 	// Optional max_depth argument
-	maxDepthValidation := &capns.ArgumentValidation{
+	maxDepthValidation := &capns.MediaValidation{
 		Min: float64Ptr(1.0),
 		Max: float64Ptr(10.0),
 	}
@@ -300,13 +300,13 @@ func ExtractOutlineCap() *capns.Cap {
 		ArgType:        capns.ArgumentTypeBoolean,
 		ArgDescription: "Include page numbers in the outline (default: true)",
 		CliFlag:     "--include-order-indexes",
-		Validation:  &capns.ArgumentValidation{},
+		Validation:  &capns.MediaValidation{},
 		DefaultValue:     true,
 	}
 	arguments.AddOptional(includeOrderIndexesArg)
 	
 	// Optional output argument
-	outputValidation := &capns.ArgumentValidation{
+	outputValidation := &capns.MediaValidation{
 		Pattern: stringPtr("^[^\\0]+$"),
 	}
 	outputArg := capns.CapArgument{
@@ -322,7 +322,7 @@ func ExtractOutlineCap() *capns.Cap {
 		OutputType:        capns.OutputTypeObject,
 		SchemaRef:   stringPtr("document-outline.json"),
 		ContentType: stringPtr("application/json"),
-		Validation:  &capns.ArgumentValidation{},
+		Validation:  &capns.MediaValidation{},
 		OutputDescription: "Hierarchical document outline with section titles and optional page numbers",
 	}
 	
@@ -351,7 +351,7 @@ func DisbindCap() *capns.Cap {
 	arguments := capns.NewCapArguments()
 	
 	// Required file_path argument
-	filePathValidation := &capns.ArgumentValidation{
+	filePathValidation := &capns.MediaValidation{
 		Pattern:   stringPtr("^[^\\0]+$"),
 		MinLength: intPtr(1),
 	}
@@ -366,7 +366,7 @@ func DisbindCap() *capns.Cap {
 	arguments.AddRequired(filePathArg)
 	
 	// Optional output argument
-	outputValidation := &capns.ArgumentValidation{
+	outputValidation := &capns.MediaValidation{
 		Pattern: stringPtr("^[^\\0]+$"),
 	}
 	outputArg := capns.CapArgument{
@@ -379,7 +379,7 @@ func DisbindCap() *capns.Cap {
 	arguments.AddOptional(outputArg)
 	
 	// Optional index_range argument
-	indexRangeValidation := &capns.ArgumentValidation{
+	indexRangeValidation := &capns.MediaValidation{
 		Pattern: stringPtr("^\\d+(-\\d*)?$"),
 	}
 	indexRangeArg := capns.CapArgument{
@@ -395,7 +395,7 @@ func DisbindCap() *capns.Cap {
 		OutputType:        capns.OutputTypeObject,
 		SchemaRef:   stringPtr("disbound-pages.json"),
 		ContentType: stringPtr("application/json"),
-		Validation:  &capns.ArgumentValidation{},
+		Validation:  &capns.MediaValidation{},
 		OutputDescription: "Structured page content extracted from the document",
 	}
 	
