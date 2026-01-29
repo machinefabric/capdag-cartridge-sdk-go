@@ -46,7 +46,7 @@ type (
 	FileMetadata     = metadata.FileMetadata
 	DocumentOutline  = outline.DocumentOutline
 	DisboundPages    = pages.DisboundPages
-	FileChip     = pages.FileChip
+	DisboundPage     = pages.DisboundPage
 	OutlineEntry     = outline.OutlineEntry
 	ExtractionInfo   = outline.ExtractionInfo
 	
@@ -101,8 +101,8 @@ var (
 
 	// Pages constructors
 	NewDisboundPages        = pages.NewDisboundPages
-	NewFileChip         = pages.NewFileChip
-	NewFileChipWithText = pages.NewFileChipWithText
+	NewDisboundPage         = pages.NewDisboundPage
+	NewDisboundPageWithText = pages.NewDisboundPageWithText
 
 	// Handler constructors
 	NewHandlerRegistry = handler.NewHandlerRegistry

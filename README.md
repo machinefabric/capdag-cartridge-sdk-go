@@ -81,7 +81,7 @@ func (h *MyDocumentHandler) Grind(ctx context.Context, filePath string) (*sdk.Di
     
     // Create pages structure
     pages := sdk.NewDisboundPages(filePath, "text", 1)
-    page := sdk.NewFileChipWithText(1, string(content))
+    page := sdk.NewDisboundPageWithText(1, string(content))
     pages.AddPage(*page)
     
     return pages, nil
@@ -154,7 +154,7 @@ Page-based text content organization:
 
 ```go
 pages := sdk.NewDisboundPages("/path/to/file.pdf", "pdf", 10)
-page := sdk.NewFileChipWithText(1, "Page content here...")
+page := sdk.NewDisboundPageWithText(1, "Page content here...")
 pages.AddPage(*page)
 ```
 

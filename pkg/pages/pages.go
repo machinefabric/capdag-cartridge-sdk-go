@@ -49,8 +49,8 @@ func (p *DocumentParagraph) IsEmpty() bool {
 	return strings.TrimSpace(p.TextContent) == ""
 }
 
-// FileChip represents a single page within a document
-type FileChip struct {
+// DisboundPage represents a single page within a document
+type DisboundPage struct {
 	// Page number (1-indexed)
 	OrderIndex uint `json:"order_index"`
 
@@ -67,20 +67,20 @@ type FileChip struct {
 	CharacterCount *uint `json:"character_count,omitempty"`
 }
 
-// NewFileChip creates a new file chip
-func NewFileChip(orderIndex uint) *FileChip {
-	return &FileChip{
+// NewDisboundPage creates a new file chip
+func NewDisboundPage(orderIndex uint) *DisboundPage {
+	return &DisboundPage{
 		OrderIndex:  orderIndex,
 		TextContent: "",
 	}
 }
 
-// NewFileChipWithText creates a new file chip with text content
-func NewFileChipWithText(orderIndex uint, textContent string) *FileChip {
+// NewDisboundPageWithText creates a new file chip with text content
+func NewDisboundPageWithText(orderIndex uint, textContent string) *DisboundPage {
 	wordCount := uint(countWords(textContent))
 	charCount := uint(len(textContent))
 
-	return &FileChip{
+	return &DisboundPage{
 		OrderIndex:     orderIndex,
 		TextContent:    textContent,
 		WordCount:      &wordCount,
@@ -89,13 +89,13 @@ func NewFileChipWithText(orderIndex uint, textContent string) *FileChip {
 }
 
 // WithSourceRef sets the source reference
-func (p *FileChip) WithSourceRef(sourceRef string) *FileChip {
+func (p *DisboundPage) WithSourceRef(sourceRef string) *DisboundPage {
 	p.SourceRef = &sourceRef
 	return p
 }
 
 // SetTextContent sets the text content and updates word/character counts
-func (p *FileChip) SetTextContent(textContent string) {
+func (p *DisboundPage) SetTextContent(textContent string) {
 	p.TextContent = textContent
 	wordCount := uint(countWords(textContent))
 	charCount := uint(len(textContent))
@@ -104,12 +104,12 @@ func (p *FileChip) SetTextContent(textContent string) {
 }
 
 // GetTextContent gets the text content of this page
-func (p *FileChip) GetTextContent() string {
+func (p *DisboundPage) GetTextContent() string {
 	return p.TextContent
 }
 
 // GetWordCount gets word count for this page
-func (p *FileChip) GetWordCount() uint {
+func (p *DisboundPage) GetWordCount() uint {
 	if p.WordCount != nil {
 		return *p.WordCount
 	}
@@ -117,7 +117,7 @@ func (p *FileChip) GetWordCount() uint {
 }
 
 // GetCharacterCount gets character count for this page
-func (p *FileChip) GetCharacterCount() uint {
+func (p *DisboundPage) GetCharacterCount() uint {
 	if p.CharacterCount != nil {
 		return *p.CharacterCount
 	}
@@ -125,7 +125,7 @@ func (p *FileChip) GetCharacterCount() uint {
 }
 
 // IsEmpty checks if page is empty
-func (p *FileChip) IsEmpty() bool {
+func (p *DisboundPage) IsEmpty() bool {
 	return strings.TrimSpace(p.TextContent) == ""
 }
 
@@ -175,7 +175,7 @@ type DisboundPages struct {
 	TotalPages uint `json:"total_pages"`
 
 	// All pages in the document
-	Pages []FileChip `json:"pages"`
+	Pages []DisboundPage `json:"pages"`
 
 	// Metadata about the extraction process
 	ExtractionInfo ExtractionInfo `json:"extraction_info"`
@@ -187,7 +187,7 @@ func NewDisboundPages(sourceFile, documentType string, totalPages uint) *Disboun
 		SourceFile:     sourceFile,
 		DocumentType:   documentType,
 		TotalPages:     totalPages,
-		Pages:          make([]FileChip, 0),
+		Pages:          make([]DisboundPage, 0),
 		ExtractionInfo: *NewExtractionInfo("unknown", "unknown"),
 	}
 }
@@ -199,12 +199,12 @@ func (d *DisboundPages) WithTitle(title string) *DisboundPages {
 }
 
 // AddPage adds a page to the document
-func (d *DisboundPages) AddPage(page FileChip) {
+func (d *DisboundPages) AddPage(page DisboundPage) {
 	d.Pages = append(d.Pages, page)
 }
 
 // GetChip gets a specific page by number (1-indexed)
-func (d *DisboundPages) GetChip(orderIndex uint) *FileChip {
+func (d *DisboundPages) GetChip(orderIndex uint) *DisboundPage {
 	for i := range d.Pages {
 		if d.Pages[i].OrderIndex == orderIndex {
 			return &d.Pages[i]
