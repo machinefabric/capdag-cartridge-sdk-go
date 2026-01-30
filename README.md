@@ -72,18 +72,18 @@ func (h *MyDocumentHandler) ExtractOutline(ctx context.Context, filePath string)
     return outline, nil
 }
 
-func (h *MyDocumentHandler) Grind(ctx context.Context, filePath string) (*sdk.DisboundPages, error) {
+func (h *MyDocumentHandler) Disbind(ctx context.Context, filePath string) ([]sdk.DisboundPage, error) {
     // Read file content
     content, err := os.ReadFile(filePath)
     if err != nil {
         return nil, err
     }
-    
-    // Create pages structure
-    pages := sdk.NewDisboundPages(filePath, "text", 1)
+
+    // Create pages array
+    var pages []sdk.DisboundPage
     page := sdk.NewDisboundPageWithText(1, string(content))
-    pages.AddPage(*page)
-    
+    pages = append(pages, *page)
+
     return pages, nil
 }
 
@@ -145,17 +145,17 @@ entry := sdk.NewOutlineEntry("Chapter 1", 0).WithPage(5)
 outline.AddEntry(*entry)
 ```
 
-### DisboundPages
+### DisboundPage (Array)
 
-Page-based text content organization:
-- Documents contain pages (1-indexed)
-- Pages contain paragraphs (1-indexed within page)
-- Automatic word/character counting
+Page-based text content organization using a simple slice:
+- Pages are 1-indexed via order_index
+- Automatic word/character counting per page
+- Output is a JSON array of page objects
 
 ```go
-pages := sdk.NewDisboundPages("/path/to/file.pdf", "pdf", 10)
+var pages []sdk.DisboundPage
 page := sdk.NewDisboundPageWithText(1, "Page content here...")
-pages.AddPage(*page)
+pages = append(pages, *page)
 ```
 
 ## Plugin Caps
@@ -192,7 +192,7 @@ if err != nil {
 This SDK implements the JSON schemas defined in the `fgnd/plugin-schemas/` directory:
 - `file-metadata.json` - FileMetadata structure
 - `document-outline.json` - DocumentOutline structure  
-- `disbound-pages.json` - DisboundPages structure
+- `disbound-page.json` - DisboundPage structure (output is array of these)
 - `manifest.json` - Plugin manifest
 - `handler-interface.json` - DocumentHandler interface
 

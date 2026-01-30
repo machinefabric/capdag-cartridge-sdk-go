@@ -43,12 +43,11 @@ type (
 	DocumentHandler = handler.DocumentHandler
 
 	// Data structures
-	FileMetadata     = metadata.FileMetadata
-	DocumentOutline  = outline.DocumentOutline
-	DisboundPages    = pages.DisboundPages
-	DisboundPage     = pages.DisboundPage
-	OutlineEntry     = outline.OutlineEntry
-	ExtractionInfo   = outline.ExtractionInfo
+	FileMetadata    = metadata.FileMetadata
+	DocumentOutline = outline.DocumentOutline
+	DisboundPage    = pages.DisboundPage
+	OutlineEntry    = outline.OutlineEntry
+	ExtractionInfo  = outline.ExtractionInfo
 	
 	// Handler types
 	FileInfo            = handler.FileInfo
@@ -100,7 +99,6 @@ var (
 	NewExtractionInfo  = outline.NewExtractionInfo
 
 	// Pages constructors
-	NewDisboundPages        = pages.NewDisboundPages
 	NewDisboundPage         = pages.NewDisboundPage
 	NewDisboundPageWithText = pages.NewDisboundPageWithText
 

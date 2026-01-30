@@ -18,9 +18,9 @@ const (
 	SpecIdBinary = "media:binary"
 
 	// Output spec IDs for PDF document processing (with full schemas)
-	SpecIdFileMetadata = "media:file-metadata"
-	SpecIdDocumentOutline  = "media:document-outline"
-	SpecIdDisboundPages    = "media:disbound-pages"
+	SpecIdFileMetadata    = "media:file-metadata"
+	SpecIdDocumentOutline = "media:document-outline"
+	SpecIdDisboundPage    = "media:disbound-page"
 )
 
 // InputSpecIdForExt returns the input spec ID for a given file extension
@@ -53,12 +53,12 @@ func ExtractOutlineOutputSpecIdForExt(ext string) string {
 	return SpecIdObj
 }
 
-// DisboundPagesSpecIdForExt returns the output spec ID for grind by extension
-// - PDF files: media:disbound-pages (has full schema)
+// DisboundPageSpecIdForExt returns the output spec ID for disbind by extension
+// - PDF files: media:disbound-page (has full schema, output is array)
 // - Text files: media:object (generic JSON object)
-func DisboundPagesSpecIdForExt(ext string) string {
+func DisboundPageSpecIdForExt(ext string) string {
 	if ext == "pdf" {
-		return SpecIdDisboundPages
+		return SpecIdDisboundPage
 	}
 	return SpecIdObj
 }
@@ -86,7 +86,7 @@ func ExtractOutlineUrn(ext string) string {
 // GrindUrn builds the URN for grind capability with given extension
 func GrindUrn(ext string) string {
 	inSpec := InputSpecIdForExt(ext)
-	outSpec := DisboundPagesSpecIdForExt(ext)
+	outSpec := DisboundPageSpecIdForExt(ext)
 	return fmt.Sprintf("cap:ext=%s;in=%s;op=grind;out=%s", ext, inSpec, outSpec)
 }
 
@@ -392,11 +392,11 @@ func DisbindCap() *capns.Cap {
 	arguments.AddOptional(indexRangeArg)
 	
 	output := &capns.CapOutput{
-		OutputType:        capns.OutputTypeObject,
-		SchemaRef:   stringPtr("disbound-pages.json"),
-		ContentType: stringPtr("application/json"),
-		Validation:  &capns.MediaValidation{},
-		OutputDescription: "Structured page content extracted from the document",
+		OutputType:        capns.OutputTypeArray,
+		SchemaRef:         stringPtr("disbound-page.json"),
+		ContentType:       stringPtr("application/json"),
+		Validation:        &capns.MediaValidation{},
+		OutputDescription: "Array of structured page content extracted from the document",
 	}
 	
 	cap := capns.NewCapWithDescription(
