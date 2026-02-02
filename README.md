@@ -224,6 +224,6 @@ MIT License - see LICENSE file for details.
 
 - **fgnd-plugin-sdk** - Rust SDK implementation
 - **fgnd** - Main FGND engine
-- **txtczar** - Text and Markdown processor
-- **pdfczar** - PDF processor  
-- **epubczar** - EPUB processor
+- **txtcartridge** - Text and Markdown processor
+- **pdfcartridge** - PDF processor  
+- **epubcartridge** - EPUB processor
