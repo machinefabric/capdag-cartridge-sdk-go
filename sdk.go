@@ -1,18 +1,18 @@
-// Package sdk provides the main FGND Plugin SDK for Go
+// Package sdk provides the main MACINA Plugin SDK for Go
 package sdk
 
 import (
-	"github.com/jowharshamshiri/fgnd-plugin-sdk-go/pkg/handler"
-	"github.com/jowharshamshiri/fgnd-plugin-sdk-go/pkg/metadata"
-	"github.com/jowharshamshiri/fgnd-plugin-sdk-go/pkg/outline"
-	"github.com/jowharshamshiri/fgnd-plugin-sdk-go/pkg/pages"
-	"github.com/jowharshamshiri/fgnd-plugin-sdk-go/pkg/plugin"
+	"github.com/jowharshamshiri/macina-plugin-sdk-go/pkg/handler"
+	"github.com/jowharshamshiri/macina-plugin-sdk-go/pkg/metadata"
+	"github.com/jowharshamshiri/macina-plugin-sdk-go/pkg/outline"
+	"github.com/jowharshamshiri/macina-plugin-sdk-go/pkg/pages"
+	"github.com/jowharshamshiri/macina-plugin-sdk-go/pkg/plugin"
 	
 	// Re-export cap SDK types
-	capns "github.com/fgnd/cap-sdk-go"
+	capns "github.com/macina/cap-sdk-go"
 )
 
-// Version of the FGND Plugin SDK
+// Version of the MACINA Plugin SDK
 const Version = "0.1.0"
 
 // Re-export argument type constants
