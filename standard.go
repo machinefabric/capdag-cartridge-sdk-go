@@ -24,7 +24,7 @@ const (
 )
 
 // InputSpecIdForExt returns the input spec ID for a given file extension
-// - PDF files: media:bytes
+// - PDF files: media:
 // - Text files (md, rst, log, txt): media:string
 func InputSpecIdForExt(ext string) string {
 	if ext == "pdf" {

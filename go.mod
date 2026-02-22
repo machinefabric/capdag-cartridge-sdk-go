@@ -1,4 +1,5 @@
 module github.com/jowharshamshiri/fgrnd-plugin-sdk-go
+// version: 0.62.4959
 
 go 1.21
 
