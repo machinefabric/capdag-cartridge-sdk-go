@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"log"
 
-	sdk "github.com/jowharshamshiri/macina-plugin-sdk-go"
+	sdk "github.com/jowharshamshiri/fgrnd-plugin-sdk-go"
 )
 
 func main() {

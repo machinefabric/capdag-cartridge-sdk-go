@@ -2,14 +2,14 @@
 package sdk
 
 import (
-	"github.com/jowharshamshiri/macina-plugin-sdk-go/pkg/handler"
-	"github.com/jowharshamshiri/macina-plugin-sdk-go/pkg/metadata"
-	"github.com/jowharshamshiri/macina-plugin-sdk-go/pkg/outline"
-	"github.com/jowharshamshiri/macina-plugin-sdk-go/pkg/pages"
-	"github.com/jowharshamshiri/macina-plugin-sdk-go/pkg/plugin"
-	
+	"github.com/jowharshamshiri/fgrnd-plugin-sdk-go/pkg/handler"
+	"github.com/jowharshamshiri/fgrnd-plugin-sdk-go/pkg/metadata"
+	"github.com/jowharshamshiri/fgrnd-plugin-sdk-go/pkg/outline"
+	"github.com/jowharshamshiri/fgrnd-plugin-sdk-go/pkg/pages"
+	"github.com/jowharshamshiri/fgrnd-plugin-sdk-go/pkg/plugin"
+
 	// Re-export cap SDK types
-	capns "github.com/macina/cap-sdk-go"
+	capns "github.com/filegrind/capns-go/cap"
 )
 
 // Version of the MACINA Plugin SDK

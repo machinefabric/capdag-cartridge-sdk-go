@@ -5,9 +5,9 @@ import (
 	"testing"
 	"time"
 
+	capns "github.com/filegrind/capns-go/cap"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	capns "github.com/macina/cap-sdk-go"
 )
 
 func TestPluginRegistryCreation(t *testing.T) {

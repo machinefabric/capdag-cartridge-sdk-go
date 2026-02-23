@@ -2,7 +2,7 @@
 package handler
 
 import (
-	capns "github.com/macina/cap-sdk-go"
+	capns "github.com/filegrind/capns-go"
 )
 
 // Re-export CapManifest from capns as PluginManifest for backward compatibility

@@ -1,5 +1,6 @@
 module github.com/jowharshamshiri/fgrnd-plugin-sdk-go
-// version: 0.62.4959
+
+// version: 0.63.4966
 
 go 1.21
 
@@ -10,6 +11,7 @@ require (
 
 require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
+	github.com/filegrind/tagged-urn-go v0.0.0 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/xeipuuv/gojsonpointer v0.0.0-20180127040702-4e3ac2762d5f // indirect
 	github.com/xeipuuv/gojsonreference v0.0.0-20180127040603-bd5ef7bd5415 // indirect
@@ -18,3 +20,5 @@ require (
 )
 
 replace github.com/filegrind/capns-go => ../capns-go
+
+replace github.com/filegrind/tagged-urn-go => ../tagged-urn-go
