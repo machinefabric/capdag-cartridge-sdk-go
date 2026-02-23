@@ -8,34 +8,12 @@ import (
 	"github.com/jowharshamshiri/fgrnd-plugin-sdk-go/pkg/pages"
 	"github.com/jowharshamshiri/fgrnd-plugin-sdk-go/pkg/plugin"
 
-	// Re-export cap SDK types
-	capns "github.com/filegrind/capns-go/cap"
+	"github.com/filegrind/capns-go/cap"
+	"github.com/filegrind/capns-go/urn"
 )
 
 // Version of the MACINA Plugin SDK
-const Version = "0.1.0"
-
-// Re-export argument type constants
-const (
-	ArgumentTypeString  = capns.ArgumentTypeString
-	ArgumentTypeInteger = capns.ArgumentTypeInteger
-	ArgumentTypeNumber  = capns.ArgumentTypeNumber
-	ArgumentTypeBoolean = capns.ArgumentTypeBoolean
-	ArgumentTypeArray   = capns.ArgumentTypeArray
-	ArgumentTypeObject  = capns.ArgumentTypeObject
-	ArgumentTypeBinary  = capns.ArgumentTypeBinary
-)
-
-// Re-export output type constants
-const (
-	OutputTypeString  = capns.OutputTypeString
-	OutputTypeInteger = capns.OutputTypeInteger
-	OutputTypeNumber  = capns.OutputTypeNumber
-	OutputTypeBoolean = capns.OutputTypeBoolean
-	OutputTypeArray   = capns.OutputTypeArray
-	OutputTypeObject  = capns.OutputTypeObject
-	OutputTypeBinary  = capns.OutputTypeBinary
-)
+const Version = "0.2.0"
 
 // Re-export commonly used types for convenience
 type (
@@ -48,43 +26,44 @@ type (
 	DisboundPage    = pages.DisboundPage
 	OutlineEntry    = outline.OutlineEntry
 	ExtractionInfo  = outline.ExtractionInfo
-	
+
 	// Handler types
-	FileInfo            = handler.FileInfo
-	QuickMetadata       = handler.QuickMetadata
-	ProcessingResult    = handler.ProcessingResult
-	HandlerRegistry     = handler.HandlerRegistry
-	PluginManifest      = capns.CapManifest
-	
+	FileInfo         = handler.FileInfo
+	QuickMetadata    = handler.QuickMetadata
+	ProcessingResult = handler.ProcessingResult
+	HandlerRegistry  = handler.HandlerRegistry
+
 	// Cap types from cap SDK
-	CapUrn         = capns.CapUrn
-	Cap           = capns.Cap
-	CapMatcher    = capns.CapMatcher
-	CapCaller     = capns.CapCaller
-	ResponseWrapper = capns.ResponseWrapper
-	CapSet       = capns.CapSet
-	HostResult    = capns.HostResult
-	
-	// Argument and output types
-	ArgumentType = capns.ArgumentType
-	OutputType   = capns.OutputType
-	
+	CapUrn          = urn.CapUrn
+	CapMatcher      = urn.CapMatcher
+	Cap             = cap.Cap
+	CapArg          = cap.CapArg
+	ArgSource       = cap.ArgSource
+	CapOutput       = cap.CapOutput
+	CapCaller       = cap.CapCaller
+	ResponseWrapper = cap.ResponseWrapper
+	CapSet          = cap.CapSet
+	HostResult      = cap.HostResult
+
+	// Argument value types
+	CapArgumentValue = cap.CapArgumentValue
+
 	// Schema validation types
-	SchemaValidator            = capns.SchemaValidator
-	SchemaValidationError      = capns.SchemaValidationError
-	SchemaResolver             = capns.SchemaResolver
-	FileSchemaResolver         = capns.FileSchemaResolver
-	CapValidationCoordinator   = capns.CapValidationCoordinator
-	InputValidator             = capns.InputValidator
-	OutputValidator            = capns.OutputValidator
+	SchemaValidator          = cap.SchemaValidator
+	SchemaValidationError    = cap.SchemaValidationError
+	SchemaResolver           = cap.SchemaResolver
+	FileSchemaResolver       = cap.FileSchemaResolver
+	CapValidationCoordinator = cap.CapValidationCoordinator
+	InputValidator           = cap.InputValidator
+	OutputValidator          = cap.OutputValidator
 
 	// Output types
-	ExtractedData      = plugin.ExtractedData
-	ThumbnailInfo      = plugin.ThumbnailInfo
-	ExtractionSummary  = plugin.ExtractionSummary
-	OutputFormat       = plugin.OutputFormat
-	OutlineFormatter   = plugin.OutlineFormatter
-	MetadataFormatter  = plugin.MetadataFormatter
+	ExtractedData     = plugin.ExtractedData
+	ThumbnailInfo     = plugin.ThumbnailInfo
+	ExtractionSummary = plugin.ExtractionSummary
+	OutputFormat      = plugin.OutputFormat
+	OutlineFormatter  = plugin.OutlineFormatter
+	MetadataFormatter = plugin.MetadataFormatter
 )
 
 // Constructor functions for convenience
@@ -95,7 +74,7 @@ var (
 
 	// Outline constructors
 	NewDocumentOutline = outline.NewDocumentOutline
-	NewOutlineEntry        = outline.NewOutlineEntry
+	NewOutlineEntry    = outline.NewOutlineEntry
 	NewExtractionInfo  = outline.NewExtractionInfo
 
 	// Pages constructors
@@ -110,38 +89,40 @@ var (
 	// Output constructors
 	NewExtractedData     = plugin.NewExtractedData
 	NewExtractionSummary = plugin.NewExtractionSummary
-	
+
+	// URN constructors
+	NewCapUrnFromString = urn.NewCapUrnFromString
+	NewCapUrnFromTags   = urn.NewCapUrnFromTags
+	NewCapUrnBuilder    = urn.NewCapUrnBuilder
+
 	// Cap constructors
-	NewCapUrnFromString           = capns.NewCapUrnFromString
-	NewCapUrnFromTags             = capns.NewCapUrnFromTags
-	NewCapUrnBuilder              = capns.NewCapUrnBuilder
-	NewCap                       = capns.NewCap
-	NewCapWithDescription        = capns.NewCapWithDescription
-	NewCapWithMetadata           = capns.NewCapWithMetadata
-	NewCapWithDescriptionAndMetadata = capns.NewCapWithDescriptionAndMetadata
-	NewPluginManifest                       = capns.NewCapManifest
-	
-	// Schema-enabled constructors
-	NewCapArgumentWithSchema      = capns.NewCapArgumentWithSchema
-	NewCapArgumentWithSchemaRef   = capns.NewCapArgumentWithSchemaRef
-	NewCapOutputWithSchemaRef     = capns.NewCapOutputWithSchemaRef
-	NewCapOutputWithEmbeddedSchema = capns.NewCapOutputWithEmbeddedSchema
-	
+	NewCap                = cap.NewCap
+	NewCapWithDescription = cap.NewCapWithDescription
+	NewCapWithMetadata    = cap.NewCapWithMetadata
+
+	// Argument constructors
+	NewCapArg                = cap.NewCapArg
+	NewCapArgWithDescription = cap.NewCapArgWithDescription
+	NewCapOutput             = cap.NewCapOutput
+
+	// Argument value constructors
+	NewCapArgumentValue        = cap.NewCapArgumentValue
+	NewCapArgumentValueFromStr = cap.NewCapArgumentValueFromStr
+
 	// Validation constructors
-	NewSchemaValidator                     = capns.NewSchemaValidator
-	NewSchemaValidatorWithResolver         = capns.NewSchemaValidatorWithResolver
-	NewFileSchemaResolver                  = capns.NewFileSchemaResolver
-	NewCapValidationCoordinator            = capns.NewCapValidationCoordinator
-	NewCapValidationCoordinatorWithSchemaResolver = capns.NewCapValidationCoordinatorWithSchemaResolver
-	NewInputValidator                      = capns.NewInputValidator
-	NewInputValidatorWithSchemaResolver    = capns.NewInputValidatorWithSchemaResolver
-	NewOutputValidator                     = capns.NewOutputValidator
-	NewOutputValidatorWithSchemaResolver   = capns.NewOutputValidatorWithSchemaResolver
-	
+	NewSchemaValidator                                = cap.NewSchemaValidator
+	NewSchemaValidatorWithResolver                    = cap.NewSchemaValidatorWithResolver
+	NewFileSchemaResolver                             = cap.NewFileSchemaResolver
+	NewCapValidationCoordinator                       = cap.NewCapValidationCoordinator
+	NewCapValidationCoordinatorWithSchemaResolver     = cap.NewCapValidationCoordinatorWithSchemaResolver
+	NewInputValidator                                 = cap.NewInputValidator
+	NewInputValidatorWithSchemaResolver               = cap.NewInputValidatorWithSchemaResolver
+	NewOutputValidator                                = cap.NewOutputValidator
+	NewOutputValidatorWithSchemaResolver              = cap.NewOutputValidatorWithSchemaResolver
+
 	// Caller/Response constructors
-	NewCapCaller               = capns.NewCapCaller
-	NewResponseWrapperFromJSON = capns.NewResponseWrapperFromJSON
-	NewResponseWrapperFromText = capns.NewResponseWrapperFromText
-	NewResponseWrapperFromBinary = capns.NewResponseWrapperFromBinary
-	
+	NewCapCaller               = cap.NewCapCaller
+	NewResponseWrapperFromJSON   = cap.NewResponseWrapperFromJSON
+	NewResponseWrapperFromText   = cap.NewResponseWrapperFromText
+	NewResponseWrapperFromBinary = cap.NewResponseWrapperFromBinary
 )

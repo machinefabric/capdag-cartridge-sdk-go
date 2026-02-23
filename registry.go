@@ -5,17 +5,17 @@ import (
 	"context"
 	"fmt"
 	"os/exec"
-	"strings"
 
-	capns "github.com/filegrind/capns-go/cap"
+	"github.com/filegrind/capns-go/cap"
+	"github.com/filegrind/capns-go/urn"
 )
 
 // PluginRegistry provides cap-based access to plugins with caller support
 type PluginRegistry struct {
-	plugins   map[string]*PluginEntry
-	capIndex  map[string][]string
-	registry  *capns.CapRegistry
-	hostImpl  *PluginCapSet
+	plugins  map[string]*PluginEntry
+	capIndex map[string][]string
+	registry *cap.CapRegistry
+	hostImpl *PluginCapSet
 }
 
 // PluginEntry represents a registered plugin with its capabilities
@@ -39,15 +39,14 @@ type PluginCapSet struct {
 	registry *PluginRegistry
 }
 
-// ExecuteCap implements the CapSet interface for plugin execution
+// ExecuteCap implements the CapSet interface for plugin execution.
+// Arguments are identified by media_urn and converted to CLI arguments
+// based on the cap definition's argument sources.
 func (pch *PluginCapSet) ExecuteCap(
 	ctx context.Context,
 	capUrn string,
-	positionalArgs []string,
-	namedArgs map[string]string,
-	stdinData []byte,
-) (*capns.HostResult, error) {
-	// Find the plugin that can handle this cap
+	arguments []cap.CapArgumentValue,
+) (*cap.HostResult, error) {
 	pluginName := pch.registry.findBestPluginForCap(capUrn)
 	if pluginName == "" {
 		return nil, fmt.Errorf("no plugin found for cap: %s", capUrn)
@@ -58,13 +57,12 @@ func (pch *PluginCapSet) ExecuteCap(
 		return nil, fmt.Errorf("plugin %s not found", pluginName)
 	}
 
-	// Parse cap URN to extract command
-	capUrnObj, err := capns.NewCapUrnFromString(capUrn)
+	capUrnObj, err := urn.NewCapUrnFromString(capUrn)
 	if err != nil {
 		return nil, fmt.Errorf("invalid cap URN: %w", err)
 	}
 
-	// Build command based on cap op
+	// Build command from cap op
 	var command string
 	if op, exists := capUrnObj.GetTag("op"); exists {
 		if target, targetExists := capUrnObj.GetTag("target"); targetExists {
@@ -76,21 +74,83 @@ func (pch *PluginCapSet) ExecuteCap(
 		return nil, fmt.Errorf("cap URN missing op tag: %s", capUrn)
 	}
 
-	// Build full command arguments
-	cmdArgs := []string{command}
-
-	// Add positional arguments
-	cmdArgs = append(cmdArgs, positionalArgs...)
-
-	// Add named arguments
-	for name, value := range namedArgs {
-		cmdArgs = append(cmdArgs, fmt.Sprintf("--%s", name), value)
+	// Look up cap definition to map arguments to CLI args
+	var capDef *cap.Cap
+	if standardCap := GetStandardCapByUrn(capUrn); standardCap != nil {
+		capDef = standardCap
 	}
 
-	// Execute the plugin
+	cmdArgs := []string{command}
+	var stdinData []byte
+
+	if capDef != nil {
+		// Map each CapArgumentValue to its source using the cap definition
+		for _, argVal := range arguments {
+			argDef := capDef.FindArgByMediaUrn(argVal.MediaUrn)
+			if argDef == nil {
+				// No definition found; treat as positional
+				valStr, err := argVal.ValueAsStr()
+				if err != nil {
+					cmdArgs = append(cmdArgs, string(argVal.Value))
+				} else {
+					cmdArgs = append(cmdArgs, valStr)
+				}
+				continue
+			}
+
+			// Use the first non-stdin source to determine CLI form
+			placed := false
+			for _, src := range argDef.Sources {
+				if src.IsStdin() {
+					stdinData = argVal.Value
+					placed = true
+					break
+				}
+				if src.IsCliFlag() {
+					flag := src.GetCliFlag()
+					if flag != nil {
+						valStr, err := argVal.ValueAsStr()
+						if err != nil {
+							valStr = string(argVal.Value)
+						}
+						cmdArgs = append(cmdArgs, *flag, valStr)
+						placed = true
+						break
+					}
+				}
+				if src.IsPosition() {
+					valStr, err := argVal.ValueAsStr()
+					if err != nil {
+						valStr = string(argVal.Value)
+					}
+					cmdArgs = append(cmdArgs, valStr)
+					placed = true
+					break
+				}
+			}
+			if !placed {
+				valStr, err := argVal.ValueAsStr()
+				if err != nil {
+					cmdArgs = append(cmdArgs, string(argVal.Value))
+				} else {
+					cmdArgs = append(cmdArgs, valStr)
+				}
+			}
+		}
+	} else {
+		// No cap definition: pass all argument values as positional
+		for _, argVal := range arguments {
+			valStr, err := argVal.ValueAsStr()
+			if err != nil {
+				cmdArgs = append(cmdArgs, string(argVal.Value))
+			} else {
+				cmdArgs = append(cmdArgs, valStr)
+			}
+		}
+	}
+
 	cmd := exec.CommandContext(ctx, plugin.BinaryPath, cmdArgs...)
 
-	// Set stdin if provided
 	if stdinData != nil {
 		stdin, err := cmd.StdinPipe()
 		if err != nil {
@@ -111,13 +171,12 @@ func (pch *PluginCapSet) ExecuteCap(
 		return nil, fmt.Errorf("plugin execution failed: %w", err)
 	}
 
-	// Determine if output is binary based on cap URN
 	isBinary := false
 	if outputType, exists := capUrnObj.GetTag("output"); exists && outputType == "binary" {
 		isBinary = true
 	}
 
-	result := &capns.HostResult{}
+	result := &cap.HostResult{}
 	if isBinary {
 		result.BinaryOutput = output
 	} else {
@@ -129,9 +188,8 @@ func (pch *PluginCapSet) ExecuteCap(
 
 // NewPluginRegistry creates a new plugin registry with cap support
 func NewPluginRegistry() (*PluginRegistry, error) {
-	registry, err := capns.NewCapRegistry()
+	registry, err := cap.NewCapRegistry()
 	if err != nil {
-		// Allow registry creation to fail - we can still work with local definitions
 		registry = nil
 	}
 
@@ -156,12 +214,11 @@ func (pr *PluginRegistry) RegisterPlugin(name, binaryPath string, caps []string)
 		},
 	}
 
-	// Update cap index
-	for _, cap := range caps {
-		if _, exists := pr.capIndex[cap]; !exists {
-			pr.capIndex[cap] = make([]string, 0)
+	for _, c := range caps {
+		if _, exists := pr.capIndex[c]; !exists {
+			pr.capIndex[c] = make([]string, 0)
 		}
-		pr.capIndex[cap] = append(pr.capIndex[cap], name)
+		pr.capIndex[c] = append(pr.capIndex[c], name)
 	}
 
 	pr.plugins[name] = entry
@@ -175,43 +232,38 @@ func (pr *PluginRegistry) RegisterPluginWithMetadata(name, binaryPath string, me
 		Metadata:   metadata,
 	}
 
-	// Update cap index
-	for _, cap := range metadata.Caps {
-		if _, exists := pr.capIndex[cap]; !exists {
-			pr.capIndex[cap] = make([]string, 0)
+	for _, c := range metadata.Caps {
+		if _, exists := pr.capIndex[c]; !exists {
+			pr.capIndex[c] = make([]string, 0)
 		}
-		pr.capIndex[cap] = append(pr.capIndex[cap], name)
+		pr.capIndex[c] = append(pr.capIndex[c], name)
 	}
 
 	pr.plugins[name] = entry
 }
 
 // Can checks if a cap is available and returns a CapCaller instance
-func (pr *PluginRegistry) Can(capUrn string) (*capns.CapCaller, error) {
-	// Find the best plugin for this cap
+func (pr *PluginRegistry) Can(capUrn string) (*cap.CapCaller, error) {
 	pluginName := pr.findBestPluginForCap(capUrn)
 	if pluginName == "" {
 		return nil, fmt.Errorf("cap '%s' is not available in any registered plugin", capUrn)
 	}
 
-	// Get cap definition (from registry if available, or create basic definition)
-	var capDefinition *capns.Cap
+	var capDefinition *cap.Cap
 	if pr.registry != nil {
 		if registryCap, err := pr.registry.GetCap(capUrn); err == nil {
 			capDefinition = registryCap
 		}
 	}
 
-	// If no registry definition, try to get from standard caps
 	if capDefinition == nil {
 		if standardCap := GetStandardCapByUrn(capUrn); standardCap != nil {
 			capDefinition = standardCap
 		}
 	}
 
-	// If still no definition, create a basic one
 	if capDefinition == nil {
-		capUrnObj, err := capns.NewCapUrnFromString(capUrn)
+		capUrnObj, err := urn.NewCapUrnFromString(capUrn)
 		if err != nil {
 			return nil, fmt.Errorf("invalid cap URN: %w", err)
 		}
@@ -227,25 +279,23 @@ func (pr *PluginRegistry) Can(capUrn string) (*capns.CapCaller, error) {
 			command = "unknown"
 		}
 
-		capDefinition = capns.NewCap(capUrnObj, "Plugin Capability", command)
+		capDefinition = cap.NewCap(capUrnObj, "Plugin Capability", command)
 	}
 
-	// Create and return CapCaller
-	caller := capns.NewCapCaller(capUrn, pr.hostImpl, capDefinition)
+	caller := cap.NewCapCaller(capUrn, pr.hostImpl, capDefinition)
 	return caller, nil
 }
 
 // ValidatePluginCaps validates all caps in a plugin against canonical definitions
-func (pr *PluginRegistry) ValidatePluginCaps(caps []*capns.Cap) []error {
+func (pr *PluginRegistry) ValidatePluginCaps(caps []*cap.Cap) []error {
 	if pr.registry == nil {
-		return nil // Skip validation if no registry available
+		return nil
 	}
 
 	var errors []error
-
-	for _, cap := range caps {
-		if err := capns.ValidateCapCanonical(pr.registry, cap); err != nil {
-			errors = append(errors, fmt.Errorf("cap %s validation failed: %w", cap.UrnString(), err))
+	for _, c := range caps {
+		if err := cap.ValidateCapCanonical(pr.registry, c); err != nil {
+			errors = append(errors, fmt.Errorf("cap %s validation failed: %w", c.UrnString(), err))
 		}
 	}
 
@@ -264,15 +314,15 @@ func (pr *PluginRegistry) GetPlugins() map[string]*PluginEntry {
 // GetCapabilities returns all available capabilities
 func (pr *PluginRegistry) GetCapabilities() []string {
 	caps := make([]string, 0, len(pr.capIndex))
-	for cap := range pr.capIndex {
-		caps = append(caps, cap)
+	for c := range pr.capIndex {
+		caps = append(caps, c)
 	}
 	return caps
 }
 
 // GetPluginsForCap returns all plugins that support a given cap
-func (pr *PluginRegistry) GetPluginsForCap(cap string) []string {
-	if plugins, exists := pr.capIndex[cap]; exists {
+func (pr *PluginRegistry) GetPluginsForCap(c string) []string {
+	if plugins, exists := pr.capIndex[c]; exists {
 		result := make([]string, len(plugins))
 		copy(result, plugins)
 		return result
@@ -280,22 +330,19 @@ func (pr *PluginRegistry) GetPluginsForCap(cap string) []string {
 	return []string{}
 }
 
-// Internal helper methods
-
 // findBestPluginForCap finds the best plugin to handle a specific cap
-func (pr *PluginRegistry) findBestPluginForCap(cap string) string {
-	candidates := pr.getCapCandidates(cap)
+func (pr *PluginRegistry) findBestPluginForCap(c string) string {
+	candidates := pr.getCapCandidates(c)
 	if len(candidates) == 0 {
 		return ""
 	}
 
-	// Find the candidate with the highest specificity score
 	bestPlugin := ""
 	bestScore := -1
 
 	for _, pluginName := range candidates {
 		plugin := pr.plugins[pluginName]
-		score := pr.calculateCapScore(plugin, cap)
+		score := pr.calculateCapScore(plugin, c)
 		if score > bestScore {
 			bestPlugin = pluginName
 			bestScore = score
@@ -306,18 +353,15 @@ func (pr *PluginRegistry) findBestPluginForCap(cap string) string {
 }
 
 // getCapCandidates returns plugins that might support the cap
-func (pr *PluginRegistry) getCapCandidates(cap string) []string {
-	// Direct match
-	if plugins, exists := pr.capIndex[cap]; exists {
+func (pr *PluginRegistry) getCapCandidates(c string) []string {
+	if plugins, exists := pr.capIndex[c]; exists {
 		return plugins
 	}
 
-	// Try variations and partial matches
 	candidates := make([]string, 0)
 
-	// For each registered cap, check if it's a match or pattern
 	for registeredCap, plugins := range pr.capIndex {
-		if pr.isCapMatch(registeredCap, cap) {
+		if pr.isCapMatch(registeredCap, c) {
 			candidates = append(candidates, plugins...)
 		}
 	}
@@ -327,71 +371,29 @@ func (pr *PluginRegistry) getCapCandidates(cap string) []string {
 
 // isCapMatch checks if a registered cap pattern matches the requested cap
 func (pr *PluginRegistry) isCapMatch(registeredCap, requestedCap string) bool {
-	// Exact match
 	if registeredCap == requestedCap {
 		return true
 	}
 
-	// Parse both cap URNs for pattern matching
-	_, err1 := capns.NewCapUrnFromString(registeredCap)
-	_, err2 := capns.NewCapUrnFromString(requestedCap)
+	regUrn, err1 := urn.NewCapUrnFromString(registeredCap)
+	reqUrn, err2 := urn.NewCapUrnFromString(requestedCap)
 	if err1 != nil || err2 != nil {
 		return false
 	}
 
-	// For pattern matching, we need to check if the registered cap pattern matches the requested cap
-	// Since we don't have direct access to tags, we'll use the URN string representation
-	// and implement a simpler pattern matching approach
-	
-	// Check if registered cap is a wildcard pattern
-	if strings.Contains(registeredCap, "*") {
-		// For simple wildcard matching, check if the non-wildcard parts match
-		// Convert both to comparable forms by removing wildcards and comparing structure
-		registeredParts := strings.Split(strings.TrimSuffix(registeredCap, ";"), ";")
-		requestedParts := strings.Split(strings.TrimSuffix(requestedCap, ";"), ";")
-		
-		if len(registeredParts) != len(requestedParts) {
-			return false
-		}
-		
-		for i, regPart := range registeredParts {
-			if !strings.Contains(regPart, "=") || !strings.Contains(requestedParts[i], "=") {
-				continue
-			}
-			
-			regKey := strings.Split(regPart, "=")[0]
-			regValue := strings.Split(regPart, "=")[1]
-			reqKey := strings.Split(requestedParts[i], "=")[0]
-			reqValue := strings.Split(requestedParts[i], "=")[1]
-			
-			// Keys must match exactly
-			if regKey != reqKey {
-				return false
-			}
-			
-			// Values can be wildcards
-			if regValue != "*" && regValue != reqValue {
-				return false
-			}
-		}
-		
-		return true
-	}
-
-	return false
+	// Use directional matching: request.Accepts(registered) — request is pattern, registered is instance
+	return reqUrn.Accepts(regUrn)
 }
 
 // calculateCapScore calculates specificity score for a plugin cap match
-func (pr *PluginRegistry) calculateCapScore(plugin *PluginEntry, cap string) int {
+func (pr *PluginRegistry) calculateCapScore(plugin *PluginEntry, c string) int {
 	score := 0
 
 	for _, pluginCap := range plugin.Caps {
-		if pluginCap == cap {
-			// Exact match gets highest score
+		if pluginCap == c {
 			score += 100
 			break
-		} else if pr.isCapMatch(pluginCap, cap) {
-			// Pattern match gets lower score
+		} else if pr.isCapMatch(pluginCap, c) {
 			score += 50
 		}
 	}
@@ -400,22 +402,18 @@ func (pr *PluginRegistry) calculateCapScore(plugin *PluginEntry, cap string) int
 }
 
 // GetStandardCapByUrnCanonical returns a standard cap by fetching from registry if available
-func GetStandardCapByUrnCanonical(urnStr string) (*capns.Cap, error) {
-	// First try to get from local standard caps
+func GetStandardCapByUrnCanonical(urnStr string) (*cap.Cap, error) {
 	if localCap := GetStandardCapByUrn(urnStr); localCap != nil {
-		// Try to validate against registry if available
-		registry, err := capns.NewCapRegistry()
+		registry, err := cap.NewCapRegistry()
 		if err == nil {
-			if err := capns.ValidateCapCanonical(registry, localCap); err == nil {
+			if err := cap.ValidateCapCanonical(registry, localCap); err == nil {
 				return localCap, nil
 			}
 		}
-		// Return local cap even if registry validation fails
 		return localCap, nil
 	}
 
-	// Try to get from registry
-	registry, err := capns.NewCapRegistry()
+	registry, err := cap.NewCapRegistry()
 	if err != nil {
 		return nil, fmt.Errorf("failed to create registry: %w", err)
 	}
@@ -425,7 +423,7 @@ func GetStandardCapByUrnCanonical(urnStr string) (*capns.Cap, error) {
 
 // ValidateStandardCaps validates all standard caps against the registry
 func ValidateStandardCaps() error {
-	registry, err := capns.NewCapRegistry()
+	registry, err := cap.NewCapRegistry()
 	if err != nil {
 		return fmt.Errorf("failed to create registry: %w", err)
 	}
@@ -437,13 +435,14 @@ func ValidateStandardCaps() error {
 		"cap:op=grind",
 	}
 
-	for _, urn := range standardUrns {
-		if localCap := GetStandardCapByUrn(urn); localCap != nil {
-			if err := capns.ValidateCapCanonical(registry, localCap); err != nil {
-				return fmt.Errorf("standard cap %s validation failed: %w", urn, err)
+	for _, u := range standardUrns {
+		if localCap := GetStandardCapByUrn(u); localCap != nil {
+			if err := cap.ValidateCapCanonical(registry, localCap); err != nil {
+				return fmt.Errorf("standard cap %s validation failed: %w", u, err)
 			}
 		}
 	}
 
 	return nil
 }
+
