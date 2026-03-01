@@ -5,8 +5,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/filegrind/capns-go/cap"
-	"github.com/filegrind/capns-go/standard"
+	"github.com/machinefabric/capns-go/cap"
+	"github.com/machinefabric/capns-go/standard"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

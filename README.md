@@ -1,6 +1,6 @@
 # MACINA Plugin SDK for Go
 
-A Go SDK for building document processing plugins for the MACINA (FileGrind) system. This SDK provides unified data structures and interfaces for extracting metadata, outlines, and text content from various document formats.
+A Go SDK for building document processing plugins for the MACINA (MachineFabric) system. This SDK provides unified data structures and interfaces for extracting metadata, outlines, and text content from various document formats.
 
 ## Features
 
@@ -14,7 +14,7 @@ A Go SDK for building document processing plugins for the MACINA (FileGrind) sys
 ## Installation
 
 ```bash
-go get github.com/jowharshamshiri/macina-plugin-sdk-go
+go get github.com/machinefabric/machfab-plugin-sdk-go
 ```
 
 ## Quick Start
@@ -28,7 +28,7 @@ import (
     "context"
     "fmt"
     
-    sdk "github.com/jowharshamshiri/macina-plugin-sdk-go"
+    sdk "github.com/machinefabric/machfab-plugin-sdk-go"
 )
 
 // MyDocumentHandler implements the DocumentHandler interface
@@ -189,7 +189,7 @@ if err != nil {
 
 ## JSON Schemas
 
-This SDK implements the JSON schemas defined in the `macina/plugin-schemas/` directory:
+This SDK implements the JSON schemas defined in the `machfab/plugin-schemas/` directory:
 - `file-metadata.json` - FileMetadata structure
 - `document-outline.json` - DocumentOutline structure  
 - `disbound-page.json` - DisboundPage structure (output is array of these)
@@ -211,7 +211,7 @@ See the `examples/` directory for complete implementation examples:
 
 ## Contributing
 
-1. Ensure all data structures match the JSON schemas in `../macina/plugin-schemas/`
+1. Ensure all data structures match the JSON schemas in `../machfab/plugin-schemas/`
 2. Implement the complete `DocumentHandler` interface
 3. Add appropriate tests
 4. Follow Go naming conventions
@@ -222,8 +222,8 @@ MIT License - see LICENSE file for details.
 
 ## Related Projects
 
-- **macina-plugin-sdk** - Rust SDK implementation
-- **macina** - Main MACINA engine
+- **machfab-plugin-sdk** - Rust SDK implementation
+- **machfab** - Main MACINA engine
 - **txtcartridge** - Text and Markdown processor
 - **pdfcartridge** - PDF processor  
 - **epubcartridge** - EPUB processor

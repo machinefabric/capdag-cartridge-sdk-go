@@ -2,14 +2,14 @@
 package sdk
 
 import (
-	"github.com/jowharshamshiri/fgrnd-plugin-sdk-go/pkg/handler"
-	"github.com/jowharshamshiri/fgrnd-plugin-sdk-go/pkg/metadata"
-	"github.com/jowharshamshiri/fgrnd-plugin-sdk-go/pkg/outline"
-	"github.com/jowharshamshiri/fgrnd-plugin-sdk-go/pkg/pages"
-	"github.com/jowharshamshiri/fgrnd-plugin-sdk-go/pkg/plugin"
+	"github.com/machinefabric/fgrnd-plugin-sdk-go/pkg/handler"
+	"github.com/machinefabric/fgrnd-plugin-sdk-go/pkg/metadata"
+	"github.com/machinefabric/fgrnd-plugin-sdk-go/pkg/outline"
+	"github.com/machinefabric/fgrnd-plugin-sdk-go/pkg/pages"
+	"github.com/machinefabric/fgrnd-plugin-sdk-go/pkg/plugin"
 
-	"github.com/filegrind/capns-go/cap"
-	"github.com/filegrind/capns-go/urn"
+	"github.com/machinefabric/capns-go/cap"
+	"github.com/machinefabric/capns-go/urn"
 )
 
 // Version of the MACINA Plugin SDK

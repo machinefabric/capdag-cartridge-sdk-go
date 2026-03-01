@@ -6,9 +6,9 @@ import (
 	"fmt"
 	"log"
 
-	sdk "github.com/jowharshamshiri/fgrnd-plugin-sdk-go"
-	"github.com/filegrind/capns-go/cap"
-	"github.com/filegrind/capns-go/standard"
+	sdk "github.com/machinefabric/fgrnd-plugin-sdk-go"
+	"github.com/machinefabric/capns-go/cap"
+	"github.com/machinefabric/capns-go/standard"
 )
 
 func main() {

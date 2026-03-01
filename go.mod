@@ -1,17 +1,17 @@
 module github.com/jowharshamshiri/fgrnd-plugin-sdk-go
 
-// version: 0.65.6186
+// version: 0.66.6194
 
 go 1.21
 
 require (
-	github.com/filegrind/capns-go v0.0.0-00010101000000-000000000000
+	github.com/machinafabric/capns-go v0.0.0-00010101000000-000000000000
 	github.com/stretchr/testify v1.8.4
 )
 
 require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
-	github.com/filegrind/tagged-urn-go v0.0.0 // indirect
+	github.com/machinafabric/tagged-urn-go v0.0.0 // indirect
 	github.com/fxamacker/cbor/v2 v2.9.0 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
@@ -22,6 +22,6 @@ require (
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 
-replace github.com/filegrind/capns-go => ../capns-go
+replace github.com/machinafabric/capns-go => ../capns-go
 
-replace github.com/filegrind/tagged-urn-go => ../tagged-urn-go
+replace github.com/machinafabric/tagged-urn-go => ../tagged-urn-go

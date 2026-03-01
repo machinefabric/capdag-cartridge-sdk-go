@@ -2,7 +2,7 @@
 package handler
 
 import (
-	capns "github.com/filegrind/capns-go"
+	capns "github.com/machinefabric/capns-go"
 )
 
 // Re-export CapManifest from capns as PluginManifest for backward compatibility
