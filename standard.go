@@ -5,9 +5,9 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/machinefabric/capns-go/cap"
-	"github.com/machinefabric/capns-go/standard"
-	"github.com/machinefabric/capns-go/urn"
+	"github.com/machinefabric/capdag-go/cap"
+	"github.com/machinefabric/capdag-go/standard"
+	"github.com/machinefabric/capdag-go/urn"
 )
 
 // Spec ID constants for domain-specific media URNs

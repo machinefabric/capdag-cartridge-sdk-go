@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"os/exec"
 
-	"github.com/machinefabric/capns-go/cap"
-	"github.com/machinefabric/capns-go/urn"
+	"github.com/machinefabric/capdag-go/cap"
+	"github.com/machinefabric/capdag-go/urn"
 )
 
 // PluginRegistry provides cap-based access to plugins with caller support

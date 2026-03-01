@@ -1,4 +1,4 @@
-// Example usage of the updated MACINA Plugin SDK with capns-go integration
+// Example usage of the updated MACINA Plugin SDK with capdag-go integration
 package main
 
 import (
@@ -7,8 +7,8 @@ import (
 	"log"
 
 	sdk "github.com/machinefabric/fgrnd-plugin-sdk-go"
-	"github.com/machinefabric/capns-go/cap"
-	"github.com/machinefabric/capns-go/standard"
+	"github.com/machinefabric/capdag-go/cap"
+	"github.com/machinefabric/capdag-go/standard"
 )
 
 func main() {

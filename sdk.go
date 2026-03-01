@@ -8,8 +8,8 @@ import (
 	"github.com/machinefabric/fgrnd-plugin-sdk-go/pkg/pages"
 	"github.com/machinefabric/fgrnd-plugin-sdk-go/pkg/plugin"
 
-	"github.com/machinefabric/capns-go/cap"
-	"github.com/machinefabric/capns-go/urn"
+	"github.com/machinefabric/capdag-go/cap"
+	"github.com/machinefabric/capdag-go/urn"
 )
 
 // Version of the MACINA Plugin SDK

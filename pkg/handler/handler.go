@@ -2,15 +2,15 @@
 package handler
 
 import (
-	capns "github.com/machinefabric/capns-go"
+	capdag "github.com/machinefabric/capdag-go"
 )
 
-// Re-export CapManifest from capns as PluginManifest for backward compatibility
-type PluginManifest = capns.CapManifest
+// Re-export CapManifest from capdag as PluginManifest for backward compatibility
+type PluginManifest = capdag.CapManifest
 
 // NewPluginManifest creates a new plugin manifest
-func NewPluginManifest(name, version, description string, caps []capns.Cap) *capns.CapManifest {
-	return capns.NewCapManifest(name, version, description, caps)
+func NewPluginManifest(name, version, description string, caps []capdag.Cap) *capdag.CapManifest {
+	return capdag.NewCapManifest(name, version, description, caps)
 }
 
 // FileInfo represents basic file information
