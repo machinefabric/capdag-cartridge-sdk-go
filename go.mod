@@ -1,11 +1,11 @@
 module github.com/jowharshamshiri/fgrnd-plugin-sdk-go
 
-// version: 0.67.6266
+// version: 0.68.6306
 
 go 1.21
 
 require (
-	github.com/machinafabric/capns-go v0.0.0-00010101000000-000000000000
+	github.com/machinafabric/capdag-go v0.0.0-00010101000000-000000000000
 	github.com/stretchr/testify v1.8.4
 )
 
@@ -22,6 +22,6 @@ require (
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 
-replace github.com/machinafabric/capns-go => ../capns-go
+replace github.com/machinafabric/capdag-go => ../capdag-go
 
 replace github.com/machinafabric/tagged-urn-go => ../tagged-urn-go
