@@ -20,7 +20,7 @@ const (
 // InputSpecIdForExt returns the input media URN for a given file extension
 func InputSpecIdForExt(ext string) string {
 	if ext == "pdf" {
-		return standard.MediaBinary
+		return standard.MediaIdentity
 	}
 	return standard.MediaString
 }
@@ -59,7 +59,7 @@ func ExtractMetadataUrn(ext string) string {
 // GenerateThumbnailUrn builds the URN for generate-thumbnail capability with given extension
 func GenerateThumbnailUrn(ext string) string {
 	inSpec := InputSpecIdForExt(ext)
-	return fmt.Sprintf("cap:ext=%s;in=%q;op=generate_thumbnail;out=%q", ext, inSpec, standard.MediaBinary)
+	return fmt.Sprintf("cap:ext=%s;in=%q;op=generate_thumbnail;out=%q", ext, inSpec, standard.MediaIdentity)
 }
 
 // ExtractOutlineUrn builds the URN for extract-outline capability with given extension
@@ -93,7 +93,7 @@ func ExtractMetadataCap() *cap.Cap {
 		Required: true,
 		Sources: []cap.ArgSource{
 			{Position: intPtr(0)},
-			{Stdin: stringPtr(standard.MediaBinary)},
+			{Stdin: stringPtr(standard.MediaIdentity)},
 		},
 		ArgDescription: "Path to the document file to process",
 	})
@@ -133,7 +133,7 @@ func GenerateThumbnailCap() *cap.Cap {
 		Required: true,
 		Sources: []cap.ArgSource{
 			{Position: intPtr(0)},
-			{Stdin: stringPtr(standard.MediaBinary)},
+			{Stdin: stringPtr(standard.MediaIdentity)},
 		},
 		ArgDescription: "Path to the document file to process",
 	})
@@ -182,7 +182,7 @@ func GenerateThumbnailCap() *cap.Cap {
 	})
 
 	c.SetOutput(cap.NewCapOutput(
-		standard.MediaBinary,
+		standard.MediaIdentity,
 		"PNG image data representing a thumbnail of the document",
 	))
 
@@ -206,7 +206,7 @@ func ExtractOutlineCap() *cap.Cap {
 		Required: true,
 		Sources: []cap.ArgSource{
 			{Position: intPtr(0)},
-			{Stdin: stringPtr(standard.MediaBinary)},
+			{Stdin: stringPtr(standard.MediaIdentity)},
 		},
 		ArgDescription: "Path to the document file to process",
 	})
@@ -267,7 +267,7 @@ func DisbindCap() *cap.Cap {
 		Required: true,
 		Sources: []cap.ArgSource{
 			{Position: intPtr(0)},
-			{Stdin: stringPtr(standard.MediaBinary)},
+			{Stdin: stringPtr(standard.MediaIdentity)},
 		},
 		ArgDescription: "Path to the document file to process",
 	})
