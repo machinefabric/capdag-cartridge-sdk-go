@@ -1,17 +1,17 @@
 module github.com/jowharshamshiri/fgrnd-plugin-sdk-go
 
-// version: 0.69.6316
+// version: 0.70.6336
 
 go 1.21
 
 require (
-	github.com/machinafabric/capdag-go v0.0.0-00010101000000-000000000000
+	github.com/machinefabric/capdag-go v0.0.0-00010101000000-000000000000
 	github.com/stretchr/testify v1.8.4
 )
 
 require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
-	github.com/machinafabric/tagged-urn-go v0.0.0 // indirect
+	github.com/machinefabric/tagged-urn-go v0.0.0 // indirect
 	github.com/fxamacker/cbor/v2 v2.9.0 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
@@ -22,6 +22,6 @@ require (
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 
-replace github.com/machinafabric/capdag-go => ../capdag-go
+replace github.com/machinefabric/capdag-go => ../capdag-go
 
-replace github.com/machinafabric/tagged-urn-go => ../tagged-urn-go
+replace github.com/machinefabric/tagged-urn-go => ../tagged-urn-go
