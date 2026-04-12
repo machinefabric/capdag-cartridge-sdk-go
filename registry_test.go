@@ -11,47 +11,47 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestPluginRegistryCreation(t *testing.T) {
-	registry, err := NewPluginRegistry()
+func TestCartridgeRegistryCreation(t *testing.T) {
+	registry, err := NewCartridgeRegistry()
 	require.NoError(t, err)
 	require.NotNil(t, registry)
 
-	assert.Equal(t, 0, len(registry.GetPlugins()))
+	assert.Equal(t, 0, len(registry.GetCartridges()))
 	assert.Equal(t, 0, len(registry.GetCapabilities()))
 }
 
-func TestPluginRegistration(t *testing.T) {
-	registry, err := NewPluginRegistry()
+func TestCartridgeRegistration(t *testing.T) {
+	registry, err := NewCartridgeRegistry()
 	require.NoError(t, err)
 
 	caps := []string{
 		"cap:op=extract;target=metadata;",
 		"cap:op=generate;output=binary;target=thumbnail;",
 	}
-	registry.RegisterPlugin("testplugin", "/path/to/testplugin", caps)
+	registry.RegisterCartridge("testcartridge", "/path/to/testcartridge", caps)
 
-	plugins := registry.GetPlugins()
-	assert.Equal(t, 1, len(plugins))
-	assert.Contains(t, plugins, "testplugin")
+	cartridges := registry.GetCartridges()
+	assert.Equal(t, 1, len(cartridges))
+	assert.Contains(t, cartridges, "testcartridge")
 
 	capabilities := registry.GetCapabilities()
 	assert.Equal(t, 2, len(capabilities))
 	assert.Contains(t, capabilities, "cap:op=extract;target=metadata;")
 	assert.Contains(t, capabilities, "cap:op=generate;output=binary;target=thumbnail;")
 
-	pluginsForMetadata := registry.GetPluginsForCap("cap:op=extract;target=metadata;")
-	assert.Equal(t, 1, len(pluginsForMetadata))
-	assert.Contains(t, pluginsForMetadata, "testplugin")
+	cartridgesForMetadata := registry.GetCartridgesForCap("cap:op=extract;target=metadata;")
+	assert.Equal(t, 1, len(cartridgesForMetadata))
+	assert.Contains(t, cartridgesForMetadata, "testcartridge")
 }
 
-func TestPluginRegistrationWithMetadata(t *testing.T) {
-	registry, err := NewPluginRegistry()
+func TestCartridgeRegistrationWithMetadata(t *testing.T) {
+	registry, err := NewCartridgeRegistry()
 	require.NoError(t, err)
 
-	metadata := &PluginMetadata{
-		Name:        "Test Plugin",
+	metadata := &CartridgeMetadata{
+		Name:        "Test Cartridge",
 		Version:     "1.0.0",
-		Description: "A test plugin for document processing",
+		Description: "A test cartridge for document processing",
 		Author:      "Test Author",
 		Caps: []string{
 			"cap:op=extract;target=metadata;",
@@ -59,26 +59,26 @@ func TestPluginRegistrationWithMetadata(t *testing.T) {
 		},
 	}
 
-	registry.RegisterPluginWithMetadata("testplugin", "/path/to/testplugin", metadata)
+	registry.RegisterCartridgeWithMetadata("testcartridge", "/path/to/testcartridge", metadata)
 
-	plugins := registry.GetPlugins()
-	assert.Equal(t, 1, len(plugins))
+	cartridges := registry.GetCartridges()
+	assert.Equal(t, 1, len(cartridges))
 
-	plugin := plugins["testplugin"]
-	require.NotNil(t, plugin)
-	assert.Equal(t, "/path/to/testplugin", plugin.BinaryPath)
-	assert.Equal(t, 2, len(plugin.Caps))
-	assert.NotNil(t, plugin.Metadata)
-	assert.Equal(t, "Test Plugin", plugin.Metadata.Name)
-	assert.Equal(t, "1.0.0", plugin.Metadata.Version)
+	cartridge := cartridges["testcartridge"]
+	require.NotNil(t, cartridge)
+	assert.Equal(t, "/path/to/testcartridge", cartridge.BinaryPath)
+	assert.Equal(t, 2, len(cartridge.Caps))
+	assert.NotNil(t, cartridge.Metadata)
+	assert.Equal(t, "Test Cartridge", cartridge.Metadata.Name)
+	assert.Equal(t, "1.0.0", cartridge.Metadata.Version)
 }
 
 func TestCanMethodBasicFunctionality(t *testing.T) {
-	registry, err := NewPluginRegistry()
+	registry, err := NewCartridgeRegistry()
 	require.NoError(t, err)
 
 	caps := []string{"cap:op=extract;target=metadata;"}
-	registry.RegisterPlugin("pdfplugin", "/usr/bin/pdfplugin", caps)
+	registry.RegisterCartridge("pdfcartridge", "/usr/bin/pdfcartridge", caps)
 
 	caller, err := registry.Can("cap:op=extract;target=metadata;")
 	require.NoError(t, err)
@@ -90,11 +90,11 @@ func TestCanMethodBasicFunctionality(t *testing.T) {
 }
 
 func TestCapCallerIntegration(t *testing.T) {
-	registry, err := NewPluginRegistry()
+	registry, err := NewCartridgeRegistry()
 	require.NoError(t, err)
 
 	caps := []string{"cap:op=extract;target=metadata;"}
-	registry.RegisterPlugin("testplugin", "/bin/echo", caps)
+	registry.RegisterCartridge("testcartridge", "/bin/echo", caps)
 
 	caller, err := registry.Can("cap:op=extract;target=metadata;")
 	require.NoError(t, err)
@@ -109,7 +109,7 @@ func TestCapCallerIntegration(t *testing.T) {
 	}, nil)
 
 	if err != nil {
-		t.Logf("Call failed as expected with mock plugin: %v", err)
+		t.Logf("Call failed as expected with mock cartridge: %v", err)
 	} else {
 		assert.NotNil(t, response)
 		t.Logf("Mock call succeeded with response size: %d bytes", response.Size())
@@ -120,10 +120,10 @@ func TestStandardCapValidation(t *testing.T) {
 	c := ExtractMetadataCap()
 	require.NotNil(t, c)
 
-	registry, err := NewPluginRegistry()
+	registry, err := NewCartridgeRegistry()
 	require.NoError(t, err)
 
-	errors := registry.ValidatePluginCaps([]*cap.Cap{c})
+	errors := registry.ValidateCartridgeCaps([]*cap.Cap{c})
 
 	if len(errors) > 0 {
 		t.Logf("Validation errors (expected if registry is unavailable): %v", errors)
@@ -133,14 +133,14 @@ func TestStandardCapValidation(t *testing.T) {
 }
 
 func TestCapPatternMatching(t *testing.T) {
-	registry, err := NewPluginRegistry()
+	registry, err := NewCartridgeRegistry()
 	require.NoError(t, err)
 
 	caps := []string{
 		"cap:op=extract;target=metadata;",
 		"cap:op=extract;target=*;",
 	}
-	registry.RegisterPlugin("universalplugin", "/usr/bin/universalplugin", caps)
+	registry.RegisterCartridge("universalcartridge", "/usr/bin/universalcartridge", caps)
 
 	caller, err := registry.Can("cap:op=extract;target=metadata;")
 	assert.NoError(t, err)
@@ -154,15 +154,15 @@ func TestCapPatternMatching(t *testing.T) {
 	assert.Error(t, err)
 }
 
-func TestMultiplePluginPriority(t *testing.T) {
-	registry, err := NewPluginRegistry()
+func TestMultipleCartridgePriority(t *testing.T) {
+	registry, err := NewCartridgeRegistry()
 	require.NoError(t, err)
 
-	registry.RegisterPlugin("generic", "/usr/bin/generic", []string{
+	registry.RegisterCartridge("generic", "/usr/bin/generic", []string{
 		"cap:op=extract;target=*;",
 	})
 
-	registry.RegisterPlugin("specific", "/usr/bin/pdfspecific", []string{
+	registry.RegisterCartridge("specific", "/usr/bin/pdfspecific", []string{
 		"cap:op=extract;target=metadata;",
 	})
 
@@ -195,13 +195,13 @@ func TestValidateStandardCaps(t *testing.T) {
 }
 
 func TestHostImplementationInterface(t *testing.T) {
-	registry, err := NewPluginRegistry()
+	registry, err := NewCartridgeRegistry()
 	require.NoError(t, err)
 
-	// Verify PluginCapSet implements CapSet interface
+	// Verify CartridgeCapSet implements CapSet interface
 	var _ cap.CapSet = registry.hostImpl
 
-	registry.RegisterPlugin("testhost", "/bin/echo", []string{
+	registry.RegisterCartridge("testhost", "/bin/echo", []string{
 		"cap:op=test;target=interface;",
 	})
 

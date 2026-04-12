@@ -1,18 +1,18 @@
-// Package sdk provides the main MACINA Plugin SDK for Go
+// Package sdk provides the main MACINA Cartridge SDK for Go
 package sdk
 
 import (
-	"github.com/machinefabric/fgrnd-plugin-sdk-go/pkg/handler"
-	"github.com/machinefabric/fgrnd-plugin-sdk-go/pkg/metadata"
-	"github.com/machinefabric/fgrnd-plugin-sdk-go/pkg/outline"
-	"github.com/machinefabric/fgrnd-plugin-sdk-go/pkg/pages"
-	"github.com/machinefabric/fgrnd-plugin-sdk-go/pkg/plugin"
+	"github.com/machinefabric/fgrnd-cartridge-sdk-go/pkg/handler"
+	"github.com/machinefabric/fgrnd-cartridge-sdk-go/pkg/metadata"
+	"github.com/machinefabric/fgrnd-cartridge-sdk-go/pkg/outline"
+	"github.com/machinefabric/fgrnd-cartridge-sdk-go/pkg/pages"
+	"github.com/machinefabric/fgrnd-cartridge-sdk-go/pkg/cartridge"
 
 	"github.com/machinefabric/capdag-go/cap"
 	"github.com/machinefabric/capdag-go/urn"
 )
 
-// Version of the MACINA Plugin SDK
+// Version of the MACINA Cartridge SDK
 const Version = "0.2.0"
 
 // Re-export commonly used types for convenience
@@ -58,12 +58,12 @@ type (
 	OutputValidator          = cap.OutputValidator
 
 	// Output types
-	ExtractedData     = plugin.ExtractedData
-	ThumbnailInfo     = plugin.ThumbnailInfo
-	ExtractionSummary = plugin.ExtractionSummary
-	OutputFormat      = plugin.OutputFormat
-	OutlineFormatter  = plugin.OutlineFormatter
-	MetadataFormatter = plugin.MetadataFormatter
+	ExtractedData     = cartridge.ExtractedData
+	ThumbnailInfo     = cartridge.ThumbnailInfo
+	ExtractionSummary = cartridge.ExtractionSummary
+	OutputFormat      = cartridge.OutputFormat
+	OutlineFormatter  = cartridge.OutlineFormatter
+	MetadataFormatter = cartridge.MetadataFormatter
 )
 
 // Constructor functions for convenience
@@ -87,8 +87,8 @@ var (
 	NewFailureResult   = handler.NewFailureResult
 
 	// Output constructors
-	NewExtractedData     = plugin.NewExtractedData
-	NewExtractionSummary = plugin.NewExtractionSummary
+	NewExtractedData     = cartridge.NewExtractedData
+	NewExtractionSummary = cartridge.NewExtractionSummary
 
 	// URN constructors
 	NewCapUrnFromString = urn.NewCapUrnFromString

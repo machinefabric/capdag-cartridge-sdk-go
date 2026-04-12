@@ -1,4 +1,4 @@
-// Package sdk provides registry integration for plugin execution with caller system
+// Package sdk provides registry integration for cartridge execution with caller system
 package sdk
 
 import (
@@ -10,23 +10,23 @@ import (
 	"github.com/machinefabric/capdag-go/urn"
 )
 
-// PluginRegistry provides cap-based access to plugins with caller support
-type PluginRegistry struct {
-	plugins  map[string]*PluginEntry
+// CartridgeRegistry provides cap-based access to cartridges with caller support
+type CartridgeRegistry struct {
+	cartridges  map[string]*CartridgeEntry
 	capIndex map[string][]string
 	registry *cap.CapRegistry
-	hostImpl *PluginCapSet
+	hostImpl *CartridgeCapSet
 }
 
-// PluginEntry represents a registered plugin with its capabilities
-type PluginEntry struct {
+// CartridgeEntry represents a registered cartridge with its capabilities
+type CartridgeEntry struct {
 	BinaryPath string
 	Caps       []string
-	Metadata   *PluginMetadata
+	Metadata   *CartridgeMetadata
 }
 
-// PluginMetadata contains metadata about a plugin
-type PluginMetadata struct {
+// CartridgeMetadata contains metadata about a cartridge
+type CartridgeMetadata struct {
 	Name        string   `json:"name"`
 	Version     string   `json:"version"`
 	Description string   `json:"description"`
@@ -34,27 +34,27 @@ type PluginMetadata struct {
 	Caps        []string `json:"caps"`
 }
 
-// PluginCapSet implements CapSet interface for plugin execution
-type PluginCapSet struct {
-	registry *PluginRegistry
+// CartridgeCapSet implements CapSet interface for cartridge execution
+type CartridgeCapSet struct {
+	registry *CartridgeRegistry
 }
 
-// ExecuteCap implements the CapSet interface for plugin execution.
+// ExecuteCap implements the CapSet interface for cartridge execution.
 // Arguments are identified by media_urn and converted to CLI arguments
 // based on the cap definition's argument sources.
-func (pch *PluginCapSet) ExecuteCap(
+func (pch *CartridgeCapSet) ExecuteCap(
 	ctx context.Context,
 	capUrn string,
 	arguments []cap.CapArgumentValue,
 ) (*cap.HostResult, error) {
-	pluginName := pch.registry.findBestPluginForCap(capUrn)
-	if pluginName == "" {
-		return nil, fmt.Errorf("no plugin found for cap: %s", capUrn)
+	cartridgeName := pch.registry.findBestCartridgeForCap(capUrn)
+	if cartridgeName == "" {
+		return nil, fmt.Errorf("no cartridge found for cap: %s", capUrn)
 	}
 
-	plugin, exists := pch.registry.plugins[pluginName]
+	cartridge, exists := pch.registry.cartridges[cartridgeName]
 	if !exists {
-		return nil, fmt.Errorf("plugin %s not found", pluginName)
+		return nil, fmt.Errorf("cartridge %s not found", cartridgeName)
 	}
 
 	capUrnObj, err := urn.NewCapUrnFromString(capUrn)
@@ -149,7 +149,7 @@ func (pch *PluginCapSet) ExecuteCap(
 		}
 	}
 
-	cmd := exec.CommandContext(ctx, plugin.BinaryPath, cmdArgs...)
+	cmd := exec.CommandContext(ctx, cartridge.BinaryPath, cmdArgs...)
 
 	if stdinData != nil {
 		stdin, err := cmd.StdinPipe()
@@ -166,9 +166,9 @@ func (pch *PluginCapSet) ExecuteCap(
 	output, err := cmd.Output()
 	if err != nil {
 		if exitErr, ok := err.(*exec.ExitError); ok {
-			return nil, fmt.Errorf("plugin execution failed with stderr: %s", string(exitErr.Stderr))
+			return nil, fmt.Errorf("cartridge execution failed with stderr: %s", string(exitErr.Stderr))
 		}
-		return nil, fmt.Errorf("plugin execution failed: %w", err)
+		return nil, fmt.Errorf("cartridge execution failed: %w", err)
 	}
 
 	isBinary := false
@@ -186,29 +186,29 @@ func (pch *PluginCapSet) ExecuteCap(
 	return result, nil
 }
 
-// NewPluginRegistry creates a new plugin registry with cap support
-func NewPluginRegistry() (*PluginRegistry, error) {
+// NewCartridgeRegistry creates a new cartridge registry with cap support
+func NewCartridgeRegistry() (*CartridgeRegistry, error) {
 	registry, err := cap.NewCapRegistry()
 	if err != nil {
 		registry = nil
 	}
 
-	pr := &PluginRegistry{
-		plugins:  make(map[string]*PluginEntry),
+	pr := &CartridgeRegistry{
+		cartridges:  make(map[string]*CartridgeEntry),
 		capIndex: make(map[string][]string),
 		registry: registry,
 	}
 
-	pr.hostImpl = &PluginCapSet{registry: pr}
+	pr.hostImpl = &CartridgeCapSet{registry: pr}
 	return pr, nil
 }
 
-// RegisterPlugin registers a plugin with its capabilities
-func (pr *PluginRegistry) RegisterPlugin(name, binaryPath string, caps []string) {
-	entry := &PluginEntry{
+// RegisterCartridge registers a cartridge with its capabilities
+func (pr *CartridgeRegistry) RegisterCartridge(name, binaryPath string, caps []string) {
+	entry := &CartridgeEntry{
 		BinaryPath: binaryPath,
 		Caps:       caps,
-		Metadata: &PluginMetadata{
+		Metadata: &CartridgeMetadata{
 			Name: name,
 			Caps: caps,
 		},
@@ -221,12 +221,12 @@ func (pr *PluginRegistry) RegisterPlugin(name, binaryPath string, caps []string)
 		pr.capIndex[c] = append(pr.capIndex[c], name)
 	}
 
-	pr.plugins[name] = entry
+	pr.cartridges[name] = entry
 }
 
-// RegisterPluginWithMetadata registers a plugin with full metadata
-func (pr *PluginRegistry) RegisterPluginWithMetadata(name, binaryPath string, metadata *PluginMetadata) {
-	entry := &PluginEntry{
+// RegisterCartridgeWithMetadata registers a cartridge with full metadata
+func (pr *CartridgeRegistry) RegisterCartridgeWithMetadata(name, binaryPath string, metadata *CartridgeMetadata) {
+	entry := &CartridgeEntry{
 		BinaryPath: binaryPath,
 		Caps:       metadata.Caps,
 		Metadata:   metadata,
@@ -239,14 +239,14 @@ func (pr *PluginRegistry) RegisterPluginWithMetadata(name, binaryPath string, me
 		pr.capIndex[c] = append(pr.capIndex[c], name)
 	}
 
-	pr.plugins[name] = entry
+	pr.cartridges[name] = entry
 }
 
 // Can checks if a cap is available and returns a CapCaller instance
-func (pr *PluginRegistry) Can(capUrn string) (*cap.CapCaller, error) {
-	pluginName := pr.findBestPluginForCap(capUrn)
-	if pluginName == "" {
-		return nil, fmt.Errorf("cap '%s' is not available in any registered plugin", capUrn)
+func (pr *CartridgeRegistry) Can(capUrn string) (*cap.CapCaller, error) {
+	cartridgeName := pr.findBestCartridgeForCap(capUrn)
+	if cartridgeName == "" {
+		return nil, fmt.Errorf("cap '%s' is not available in any registered cartridge", capUrn)
 	}
 
 	var capDefinition *cap.Cap
@@ -279,15 +279,15 @@ func (pr *PluginRegistry) Can(capUrn string) (*cap.CapCaller, error) {
 			command = "unknown"
 		}
 
-		capDefinition = cap.NewCap(capUrnObj, "Plugin Capability", command)
+		capDefinition = cap.NewCap(capUrnObj, "Cartridge Capability", command)
 	}
 
 	caller := cap.NewCapCaller(capUrn, pr.hostImpl, capDefinition)
 	return caller, nil
 }
 
-// ValidatePluginCaps validates all caps in a plugin against canonical definitions
-func (pr *PluginRegistry) ValidatePluginCaps(caps []*cap.Cap) []error {
+// ValidateCartridgeCaps validates all caps in a cartridge against canonical definitions
+func (pr *CartridgeRegistry) ValidateCartridgeCaps(caps []*cap.Cap) []error {
 	if pr.registry == nil {
 		return nil
 	}
@@ -302,17 +302,17 @@ func (pr *PluginRegistry) ValidatePluginCaps(caps []*cap.Cap) []error {
 	return errors
 }
 
-// GetPlugins returns all registered plugins
-func (pr *PluginRegistry) GetPlugins() map[string]*PluginEntry {
-	result := make(map[string]*PluginEntry)
-	for name, entry := range pr.plugins {
+// GetCartridges returns all registered cartridges
+func (pr *CartridgeRegistry) GetCartridges() map[string]*CartridgeEntry {
+	result := make(map[string]*CartridgeEntry)
+	for name, entry := range pr.cartridges {
 		result[name] = entry
 	}
 	return result
 }
 
 // GetCapabilities returns all available capabilities
-func (pr *PluginRegistry) GetCapabilities() []string {
+func (pr *CartridgeRegistry) GetCapabilities() []string {
 	caps := make([]string, 0, len(pr.capIndex))
 	for c := range pr.capIndex {
 		caps = append(caps, c)
@@ -320,49 +320,49 @@ func (pr *PluginRegistry) GetCapabilities() []string {
 	return caps
 }
 
-// GetPluginsForCap returns all plugins that support a given cap
-func (pr *PluginRegistry) GetPluginsForCap(c string) []string {
-	if plugins, exists := pr.capIndex[c]; exists {
-		result := make([]string, len(plugins))
-		copy(result, plugins)
+// GetCartridgesForCap returns all cartridges that support a given cap
+func (pr *CartridgeRegistry) GetCartridgesForCap(c string) []string {
+	if cartridges, exists := pr.capIndex[c]; exists {
+		result := make([]string, len(cartridges))
+		copy(result, cartridges)
 		return result
 	}
 	return []string{}
 }
 
-// findBestPluginForCap finds the best plugin to handle a specific cap
-func (pr *PluginRegistry) findBestPluginForCap(c string) string {
+// findBestCartridgeForCap finds the best cartridge to handle a specific cap
+func (pr *CartridgeRegistry) findBestCartridgeForCap(c string) string {
 	candidates := pr.getCapCandidates(c)
 	if len(candidates) == 0 {
 		return ""
 	}
 
-	bestPlugin := ""
+	bestCartridge := ""
 	bestScore := -1
 
-	for _, pluginName := range candidates {
-		plugin := pr.plugins[pluginName]
-		score := pr.calculateCapScore(plugin, c)
+	for _, cartridgeName := range candidates {
+		cartridge := pr.cartridges[cartridgeName]
+		score := pr.calculateCapScore(cartridge, c)
 		if score > bestScore {
-			bestPlugin = pluginName
+			bestCartridge = cartridgeName
 			bestScore = score
 		}
 	}
 
-	return bestPlugin
+	return bestCartridge
 }
 
-// getCapCandidates returns plugins that might support the cap
-func (pr *PluginRegistry) getCapCandidates(c string) []string {
-	if plugins, exists := pr.capIndex[c]; exists {
-		return plugins
+// getCapCandidates returns cartridges that might support the cap
+func (pr *CartridgeRegistry) getCapCandidates(c string) []string {
+	if cartridges, exists := pr.capIndex[c]; exists {
+		return cartridges
 	}
 
 	candidates := make([]string, 0)
 
-	for registeredCap, plugins := range pr.capIndex {
+	for registeredCap, cartridges := range pr.capIndex {
 		if pr.isCapMatch(registeredCap, c) {
-			candidates = append(candidates, plugins...)
+			candidates = append(candidates, cartridges...)
 		}
 	}
 
@@ -370,7 +370,7 @@ func (pr *PluginRegistry) getCapCandidates(c string) []string {
 }
 
 // isCapMatch checks if a registered cap pattern matches the requested cap
-func (pr *PluginRegistry) isCapMatch(registeredCap, requestedCap string) bool {
+func (pr *CartridgeRegistry) isCapMatch(registeredCap, requestedCap string) bool {
 	if registeredCap == requestedCap {
 		return true
 	}
@@ -385,15 +385,15 @@ func (pr *PluginRegistry) isCapMatch(registeredCap, requestedCap string) bool {
 	return reqUrn.Accepts(regUrn)
 }
 
-// calculateCapScore calculates specificity score for a plugin cap match
-func (pr *PluginRegistry) calculateCapScore(plugin *PluginEntry, c string) int {
+// calculateCapScore calculates specificity score for a cartridge cap match
+func (pr *CartridgeRegistry) calculateCapScore(cartridge *CartridgeEntry, c string) int {
 	score := 0
 
-	for _, pluginCap := range plugin.Caps {
-		if pluginCap == c {
+	for _, cartridgeCap := range cartridge.Caps {
+		if cartridgeCap == c {
 			score += 100
 			break
-		} else if pr.isCapMatch(pluginCap, c) {
+		} else if pr.isCapMatch(cartridgeCap, c) {
 			score += 50
 		}
 	}

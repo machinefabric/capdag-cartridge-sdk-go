@@ -1,6 +1,6 @@
-# MACINA Plugin SDK for Go
+# MACINA Cartridge SDK for Go
 
-A Go SDK for building document processing plugins for the MACINA (MachineFabric) system. This SDK provides unified data structures and interfaces for extracting metadata, outlines, and text content from various document formats.
+A Go SDK for building document processing cartridges for the MACINA (MachineFabric) system. This SDK provides unified data structures and interfaces for extracting metadata, outlines, and text content from various document formats.
 
 ## Features
 
@@ -9,12 +9,12 @@ A Go SDK for building document processing plugins for the MACINA (MachineFabric)
 - **Hierarchical Outlines**: Support for nested table of contents structures
 - **Page-based Content**: Organized text extraction with pages and paragraphs
 - **JSON Compatible**: All data structures support JSON serialization
-- **Extensible**: Plugin-specific metadata through extended fields
+- **Extensible**: Cartridge-specific metadata through extended fields
 
 ## Installation
 
 ```bash
-go get github.com/machinefabric/machfab-plugin-sdk-go
+go get github.com/machinefabric/machfab-cartridge-sdk-go
 ```
 
 ## Quick Start
@@ -28,7 +28,7 @@ import (
     "context"
     "fmt"
     
-    sdk "github.com/machinefabric/machfab-plugin-sdk-go"
+    sdk "github.com/machinefabric/machfab-cartridge-sdk-go"
 )
 
 // MyDocumentHandler implements the DocumentHandler interface
@@ -158,12 +158,12 @@ page := sdk.NewDisboundPageWithText(1, "Page content here...")
 pages = append(pages, *page)
 ```
 
-## Plugin Caps
+## Cartridge Caps
 
 The SDK supports a cap-based system:
 
 ```go
-caps := &sdk.PluginCaps{
+caps := &sdk.CartridgeCaps{
     Caps: []string{
         "extract_metadata",
         "extract_outline", 
@@ -189,11 +189,11 @@ if err != nil {
 
 ## JSON Schemas
 
-This SDK implements the JSON schemas defined in the `machfab/plugin-schemas/` directory:
+This SDK implements the JSON schemas defined in the `machfab/cartridge-schemas/` directory:
 - `file-metadata.json` - FileMetadata structure
 - `document-outline.json` - DocumentOutline structure  
 - `disbound-page.json` - DisboundPage structure (output is array of these)
-- `manifest.json` - Plugin manifest
+- `manifest.json` - Cartridge manifest
 - `handler-interface.json` - DocumentHandler interface
 
 ## Testing
@@ -207,11 +207,11 @@ go test ./...
 See the `examples/` directory for complete implementation examples:
 - Text file handler
 - Markdown processor
-- Plugin registration patterns
+- Cartridge registration patterns
 
 ## Contributing
 
-1. Ensure all data structures match the JSON schemas in `../machfab/plugin-schemas/`
+1. Ensure all data structures match the JSON schemas in `../machfab/cartridge-schemas/`
 2. Implement the complete `DocumentHandler` interface
 3. Add appropriate tests
 4. Follow Go naming conventions
@@ -222,7 +222,7 @@ MIT License - see LICENSE file for details.
 
 ## Related Projects
 
-- **machfab-plugin-sdk** - Rust SDK implementation
+- **machfab-cartridge-sdk** - Rust SDK implementation
 - **machfab** - Main MACINA engine
 - **txtcartridge** - Text and Markdown processor
 - **pdfcartridge** - PDF processor  

@@ -1,4 +1,4 @@
-// Example usage of the updated MACINA Plugin SDK with capdag-go integration
+// Example usage of the updated MACINA Cartridge SDK with capdag-go integration
 package main
 
 import (
@@ -6,30 +6,30 @@ import (
 	"fmt"
 	"log"
 
-	sdk "github.com/machinefabric/fgrnd-plugin-sdk-go"
+	sdk "github.com/machinefabric/fgrnd-cartridge-sdk-go"
 	"github.com/machinefabric/capdag-go/cap"
 	"github.com/machinefabric/capdag-go/standard"
 )
 
 func main() {
-	fmt.Println("MACINA Plugin SDK with CapCaller Integration Example")
+	fmt.Println("MACINA Cartridge SDK with CapCaller Integration Example")
 	fmt.Println("=================================================")
 
-	registry, err := sdk.NewPluginRegistry()
+	registry, err := sdk.NewCartridgeRegistry()
 	if err != nil {
-		log.Fatal("Failed to create plugin registry:", err)
+		log.Fatal("Failed to create cartridge registry:", err)
 	}
 
-	pluginCaps := []string{
+	cartridgeCaps := []string{
 		"cap:op=extract;target=metadata;",
 		"cap:op=generate;output=binary;target=thumbnail;",
 		"cap:op=extract;target=outline;",
 		"cap:op=extract;target=pages",
 	}
 
-	registry.RegisterPlugin("samplePdfPlugin", "/usr/local/bin/pdfplugin", pluginCaps)
+	registry.RegisterCartridge("samplePdfCartridge", "/usr/local/bin/pdfcartridge", cartridgeCaps)
 
-	registry.RegisterPlugin("genericPlugin", "/usr/local/bin/generic", []string{
+	registry.RegisterCartridge("genericCartridge", "/usr/local/bin/generic", []string{
 		"cap:op=extract;target=*;",
 	})
 
@@ -81,16 +81,16 @@ func main() {
 		}
 	}
 
-	fmt.Printf("\n6. Registered plugins:\n")
-	for name, plugin := range registry.GetPlugins() {
-		fmt.Printf("   - %s (%s)\n", name, plugin.BinaryPath)
-		fmt.Printf("     Capabilities: %v\n", plugin.Caps)
-		if plugin.Metadata != nil {
-			fmt.Printf("     Metadata: %s v%s\n", plugin.Metadata.Name, plugin.Metadata.Version)
+	fmt.Printf("\n6. Registered cartridges:\n")
+	for name, cartridge := range registry.GetCartridges() {
+		fmt.Printf("   - %s (%s)\n", name, cartridge.BinaryPath)
+		fmt.Printf("     Capabilities: %v\n", cartridge.Caps)
+		if cartridge.Metadata != nil {
+			fmt.Printf("     Metadata: %s v%s\n", cartridge.Metadata.Name, cartridge.Metadata.Version)
 		}
 	}
 
-	fmt.Printf("\nIntegration complete - CapCaller system working with plugin registry!\n")
+	fmt.Printf("\nIntegration complete - CapCaller system working with cartridge registry!\n")
 }
 
 // demonstrateCapCallerUsage shows how to use a CapCaller in practice

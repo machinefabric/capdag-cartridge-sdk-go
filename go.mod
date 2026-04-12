@@ -1,4 +1,4 @@
-module github.com/jowharshamshiri/fgrnd-plugin-sdk-go
+module github.com/machinefabric/fgrnd-cartridge-sdk-go
 
 // version: 0.71.6350
 

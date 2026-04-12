@@ -1,6 +1,6 @@
 # Typical Go project .gitignore
 
-# Binaries for programs and plugins
+# Binaries for programs and cartridges
 *.exe
 *.dll
 *.so

@@ -1,5 +1,5 @@
-// Package plugin provides output structures for document extraction
-package plugin
+// Package cartridge provides output structures for document extraction
+package cartridge
 
 import (
 	"encoding/json"
@@ -7,9 +7,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/machinefabric/fgrnd-plugin-sdk-go/pkg/metadata"
-	"github.com/machinefabric/fgrnd-plugin-sdk-go/pkg/outline"
-	"github.com/machinefabric/fgrnd-plugin-sdk-go/pkg/pages"
+	"github.com/machinefabric/fgrnd-cartridge-sdk-go/pkg/metadata"
+	"github.com/machinefabric/fgrnd-cartridge-sdk-go/pkg/outline"
+	"github.com/machinefabric/fgrnd-cartridge-sdk-go/pkg/pages"
 )
 
 // OutputFormat represents output format options

@@ -300,7 +300,7 @@ func DisbindCap() *cap.Cap {
 	return c
 }
 
-// GetAllStandardCaps returns all standard plugin caps
+// GetAllStandardCaps returns all standard cartridge caps
 func GetAllStandardCaps() []*cap.Cap {
 	return []*cap.Cap{
 		ExtractMetadataCap(),

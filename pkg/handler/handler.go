@@ -1,15 +1,15 @@
-// Package handler provides the unified cap-based plugin interface  
+// Package handler provides the unified cap-based cartridge interface  
 package handler
 
 import (
 	capdag "github.com/machinefabric/capdag-go"
 )
 
-// Re-export CapManifest from capdag as PluginManifest for backward compatibility
-type PluginManifest = capdag.CapManifest
+// Re-export CapManifest from capdag as CartridgeManifest for backward compatibility
+type CartridgeManifest = capdag.CapManifest
 
-// NewPluginManifest creates a new plugin manifest
-func NewPluginManifest(name, version, description string, caps []capdag.Cap) *capdag.CapManifest {
+// NewCartridgeManifest creates a new cartridge manifest
+func NewCartridgeManifest(name, version, description string, caps []capdag.Cap) *capdag.CapManifest {
 	return capdag.NewCapManifest(name, version, description, caps)
 }
 
@@ -60,10 +60,10 @@ var StandardizedCaps = struct {
 }
 
 
-// DocumentHandler interface defines the contract for document processing plugins
+// DocumentHandler interface defines the contract for document processing cartridges
 type DocumentHandler interface {
-	// GetPluginManifest returns plugin manifest including caps
-	GetPluginManifest() *PluginManifest
+	// GetCartridgeManifest returns cartridge manifest including caps
+	GetCartridgeManifest() *CartridgeManifest
 	
 	// ExtractMetadata extracts metadata from a document
 	ExtractMetadata(filePath string) (*ProcessingResult, error)
@@ -78,24 +78,24 @@ type DocumentHandler interface {
 	GenerateThumbnail(filePath string, width, height int, page int) (*ProcessingResult, error)
 }
 
-// PluginMetadata represents metadata about the plugin itself
-type PluginMetadata struct {
-	// Plugin name
+// CartridgeMetadata represents metadata about the cartridge itself
+type CartridgeMetadata struct {
+	// Cartridge name
 	Name string `json:"name"`
 	
-	// Plugin version
+	// Cartridge version
 	Version string `json:"version"`
 	
-	// Plugin description
+	// Cartridge description
 	Description string `json:"description"`
 	
 	// Supported file types
 	SupportedTypes []string `json:"supported_types"`
 	
-	// Plugin caps
+	// Cartridge caps
 	Caps []string `json:"caps"`
 	
-	// Plugin author
+	// Cartridge author
 	Author *string `json:"author,omitempty"`
 }
 
