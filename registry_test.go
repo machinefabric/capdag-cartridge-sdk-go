@@ -117,7 +117,7 @@ func TestCapCallerIntegration(t *testing.T) {
 }
 
 func TestStandardCapValidation(t *testing.T) {
-	c := ExtractMetadataCap()
+	c := RenderPageImageCap()
 	require.NotNil(t, c)
 
 	registry, err := NewCartridgeRegistry()
@@ -223,7 +223,7 @@ func TestHostImplementationInterface(t *testing.T) {
 }
 
 func TestStandardCapStructure(t *testing.T) {
-	c := ExtractMetadataCap()
+	c := RenderPageImageCap()
 	require.NotNil(t, c)
 
 	// Verify args use media URNs
@@ -240,8 +240,8 @@ func TestStandardCapStructure(t *testing.T) {
 	// Cap should accept stdin (derived from args)
 	assert.True(t, c.AcceptsStdin())
 
-	// Output should be set
+	// Output should be set to PNG
 	output := c.GetOutput()
 	require.NotNil(t, output)
-	assert.Equal(t, standard.MediaObject, output.MediaUrn)
+	assert.Equal(t, standard.MediaPNG, output.MediaUrn)
 }

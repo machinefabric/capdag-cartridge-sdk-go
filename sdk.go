@@ -43,7 +43,8 @@ type (
 	CapCaller       = cap.CapCaller
 	ResponseWrapper = cap.ResponseWrapper
 	CapSet          = cap.CapSet
-	HostResult      = cap.HostResult
+	CapResult       = cap.CapResult
+	CapResultKind   = cap.CapResultKind
 
 	// Argument value types
 	CapArgumentValue = cap.CapArgumentValue

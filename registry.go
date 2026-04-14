@@ -46,20 +46,20 @@ func (pch *CartridgeCapSet) ExecuteCap(
 	ctx context.Context,
 	capUrn string,
 	arguments []cap.CapArgumentValue,
-) (*cap.HostResult, error) {
+) (cap.CapResult, error) {
 	cartridgeName := pch.registry.findBestCartridgeForCap(capUrn)
 	if cartridgeName == "" {
-		return nil, fmt.Errorf("no cartridge found for cap: %s", capUrn)
+		return cap.NewCapResultEmpty(), fmt.Errorf("no cartridge found for cap: %s", capUrn)
 	}
 
 	cartridge, exists := pch.registry.cartridges[cartridgeName]
 	if !exists {
-		return nil, fmt.Errorf("cartridge %s not found", cartridgeName)
+		return cap.NewCapResultEmpty(), fmt.Errorf("cartridge %s not found", cartridgeName)
 	}
 
 	capUrnObj, err := urn.NewCapUrnFromString(capUrn)
 	if err != nil {
-		return nil, fmt.Errorf("invalid cap URN: %w", err)
+		return cap.NewCapResultEmpty(), fmt.Errorf("invalid cap URN: %w", err)
 	}
 
 	// Build command from cap op
@@ -71,7 +71,7 @@ func (pch *CartridgeCapSet) ExecuteCap(
 			command = fmt.Sprintf("--%s", op)
 		}
 	} else {
-		return nil, fmt.Errorf("cap URN missing op tag: %s", capUrn)
+		return cap.NewCapResultEmpty(), fmt.Errorf("cap URN missing op tag: %s", capUrn)
 	}
 
 	// Look up cap definition to map arguments to CLI args
@@ -154,7 +154,7 @@ func (pch *CartridgeCapSet) ExecuteCap(
 	if stdinData != nil {
 		stdin, err := cmd.StdinPipe()
 		if err != nil {
-			return nil, fmt.Errorf("failed to create stdin pipe: %w", err)
+			return cap.NewCapResultEmpty(), fmt.Errorf("failed to create stdin pipe: %w", err)
 		}
 
 		go func() {
@@ -166,24 +166,14 @@ func (pch *CartridgeCapSet) ExecuteCap(
 	output, err := cmd.Output()
 	if err != nil {
 		if exitErr, ok := err.(*exec.ExitError); ok {
-			return nil, fmt.Errorf("cartridge execution failed with stderr: %s", string(exitErr.Stderr))
+			return cap.NewCapResultEmpty(), fmt.Errorf("cartridge execution failed with stderr: %s", string(exitErr.Stderr))
 		}
-		return nil, fmt.Errorf("cartridge execution failed: %w", err)
+		return cap.NewCapResultEmpty(), fmt.Errorf("cartridge execution failed: %w", err)
 	}
 
-	isBinary := false
-	if outputType, exists := capUrnObj.GetTag("output"); exists && outputType == "binary" {
-		isBinary = true
-	}
-
-	result := &cap.HostResult{}
-	if isBinary {
-		result.BinaryOutput = output
-	} else {
-		result.TextOutput = string(output)
-	}
-
-	return result, nil
+	// Scalar output: the cartridge writes its complete output in one shot.
+	// The caller determines how to interpret it based on the resolved output spec.
+	return cap.NewCapResultScalar(output), nil
 }
 
 // NewCartridgeRegistry creates a new cartridge registry with cap support
