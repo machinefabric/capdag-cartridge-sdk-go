@@ -1,6 +1,6 @@
 module github.com/machinefabric/fgrnd-cartridge-sdk-go
 
-// version: 0.71.6350
+// version: 0.75.328
 
 go 1.21
 
