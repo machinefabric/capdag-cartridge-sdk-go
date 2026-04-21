@@ -1,16 +1,21 @@
-// Package handler provides the unified cap-based cartridge interface  
+// Package handler provides the unified cap-based cartridge interface
 package handler
 
 import (
 	capdag "github.com/machinefabric/capdag-go"
+	"github.com/machinefabric/capdag-go/bifaci"
 )
 
 // Re-export CapManifest from capdag as CartridgeManifest for backward compatibility
 type CartridgeManifest = capdag.CapManifest
 
-// NewCartridgeManifest creates a new cartridge manifest
+// NewCartridgeManifest creates a new cartridge manifest. Every cap must live
+// inside a cap group — the capdag manifest regime does not admit a flat
+// caps array at the top level. For SDK callers that pass a flat list, we
+// wrap everything in a single "default" group with no adapter URNs.
 func NewCartridgeManifest(name, version, description string, caps []capdag.Cap) *capdag.CapManifest {
-	return capdag.NewCapManifest(name, version, description, caps)
+	groups := []bifaci.CapGroup{bifaci.DefaultGroup(caps)}
+	return capdag.NewCapManifest(name, version, description, groups)
 }
 
 // FileInfo represents basic file information

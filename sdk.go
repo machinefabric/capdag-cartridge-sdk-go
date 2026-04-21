@@ -40,9 +40,7 @@ type (
 	CapArg          = cap.CapArg
 	ArgSource       = cap.ArgSource
 	CapOutput       = cap.CapOutput
-	CapCaller       = cap.CapCaller
 	ResponseWrapper = cap.ResponseWrapper
-	CapSet          = cap.CapSet
 	CapResult       = cap.CapResult
 	CapResultKind   = cap.CapResultKind
 
@@ -121,8 +119,7 @@ var (
 	NewOutputValidator                                = cap.NewOutputValidator
 	NewOutputValidatorWithSchemaResolver              = cap.NewOutputValidatorWithSchemaResolver
 
-	// Caller/Response constructors
-	NewCapCaller               = cap.NewCapCaller
+	// Response constructors
 	NewResponseWrapperFromJSON   = cap.NewResponseWrapperFromJSON
 	NewResponseWrapperFromText   = cap.NewResponseWrapperFromText
 	NewResponseWrapperFromBinary = cap.NewResponseWrapperFromBinary
