@@ -279,15 +279,15 @@ const (
 // -----------------------------------------------------------------------------
 
 const (
-	CapLLMInferenceGGUF        = "cap:gguf;in=\"media:llm-generation-request;json;record\";llm;ml-model;op=llm_inference;out=\"media:llm-text-stream;ndjson\""
-	CapLLMInferenceMLX         = "cap:in=\"media:llm-generation-request;json;record\";llm;ml-model;mlx;op=llm_inference;out=\"media:llm-text-stream;ndjson\""
-	CapLLMInferenceCandle      = "cap:candle;in=\"media:llm-generation-request;json;record\";llm;ml-model;op=llm_inference;out=\"media:llm-text-stream;ndjson\""
-	CapLLMInferenceConstrained = "cap:constrained;gguf;in=\"media:llm-generation-request;json;record\";llm;ml-model;op=llm_inference_constrained;out=\"media:llm-text-stream;ndjson\""
-	CapLLMVocab                = "cap:op=llm_vocab;llm;ml-model;gguf;in=\"media:llm-generation-request;json;record\";out=\"media:llm-vocab-response;json;record\""
-	CapLLMModelInfo            = "cap:op=llm_model_info;llm;ml-model;gguf;in=\"media:llm-generation-request;json;record\";out=\"media:llm-model-info;json;record\""
-	CapGenerateEmbeddings      = "cap:op=generate_embeddings;ml-model;gguf;in=\"media:textable\";out=\"media:embedding-vector;record;textable\""
-	CapEmbeddingsDimensions    = "cap:gguf;in=\"media:embeddings;gguf;model-spec;textable\";ml-model;op=embeddings_dimensions;out=\"media:integer;model-dim;numeric;textable\""
-	CapDescribeImage           = "cap:gguf;in=\"media:image;png\";ml-model;op=describe_image;out=\"media:image-description;textable\";vision"
+	CapLLMInferenceGGUF        = "cap:gguf;in=\"media:llm-generation-request;json;record\";llm;ml-model;llm-inference;out=\"media:llm-text-stream;ndjson\""
+	CapLLMInferenceMLX         = "cap:in=\"media:llm-generation-request;json;record\";llm;ml-model;mlx;llm-inference;out=\"media:llm-text-stream;ndjson\""
+	CapLLMInferenceCandle      = "cap:candle;in=\"media:llm-generation-request;json;record\";llm;ml-model;llm-inference;out=\"media:llm-text-stream;ndjson\""
+	CapLLMInferenceConstrained = "cap:constrained;gguf;in=\"media:llm-generation-request;json;record\";llm;ml-model;llm-inference-constrained;out=\"media:llm-text-stream;ndjson\""
+	CapLLMVocab                = "cap:llm-vocab;llm;ml-model;gguf;in=\"media:llm-generation-request;json;record\";out=\"media:llm-vocab-response;json;record\""
+	CapLLMModelInfo            = "cap:llm-model-info;llm;ml-model;gguf;in=\"media:llm-generation-request;json;record\";out=\"media:llm-model-info;json;record\""
+	CapGenerateEmbeddings      = "cap:generate-embeddings;ml-model;gguf;in=\"media:textable\";out=\"media:embedding-vector;record;textable\""
+	CapEmbeddingsDimensions    = "cap:gguf;in=\"media:embeddings;gguf;model-spec;textable\";ml-model;embeddings-dimensions;out=\"media:integer;model-dim;numeric;textable\""
+	CapDescribeImage           = "cap:gguf;in=\"media:image;png\";ml-model;describe-image;out=\"media:image-description;textable\";vision"
 )
 
 // -----------------------------------------------------------------------------
