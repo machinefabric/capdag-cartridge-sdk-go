@@ -1,7 +1,7 @@
 // Package llm defines the canonical LLM protocol types shared by machfab and
-// LLM cartridges. Types match the capdag media-spec schemas one-for-one.
+// LLM cartridges. Types match the capdag media-def schemas one-for-one.
 //
-// Media specs:
+// Media defs:
 //   - media:llm-generation-request;json;record
 //   - media:llm-text-stream;ndjson
 //   - media:llm-vocab-response;json;record
@@ -122,7 +122,7 @@ type ToolDefinition struct {
 // -----------------------------------------------------------------------------
 
 // StreamMessageType discriminates NDJSON stream messages. All variants are
-// wire-protocol mandated by the media spec.
+// wire-protocol mandated by the media def.
 type StreamMessageType string
 
 const (

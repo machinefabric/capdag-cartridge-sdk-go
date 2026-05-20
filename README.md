@@ -2,7 +2,7 @@
 
 Canonical Go types for MachFab LLM cartridges. Mirrors the Rust
 `machfab-cartridge-sdk`: all types and constants in the `llm` subpackage
-track the capdag media specs one-for-one.
+track the capdag media defs one-for-one.
 
 ## Layout
 
