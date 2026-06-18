@@ -287,7 +287,7 @@ const (
 	CapLLMModelInfo            = "cap:llm-model-info;llm;ml-model;gguf;in=\"media:llm-generation-request;json;record\";out=\"media:llm-model-info;json;record\""
 	CapGenerateEmbeddings      = "cap:generate-embeddings;ml-model;gguf;in=\"media:textable\";out=\"media:embedding-vector;record;textable\""
 	CapEmbeddingsDimensions    = "cap:gguf;in=\"media:embeddings;gguf;model-spec;textable\";ml-model;embeddings-dimensions;out=\"media:integer;model-dim;numeric;textable\""
-	CapDescribeImage           = "cap:gguf;in=\"media:image;png\";ml-model;describe-image;out=\"media:image-description;plain-text;textable;txt\";vision"
+	CapDescribeImage           = "cap:gguf;in=\"media:ext=png;image\";ml-model;describe-image;out=\"media:ext=txt;image-description;plain-text;textable\";vision"
 )
 
 // -----------------------------------------------------------------------------
