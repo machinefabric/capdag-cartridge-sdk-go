@@ -1,5 +1,5 @@
 module github.com/machinefabric/machfab-cartridge-sdk-go
 
-// version: 1.91.430
+// version: 1.92.433
 
 go 1.21
