@@ -1,8 +1,8 @@
-# MachFab Cartridge SDK for Go
+# MachineFabric cartridge SDK for Go
 
-Canonical Go types for MachFab LLM cartridges. Mirrors the Rust
-`machfab-cartridge-sdk`: all types and constants in the `llm` subpackage
-track the capdag media defs one-for-one.
+This public Go module mirrors the Rust `machfab-cartridge-sdk` LLM contract.
+It is for Go cartridge authors and library consumers who need the canonical
+request, stream, vocabulary, model-information, media-URN, and cap-URN types.
 
 ## Layout
 
@@ -24,5 +24,12 @@ case llm.BackendCandle: // dispatch to llm.CapLLMInferenceCandle
 }
 ```
 
-No Go cartridges exist in the monorepo today — the SDK is kept as a scaffold
-so future Go cartridges align with the Rust and Swift SDKs.
+## Verify changes
+
+```bash
+go test ./...
+```
+
+The Rust SDK is authoritative for MachineFabric-specific wire types. Changes
+must be mirrored here with the same substantive numbered tests. Language-neutral
+runtime behavior belongs to the [CapDAG specification](../capdag/docs/01-overview.md).
