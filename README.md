@@ -32,4 +32,4 @@ go test ./...
 
 The Rust SDK is authoritative for MachineFabric-specific wire types. Changes
 must be mirrored here with the same substantive numbered tests. Language-neutral
-runtime behavior belongs to the [CapDAG specification](../capdag/docs/01-overview.md).
+runtime behavior belongs to the [CapDAG specification](../../capdag/docs/01-overview.md).
