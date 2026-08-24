@@ -1,4 +1,4 @@
-// Package llm defines the canonical LLM protocol types shared by machfab and
+// Package llm defines the canonical LLM protocol types shared by floom-engine and
 // LLM cartridges. Types match the capdag media-def schemas one-for-one.
 //
 // Media defs:
