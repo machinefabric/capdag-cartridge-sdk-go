@@ -1,4 +1,4 @@
-module github.com/machinefabric/machfab-cartridge-sdk-go
+module github.com/machinefabric/capdag-cartridge-sdk-go
 
 // version: {{ project.version }}
 

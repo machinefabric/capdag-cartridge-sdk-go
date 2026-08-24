@@ -1,6 +1,6 @@
 # MachineFabric cartridge SDK for Go
 
-This public Go module mirrors the Rust `machfab-cartridge-sdk` LLM contract.
+This public Go module mirrors the Rust `capdag-cartridge-sdk` LLM contract.
 It is for Go cartridge authors and library consumers who need the canonical
 request, stream, vocabulary, model-information, media-URN, and cap-URN types.
 
@@ -12,7 +12,7 @@ request, stream, vocabulary, model-information, media-URN, and cap-URN types.
 ## Usage
 
 ```go
-import "github.com/machinefabric/machfab-cartridge-sdk-go/llm"
+import "github.com/machinefabric/capdag-cartridge-sdk-go/llm"
 
 req := llm.NewGenerationRequestWithDefaults("Hello", "hf:meta-llama/Llama-3.1-8B-Instruct")
 fmt.Println(req.ToJSON())
