@@ -1,4 +1,4 @@
-# MachineFabric cartridge SDK for Go
+# CapDAG Cartridge SDK for Go
 
 This public Go module mirrors the Rust `capdag-cartridge-sdk` LLM contract.
 It is for Go cartridge authors and library consumers who need the canonical
