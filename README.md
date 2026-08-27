@@ -30,6 +30,6 @@ case llm.BackendCandle: // dispatch to llm.CapLLMInferenceCandle
 go test ./...
 ```
 
-The Rust SDK is authoritative for MachineFabric-specific wire types. Changes
+The Rust SDK is authoritative for CapDAG-specific wire types. Changes
 must be mirrored here with the same substantive numbered tests. Language-neutral
 runtime behavior belongs to the [CapDAG specification](../../capdag/docs/01-overview.md).
