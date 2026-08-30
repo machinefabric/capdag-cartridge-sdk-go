@@ -1,5 +1,5 @@
 module github.com/machinefabric/capdag-cartridge-sdk-go
 
-// version: 1.112.9
+// version: 1.113.12
 
 go 1.21
